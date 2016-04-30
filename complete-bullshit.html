@@ -28,14 +28,16 @@
 				<a id="link-top" href="complete-bullshit.html?mode=top">top</a> |
 				<a id="link-gilded" href="complete-bullshit.html?mode=gilded">gilded</a>
 			</div>
-			<div id="seperator"></div>
 			<div id="bs-container"></div>
 		</div>
 
 	</body>
 
 	<script type="text/javascript">
+		// get various dom elements we need, lock the center window to minimum its current size
+		var centerElement = document.getElementById("center");
 		var BSContainerElement = document.getElementById("bs-container");
+		centerElement.style.minWidth = Math.floor(centerElement.offsetWidth) + "px";
 		var logoElement = document.getElementById("logo");
 		
 		// extract the parameters from the url
@@ -72,7 +74,8 @@
 			
 			// put the "on top" posts into the middle and get some initial widths
 			data.children = interleave(data.children);
-			var widths = randomizeWidths(data, 800);
+			
+			var widths = randomizeWidths(data, Math.floor(BSContainerElement.offsetWidth));
 			
 			// create the bullshit cells
 			for (var i = 0; i < data.children.length; i++) {
@@ -123,6 +126,7 @@
 			// bounce the logo up and down every frame
 			bounce = !bounce;
 			logoElement.style.paddingTop = (bounce ? 1 : 0) + "px";
+			logoElement.style.paddingBottom = (bounce ? 0 : 1) + "px";
 			
 			if (!data) {
 				window.requestAnimationFrame(animate);
@@ -130,7 +134,7 @@
 			}
 		
 			// animate the widths of the bullshit cells
-			var widths = randomizeWidths(data, 800);
+			var widths = randomizeWidths(data, Math.floor(BSContainerElement.offsetWidth));
 			var elements = BSContainerElement.childNodes;
 			for (var i = 0; i < widths.length && i < elements.length; i++) {
 				elements[i].style.width = widths[i] + "px";
