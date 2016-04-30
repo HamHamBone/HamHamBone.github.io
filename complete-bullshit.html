@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="complete-bullshit.css">
+		<title>Complete Bullshit</title>
+		<link href="cb-icon.png" rel="icon" type="image/png" />
+	</head>
+	
+	<body>
+		<div id="center">
+			<div id="header">
+				<a href="complete-bullshit.html"><img id="logo" src="cb-loading.png"></img></a>
+				<div id="title">
+				<div id="main-title">COMPLETE BULLSHIT</div>
+				<div id="title-row">
+					<span id="secondary-title">content aggregator</span>
+					<span id="version-number">v6.12</span>
+				</div>
+			</div>
+			<div id="navigation">
+				<a id="link-hot" href="complete-bullshit.html?mode=hot">hot</a> |
+				<a id="link-new" href="complete-bullshit.html?mode=new">new</a> |
+				<a id="link-rising" href="complete-bullshit.html?mode=rising">rising</a> |
+				<a id="link-controversial" href="complete-bullshit.html?mode=controversial">controversial</a> |
+				<a id="link-top" href="complete-bullshit.html?mode=top">top</a> |
+				<a id="link-gilded" href="complete-bullshit.html?mode=gilded">gilded</a>
+			</div>
+			<div id="seperator"></div>
+			<div id="bs-container"></div>
+		</div>
+
+	</body>
+
+	<script type="text/javascript">
+		var BSContainerElement = document.getElementById("bs-container");
+		var logoElement = document.getElementById("logo");
+		
+		// extract the parameters from the url
+		var URLParameters = extractParameters(window.location.href);
+		var redditURL = makeRedditURL(URLParameters.subreddit, URLParameters.mode);
+		console.log(URLParameters);
+		console.log(redditURL);
+		
+		// make the mode links reflect the current subreddit
+		document.getElementById("link-hot").href = makeBullshitURL(URLParameters.subreddit, "hot");
+		document.getElementById("link-new").href = makeBullshitURL(URLParameters.subreddit, "new");
+		document.getElementById("link-rising").href = makeBullshitURL(URLParameters.subreddit, "rising");
+		document.getElementById("link-controversial").href = makeBullshitURL(URLParameters.subreddit, "controversial");
+		document.getElementById("link-top").href = makeBullshitURL(URLParameters.subreddit, "top");
+		document.getElementById("link-gilded").href = makeBullshitURL(URLParameters.subreddit, "gilded");
+		
+		// send request for the reddit post data
+		var httpRequest = new XMLHttpRequest();
+		httpRequest.onload = function() {
+			onLoad(JSON.parse(httpRequest.response).data);
+		}
+		httpRequest.open("GET", redditURL + ".json", true);
+		httpRequest.send()
+		
+		var data = null;
+		
+		function onLoad(_data) {
+			data = _data;
+			
+			console.log(data);
+			
+			// replace "loading" with the real logo
+			logoElement.src = "cb-logo.png";
+			
+			// put the "on top" posts into the middle and get some initial widths
+			data.children = interleave(data.children);
+			var widths = randomizeWidths(data, 800);
+			
+			// create the bullshit cells
+			for (var i = 0; i < data.children.length; i++) {
+				var child = data.children[i];
+				
+				var textColor = newRandomColor();
+				var backgroundColor = newRandomColor();
+				
+				var cell = document.createElement("div");
+				
+				var dataElement = document.createElement("a");
+				dataElement.href = "https://reddit.com" + child.data.permalink;
+				dataElement.className = "bs-data";
+				dataElement.innerHTML = child.data.ups + " pts, " + child.data.num_comments + " com ";
+				
+				var titleElement = document.createElement("a");
+				titleElement.href = child.data.url;
+				titleElement.className = "bs-title";
+				titleElement.innerHTML = child.data.title;
+				
+				cell.className = "bs-cell";
+				cell.style.color = textColor;
+				cell.style.backgroundColor = backgroundColor;
+				cell.style.width = widths[i] + "px";
+				
+				cell.appendChild(dataElement);
+				cell.appendChild(titleElement);
+				
+				BSContainerElement.appendChild(cell);
+			}
+		}
+		
+		// begin the animation
+		window.requestAnimationFrame(animate);
+			
+		var start = null;
+		var bounce = true;
+		function animate(timestamp) {
+			// lock to 30 fps
+			if (!start) start = timestamp;
+			var progress = timestamp - start;
+			if (progress < 50) {
+				window.requestAnimationFrame(animate);
+				return;
+			}
+			start = timestamp;
+			
+			// bounce the logo up and down every frame
+			bounce = !bounce;
+			logoElement.style.paddingTop = (bounce ? 1 : 0) + "px";
+			
+			if (!data) {
+				window.requestAnimationFrame(animate);
+				return;
+			}
+		
+			// animate the widths of the bullshit cells
+			var widths = randomizeWidths(data, 800);
+			var elements = BSContainerElement.childNodes;
+			for (var i = 0; i < widths.length && i < elements.length; i++) {
+				elements[i].style.width = widths[i] + "px";
+			}
+		  
+			window.requestAnimationFrame(animate);
+		}
+		
+		function makeBullshitURL(subreddit, mode) {
+			var bullshitURL = "complete-bullshit.html";
+			
+			if (subreddit) {
+				bullshitURL += "?subreddit=" + subreddit;
+			}
+			
+			if (mode) {
+				bullshitURL += "?mode=" + mode;
+			}
+			
+			return bullshitURL;
+		}
+		
+		function makeRedditURL(subreddit, mode) {
+			var redditURL = "https://www.reddit.com";
+			
+			if (subreddit) {
+				redditURL += "/r/" + subreddit;
+			}
+			
+			if (mode) {
+				redditURL += "/"+mode;
+			}
+			
+			redditURL += "/";
+			
+			return redditURL;
+		}
+		
+		// get a new random color
+		function newRandomColor() {
+			return "#"+(Math.floor(Math.random() * Math.pow(16, 6))).toString(16);
+		}
+		
+		// interleave an array so that the posts at the start of the array end up
+		// in the middle, and the posts at the end end up at both edges.
+		function interleave(list) {
+			var temp1 = [];
+			for (var i = 0; i < list.length; i += 2) {
+				temp1.push(list[i]);
+			}
+			
+			var temp2 = [];
+			for (var i = 1; i < list.length; i += 2) {
+				temp2.push(list[i]);
+			}
+			
+			temp2 = temp2.reverse();
+			temp2 = temp2.concat(temp1);
+			
+			return temp2;
+		}
+		
+		// give reddit post data, generate an array of widths so that each post's width
+		// is porportional to its index in the array. also randomize it slightly.
+		// ensure that the total widths add up to the specified "totalWidth"
+		function randomizeWidths(data, totalWidth) {
+			var count = data.children.length;
+		
+			var widths = [];
+			var sum = 0;
+			for (var i = 0; i<count; i++) {
+				//var width = Math.random();
+				var width = i;
+				if (i > count/2) {
+					width = count - i;
+				}
+				//width += 1;
+				
+				width *= 0.925 + 0.15 * Math.random();
+				width += 0.5 - 1.0 * Math.random();
+				
+				sum += width;
+				widths.push(width);
+			}
+			
+			var multiplier = totalWidth / sum;
+			sum = 0;
+			for (var i = 0; i<count; i++) {
+				widths[i] *= multiplier;
+				widths[i] = Math.round(widths[i]);
+				if (widths[i] < 1) widths[i] = 1;
+				sum += widths[i];
+			}
+			
+			var difference = totalWidth - sum;
+			
+			widths[Math.floor(data.children.length/2)] += difference;
+			
+			return widths;
+		}
+		
+		function extractParameters(url) {
+			pList = url.split("?");
+			pList.shift(); // get rid of the first element, the url itself
+			
+			var parameters = {};
+			for (var i = 0; i < pList.length; i++) {
+				var parameter = pList[i];
+				var eList = parameter.split("=");
+				if (eList.length == 2) {
+					parameters[eList[0]] = eList[1];
+				}
+			}
+			
+			return parameters;
+		}
+	</script>
+	
+</html>

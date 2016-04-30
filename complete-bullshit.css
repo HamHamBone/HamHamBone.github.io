@@ -1,0 +1,97 @@
+body {
+	font-family:"Century Gothic", "Arial", sans-serif;
+	font-size:14pt;
+	color:#FCFF00;
+	background-color:#444
+}
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+#logo {
+	margin-top:8px;
+	margin-left:24px;
+	display:inline-block;
+}
+
+#title {
+	display:block;
+	float:right;
+	padding-right:8px;
+}
+
+#main-title {
+	font-size:56pt;
+	font-weight:bold;
+	letter-spacing:-0.1em;
+	/*height:1em;*/
+	margin-top:-12px;
+	margin-bottom:-16px;
+	margin-right:16px;
+}
+
+#title-row {
+	font-size:16pt;
+	letter-spacing:0.5em;
+	height:30px;
+	margin-bottom:5px;
+}
+
+#secondary-title {
+	padding-left:5px;
+}
+
+#version-number {
+	float:right;
+}
+
+#navigation {
+	clear:both;
+	text-align:center;
+	color:#3800E0;
+	background-color:#FCFF00;
+}
+
+#seperator {
+	clear:both;
+	width:100%;
+	height:4px;
+	background-color:#FCFF00;
+}
+
+#center {
+	overflow:hidden;
+	width: 800px;
+	/*height:700px;*/
+	border: 4px solid black;
+	border-radius: 32px;
+	margin: 50px auto;
+	background-color:#3800E0;
+}
+
+#bs-container {
+	height:500px;
+}
+
+.bs-cell {
+	overflow: hidden;
+	word-wrap: break-word;
+	height: 500px;
+	vertical-align: text-top;
+	display:inline-block;
+	float:left;
+}
+
+.bs-data {
+	font-size:10pt;
+	font-weight:bold;
+}
+
+.bs-data, .bs-title {
+	width:100%;
+	overflow: hidden;
+	display:inline-block;
+	word-wrap: break-word;
+}
