@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Fantasy Artifact Generator</title>
+	<link rel="stylesheet" href="generator.css">
+</head>
+
+<body>
+	<div class="wrapper">
+		<h1>Fantasy Artifact Generator</h1>
+		<p>
+			<p id="output">...loading data...</p>
+		</p>
+		<button id="button-reroll">Generate more!</button>
+			<select id="select-count">
+				<option value="1">×1</option>
+				<option value="4">×4</option>
+				<option value="6" selected>×6</option>
+				<option value="8">×8</option>
+				<option value="10">×10</option>
+				<option value="12">×12</option>
+				<option value="20">×20</option>
+				<option value="100">×100</option>
+			</select>
+		<p class="attrib">
+			Generator and wordlists derived from 
+			<a href="https://github.com/anonymousAwesome/Randomly-generated-Magic-Items">
+				anonymousAwesome's Python script
+			</a>
+		</p>
+	</div>
+</body>
+
+<script type="text/javascript" src="genutil.js"></script>
+
+<script type="text/javascript">
+
+	var outputElement = document.getElementById("output");
+	var selectCountElement = document.getElementById("select-count");
+
+	var data = {};
+	data.items = "artifact-items.txt"
+	data.nouns = "artifact-nouns.txt"
+	data.adjectives = "artifact-adjectives.txt"
+	data.titles = "artifact-titles.txt"
+
+	var patterns = [
+		"The {items} of the {titles}",
+		"The {titles}'s {items}",
+		"The {adjectives} {items}",
+		"The {items} of {nouns}",
+		"The {adjectives} {items} of {nouns}",
+		"The {adjectives} {items} of the {titles}"
+	];
+	
+	GenUtil.loadTextFiles(data, onLoad);
+
+	function onLoad(loadedData) {
+		data = loadedData;
+	
+		generate();
+
+		document.getElementById("button-reroll")
+			.addEventListener("click", generate);
+	}
+
+	function generate() {
+		outputElement.innerHTML = "";
+		var count = selectCountElement.value;
+		for (var i = 0; i < count; i++) {
+			var pattern = GenUtil.pickRandom(patterns);
+			var result = GenUtil.generatePattern(pattern, data);
+			outputElement.innerHTML += "" + result + "<br>";
+		}
+	}
+
+</script>
+
+</html>

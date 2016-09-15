@@ -1,0 +1,138 @@
+Annihilation
+Blindness
+Bravery
+Burning
+Burrowing
+Conjuration
+Darkness
+Dawn
+Death
+Deception
+Defense
+Deflection
+Delerium
+Desire
+Despair
+Destruction
+Domination
+Doom
+Dragonslaying
+Dreaming
+Durability
+Dusk
+Evocation
+Fire
+Flame
+Freezing
+Fury
+Glory
+Growth
+Healing
+Heroism
+Hope
+Horror
+Ice
+Illusion
+Impact
+Imprisonment
+Incineration
+Insanity
+Invulnerability
+Invisibility
+Justice
+Life
+Light
+Lightlessness
+Lightning
+Love
+Madness
+Malice
+Mercy
+Midnight
+Obedience
+Peace
+Petrification
+Piercing
+Planeswalking
+Prophecy
+Rage
+Resurrection
+Retribution
+Seeking
+Shadow
+Shadowbinding
+Shattering
+Shieldbreaking
+Shielding
+Shocking
+Siege
+Sightblinding
+Silence
+Smiting
+Solidity
+Soul
+Soulbinding
+Soulcutting
+Spellbreaking
+Starlight
+Stealth
+Stonecutting
+Striking
+Sundering
+the Angel
+the Banshee
+the Centaur
+the Demon
+the Desert
+the Dragon
+the Dwarf
+the Elf
+the Elements
+the Fairie
+the Gargoyle
+the Genie
+the Ghost
+the Ghoul
+the Giant
+the Gnome
+the Goblin
+the God
+the Gremlin
+the Gryphon
+the Homunculus
+the Lich
+the Mermaid
+the Monster
+the Ogre
+the Orc
+the Titan
+the Troll
+the Vampire
+the Werebeast
+the Werewolf
+the Wight
+Thought
+Townsaving
+Treachery
+True Sight
+Twilight
+Valor
+Vengeance
+Void
+Warding
+Wayfinding
+Weightlessness
+Wind
+Winter
+Wisdom
+Woundhealing
+Thieving
+Law
+Chaos
+Good
+Evil
+Knowledge
+Intellect
+Strength
+Agility
+Destiny

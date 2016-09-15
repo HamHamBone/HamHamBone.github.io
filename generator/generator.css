@@ -1,0 +1,31 @@
+body {
+	font-family: "Segoe UI", Corbel, "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", "Bitstream Vera Sans", "Liberation Sans", Verdana, "Verdana Ref", sans-serif;
+	font-size:16px;
+	color:#222;
+}
+
+.attrib {
+	font-size:12px;
+}
+
+br {
+	margin:3px 0px;
+}
+
+h1 {
+	width:100%;
+	font-size:24px;
+	text-align:center;
+}
+
+.wrapper {
+	max-width:400px;
+	
+	margin:0 auto;
+}
+
+@media (min-width: 480px) {
+	.wrapper {
+		padding-top:20px;
+	}
+}
