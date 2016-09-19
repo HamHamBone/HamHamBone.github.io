@@ -1,0 +1,46 @@
+body {
+	font-family: "Segoe UI", Corbel, "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", "Bitstream Vera Sans", "Liberation Sans", Verdana, "Verdana Ref", sans-serif;
+	font-size:16px;
+	color:#222;
+	background-color:#BBB8F1
+}
+
+p {
+	margin-top:8px;
+	margin-bottom:8px;
+	padding-left: 20px;
+}
+
+.attrib {
+	font-size:12px;
+}
+
+h1 {
+	font-size:24px;
+	margin-top:16px;
+	margin-bottom:8px;
+}
+
+h2 {
+	width:100%;
+	font-size:36px;
+	text-align:center;
+	margin-top:16px;
+	margin-bottom:16px;
+}
+
+.wrapper {
+	max-width:600px;
+	
+	padding-top:10px;
+	padding-left:30px;
+	padding-right:30px;
+	padding-bottom:30px;
+	
+	box-shadow:2px 2px 6px black;
+	border-radius:20px;
+	
+	background-color:#FFF;
+	margin:0 auto;
+	margin-top:20px;
+}
