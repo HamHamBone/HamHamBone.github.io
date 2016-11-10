@@ -1,7 +1,8 @@
 body {
-	font-family: "Segoe UI", Corbel, "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", "Bitstream Vera Sans", "Liberation Sans", Verdana, "Verdana Ref", sans-serif;
+	font-family: "Segoa UI Light", Corbel, "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", "Bitstream Vera Sans", "Liberation Sans", Verdana, "Verdana Ref", sans-serif;
 	font-size:16px;
-	color:#222;
+	background-color:rgb(250,250,250);
+	color:#333;
 }
 
 .attrib {
