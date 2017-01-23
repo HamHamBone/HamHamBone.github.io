@@ -151,3 +151,10 @@ Drunken
 World
 Hanging
 Hungering
+Foul
+Damned
+Cracked
+Demented
+Chaotic
+Damp
+Stygian

@@ -94,6 +94,10 @@ GenUtil.pluralize = function(string) {
 		return string + "es";
 	} else if (string.slice(-1) == "y" && !GenUtil._isVowel(string.slice(-2,-2))) {
 		return string.slice(0, -1) + "ies";
+	} else if (string.slice(-2) == "lf") {
+		return string.slice(0, -2) + "lves";
+	} else if (string.slice(-2) == "rf") {
+		return string.slice(0, -2) + "rves";
 	} else {
 		return string + "s";
 	}
