@@ -13,23 +13,37 @@
 	<div class="wrapper">
 		<h2>Empire Erf Battle Calculator</h1>
 		<p>
-			Digging Combat (stack A):
+			Side
+			<select id="input-side">
+				<option value="Skipper" selected>Skipper</option>
+				<option value="All Lies">All Lies</option>
+				<option value="Sunburn">Sunburn</option>
+				<option value="Valeria">Valeria</option>
+				<option value="Rose">Rose</option>
+				<option value="Night">Night</option>
+			</select>
+		</p>
+	
+		<p>
+			Digging Combat:
 			<input type="number" value="0" id="input-digging"></input>
 		</p>
 		<p>
-			Non-Digging Combat (stack A):
+			Normal Combat:
 			<input type="number" value="0" id="input-combat"></input>
 		</p>
 		<p>
-			City Defense (stack B):
-			<input type="number" value="0" id="input-defense"></input>
+			Enemy City Defense:
+			<input type="number" value="0" id="input-city-defense"></input>
 		</p>
-		<p> Unit List (stack B): </p>
+		<p>Enemy Unit List:</p>
 		<p><textarea style="resize:both" id="input-unit"></textarea></p>
 		<p>
-			<button id="calculate-button">Calculate!</button>
 			<button id="test-button">Test!</button>
+			<button id="calculate-button">Calculate!</button>
+			<button id="clear-button">Clear!</button>
 		</p>
+	
 		<h1>Results</h1>
 		
 		<p id="output">...</p>
@@ -38,35 +52,51 @@
 	</div>
 </body>
 
-<script type="text/javascript" src="genutil.js"></script>
+<script type="text/javascript" src="url-param.js"></script>
 
 <script type="text/javascript">
-	
+	var sideInputElement = document.getElementById("input-side");
+	var diggingCombatInputElement = document.getElementById("input-digging");
+	var normalCombatInputElement = document.getElementById("input-combat");
+	var cityDefenseInputElement = document.getElementById("input-city-defense");
+	var unitInputElement = document.getElementById("input-unit");
+
+	loadParameters();
+
 	document.getElementById("test-button").addEventListener("click", function(e) {
 		outputElement.innerHTML = "";
 		
-		var diggingAttackCount = getInputValueNumber(document.getElementById("input-digging"));
-		var attackCount = getInputValueNumber(document.getElementById("input-combat"));
-		var cityDefense = getInputValueNumber(document.getElementById("input-defense"));
+		var sideName = sideInputElement.value;
+		var diggingCombat = getInputValueNumber(diggingCombatInputElement);
+		var normalCombat = getInputValueNumber(normalCombatInputElement);
+		var cityDefense = getInputValueNumber(cityDefenseInputElement);
 		
-		var units = parseUnits(document.getElementById("input-unit").value);
+		var units = parseUnits(unitInputElement.value);
 		
-		outputLog("<b>digging combat:</b> " + diggingAttackCount + "<br>");
-		outputLog("<b>non-digging combat:</b> " + attackCount + "<br>");
-		outputLog("<b>city  defense:</b> "+cityDefense + "<br>")
+		outputLog("<b>side name:</b> " + sideName + "<br>");
+		outputLog("<b>digging combat:</b> " + diggingCombat + "<br>");
+		outputLog("<b>normal combat:</b> " + normalCombat + "<br>");
+		outputLog("<b>city  defense:</b> "+ cityDefense + "<br>")
 		
 		outputLog("<br>");
+		
+		// -------------------------------------------------------------------------
+		
+		outputLog("<b>URL</b><br>");
+		outputLog("[url="+getURL()+"]coords ("+sideName+")[/url]" + "<br>");
+		
+		// -------------------------------------------------------------------------
 		
 		outputLog("<b>UNIT COUNTS</b> <br>")
 
 		var unitCounts = new TypeCount();
-		for (var unit of units) {
+		units.forEach(function(unit) {
 			unitCounts.add(unit.name, 1);
-		}
-	
-		for (var unitName of unitCounts.getTypes()) {
+		});
+		
+		unitCounts.getTypes().forEach(function(unitName) {
 			outputLog(unitName + " x " + unitCounts.getCount(unitName) + "<br>");
-		}		
+		});
 		
 		outputLog("<br>");
 		
@@ -79,46 +109,77 @@
 	document.getElementById("calculate-button").addEventListener("click", function(e) {
 		outputElement.innerHTML = "";
 	
-		var diggingAttackCount = getInputValueNumber(document.getElementById("input-digging"));
-		var attackCount = getInputValueNumber(document.getElementById("input-combat"));
-		
-		var cityDefense = getInputValueNumber(document.getElementById("input-defense"));
+		var sideName = sideInputElement.value;
+		var diggingCombat = getInputValueNumber(diggingCombatInputElement);
+		var normalCombat = getInputValueNumber(normalCombatInputElement);
+		var cityDefense = getInputValueNumber(cityDefenseInputElement);
+		var units = parseUnits(unitInputElement.value);
 		
 		// -------------------------------------------------------------------------
-		
-		var units = parseUnits(document.getElementById("input-unit").value);
-				
+						
 		var normalUnits = units.filter(function(unit) { return !unit.isLeader; })
 		var leadershipUnits = units.filter(function(unit) { return unit.isLeader; })
 		
 		// -------------------------------------------------------------------------
 		
 		var unitCounts = new TypeCount();
-		for (var unit of units) {
+		units.forEach(function(unit) {
 			unitCounts.add(unit.name, 1);
-		}
-	
-		for (var unitName of unitCounts.getTypes()) {
+		});
+		
+		unitCounts.getTypes().forEach(function(unitName) {
 			outputLog(unitName + " x " + unitCounts.getCount(unitName) + "<br>");
-		}
+		});
 		
 		// -------------------------------------------------------------------------
 		
-		outputLog("<b>DIGGING ATTACKS</b> <br>")
-		
-		var diggingHitCount = getHits(diggingAttackCount);
-		getCroaks(diggingHitCount, 0, normalUnits, leadershipUnits);
+		if (diggingCombat > 0) {
+			outputLog("<b>DIGGING ATTACKS</b> <br>")
+			
+			var diggingHitCount = getHits(diggingCombat, sideName);
+			getCroaks(diggingHitCount, 0, normalUnits, leadershipUnits, sideName);
+		}
 		
 		outputLog("<b>NORMAL ATTACKS</b> <br>")
 		
-		var hitCount = getHits(attackCount);
-		getCroaks(hitCount, cityDefense, normalUnits, leadershipUnits);
+		var hitCount = getHits(normalCombat, sideName);
+		getCroaks(hitCount, cityDefense, normalUnits, leadershipUnits, sideName);
 		
 		outputLog("<b>UNIT LOSS MAP</b> <br>")
 		
 		var groundUnits = units.filter(function(unit) { return unit.mountLevel == 0; });
 		unitOutput(groundUnits);
 	});
+	
+	document.getElementById("clear-button").addEventListener("click", function(e) {
+			diggingCombatInputElement.value = "0";
+			normalCombatInputElement.value = "0";
+			cityDefenseInputElement.value = "0";
+			unitInputElement.value = "";
+	});
+	
+function loadParameters() {
+	var parameters = URLParam.decode();
+	console.log(parameters);
+	
+	if (parameters.sideName != undefined) { sideInputElement.value = parameters.sideName; }
+	if (parameters.diggingCombat != undefined) { diggingCombatInputElement.value = parameters.diggingCombat; }
+	if (parameters.normalCombat != undefined) { normalCombatInputElement.value = parameters.normalCombat; }
+	if (parameters.cityDefense != undefined) { cityDefenseInputElement.value = parameters.cityDefense; }
+	if (parameters.unitList != undefined) { unitInputElement.value = parameters.unitList; }
+}
+
+function getURL() {
+	var url = URLParam.encode({
+		sideName:sideInputElement.value,
+		diggingCombat:diggingCombatInputElement.value,
+		normalCombat:normalCombatInputElement.value,
+		cityDefense:cityDefenseInputElement.value,
+		unitList:unitInputElement.value
+	});
+
+	return url;
+}
 	
 function getInputValueNumber(element) {
 	var result = parseInt(element.value, 10);
@@ -129,7 +190,7 @@ function getInputValueNumber(element) {
 }
 	
 function unitOutput(units) {
-	for (var unit of units) {
+	units.forEach(function(unit) {
 		for (var i = 0; i < unit.mountLevel; i++) {
 			outputLog("-- ");
 		}
@@ -137,7 +198,7 @@ function unitOutput(units) {
 		outputLog("<span style='color:"+color+"'>" + unit.name + " " + unit.hits + "</span>");
 		outputLog("<br>");
 		unitOutput(unit.riders);
-	}
+	});
 }
 	
 function parseUnits(string) {
@@ -191,23 +252,27 @@ function isBlankLine(string) {
 // -----------------------------------
 
 function TypeCount() {
-	this.counts = new Map();
+	this.counts = {}
 }
 
 TypeCount.prototype.add = function(type, count) {
-	if (!this.counts.has(type)) {
-		this.counts.set(type, 0);
+	if (this.counts[type] === undefined) {
+		this.counts[type] = 0;
 	}
 	
-	this.counts.set(type, this.counts.get(type) + count);
+	this.counts[type] += count;
 }
 
 TypeCount.prototype.getTypes = function() {
-	return this.counts.keys();
+	return Object.keys(this.counts);
 }
 
 TypeCount.prototype.getCount = function(type) {
-	return this.counts.get(type);
+	if (this.counts[type] === undefined) {
+		return 0;
+	}
+	
+	return this.counts[type];
 }
 
 // ------------------------------------
@@ -286,7 +351,7 @@ function parseUnitString(string) {
 	return unit;
 }
 
-function getCroaks(hitCount, cityDefense, units, leadershipUnits) {
+function getCroaks(hitCount, cityDefense, units, leadershipUnits, sideName) {
 	var hitLog = "";
 	var croakCount = {};
 	
@@ -328,17 +393,23 @@ function getCroaks(hitCount, cityDefense, units, leadershipUnits) {
 
 	var croakLog = "";
 	console.log(croakCount);
-	for (let unitName of Object.keys(croakCount)) {
+	var croakedUnitNames = Object.keys(croakCount);
+	for (var i = 0; i < croakedUnitNames.length; i++) {
+		var unitName = croakedUnitNames[i];
 		console.log(unitName);
-		croakLog += croakCount[unitName] + " " + unitName + ", ";
+		croakLog += croakCount[unitName] + " " + unitName;
+		if (i < croakedUnitNames.length - 1) {
+			croakLog += ", "
+		}
 	}
+	if (croakedUnitNames.length == 0) { croakLog = "nothing"; }
 	
-	outputLog("<p> Stack A croaks " + croakLog + "! " + "[size=75](rolls = " + hitLog + ")[/size]<p>");
+	outputLog("<p>" + sideName + " croaks " + croakLog + "! " + "[size=75](rolls = " + hitLog + ")[/size]<p>");
 	
 	return croakLog;
 }
 
-function getHits(attackCount) {
+function getHits(attackCount, sideName) {
 	var hitCount = 0;
 	var rollLog = ""
 	for (var i = 0; i < attackCount; i++) {
@@ -352,7 +423,7 @@ function getHits(attackCount) {
 		rollLog += rollString + (i < attackCount-1 ? ", " : "");
 	}
 	
-	outputLog("<p>Stack A attempts " + attackCount + " attacks and deals " + hitCount + " hits! " + "[size=75](rolls = " + rollLog + ")[/size]</p>")
+	outputLog("<p>"+ sideName +" deals " + hitCount + " hits! " + "[size=75](rolls = " + rollLog + ")[/size]</p>")
 	
 	return hitCount;
 }

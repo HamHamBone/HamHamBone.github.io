@@ -11,6 +11,15 @@ p {
 	padding-left: 20px;
 }
 
+textarea {
+	height: 150px;
+	width: 300px
+}
+
+input {
+	width: 175px;
+}
+
 .attrib {
 	font-size:12px;
 }
