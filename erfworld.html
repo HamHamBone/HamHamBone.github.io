@@ -195,7 +195,7 @@ function unitOutput(units) {
 			outputLog("-- ");
 		}
 		var color = unit.isCroaked ? "#B11" : "#000";
-		outputLog("<span style='color:"+color+"'>" + unit.name + " " + unit.hits + "</span>");
+		outputLog("<span style='color:"+color+"'>" + unit.name + " " + unit.hits + (unit.isCroaked ? "***" : "") + "</span>");
 		outputLog("<br>");
 		unitOutput(unit.riders);
 	});
