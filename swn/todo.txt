@@ -1,0 +1,41 @@
+Edit sector name
+Delete Planets
+
+------------------------------------
+
+Add, Delete, Change Order
+	Planets
+	Points of Interest
+	Bodies
+
+Add and Delete Systems
+
+Edit Tables (include world table)
+Add and Delete to Tables
+
+Political Groups Table
+People Table
+
+Remove Tabs when a table is empty
+
+Sector Settings
+	Generator Choice
+	map size / number of stars
+	others?
+
+Starlanes
+	add
+	edit
+	delete
+
+Wait til things are loaded to begin.
+	
+Sector Map Mouse Hover
+Info popups
+Add "Notes" and "Public Notes" entries to all objects
+Export Sector Map (set size)
+CSS style chooser
+Add/remove edit mode for player
+Comboboxes
+
+Sector Viewer Download (minify? zip file?) (local view)

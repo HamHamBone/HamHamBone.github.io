@@ -38,6 +38,7 @@ Archer
 Assassin
 Swordsman
 Spellweaver
+Spell
 Monk
 Paladin
 Blood Elf
@@ -116,3 +117,5 @@ Gnome
 Dwarf
 Reveler
 Foundling
+Automaton
+Devourer

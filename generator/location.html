@@ -12,9 +12,7 @@
 <body>
 	<div class="wrapper">
 		<h1>Adventure Location Generator</h1>
-		<p>
-			<p id="output">...loading data...</p>
-		</p>
+		<p id="output">...loading data...</p>
 		<button id="button-reroll">Generate more!</button>
 		<select id="select-count">
 			<option value="1">×1</option>
@@ -26,6 +24,9 @@
 			<option value="20">×20</option>
 			<option value="100">×100</option>
 		</select>
+		<form id="location-type">
+			<input type="radio" name="location-type" value="dungeons" selected>Dungeons and Landmarks</input><br><input type="radio" name="location-type" value="regions">Regions</input>
+		</form>
 		<p class="attrib">
 			Generator and wordlists derived from 
 			<a href="https://github.com/anonymousAwesome/Randomly-generated-Magic-Items">
@@ -35,20 +36,19 @@
 	</div>
 </body>
 
-</body>
-
 <script type="text/javascript" src="genutil.js"></script>
 
 <script type="text/javascript">
-
 	var outputElement = document.getElementById("output");
 	var selectCountElement = document.getElementById("select-count");
+	var locationTypeElement = document.getElementById("location-type");
 	
 	var data = {};
-	data.locations = "location-locations.txt";
+	data.dungeons = "location-locations.txt";
 	data.nouns = "location-nouns.txt";
 	data.adjectives = "location-adjectives.txt";
 	data.titles = "location-titles.txt";
+	data.regions = "location-geography.txt";
 	
 	var patterns = [
 		"The {titles}'s {locations}",
@@ -66,6 +66,8 @@
 	function onLoad(loadedData) {
 		data = loadedData;
 		
+		data.dungeonsAndRegions = data.regions.concat(data.dungeons);
+		
 		generate();
 
 		document.getElementById("button-reroll")
@@ -73,6 +75,16 @@
 	};
 	
 	function generate() {
+		var locationType = locationTypeElement.elements['location-type'].value
+		
+		data.locations = data.dungeons;
+		
+		if (locationType == 'dungeons') {
+			data.locations = data.dungeons;
+		} else if (locationType == 'regions') {
+			data.locations = data.regions;
+		}
+	
 		outputElement.innerHTML = "";
 		var count = selectCountElement.value;
 		for (var i = 0; i < count; i++) {

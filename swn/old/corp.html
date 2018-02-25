@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>megacorp!</title>
+		
+		<link rel="stylesheet" href="planet.css">
+	</head>
+	
+	<body>
+		<h1>Corporation Generator</h1>
+		
+		<h2 id='planet-name'></h2>
+		<table id='planet-data'></table>
+		<h2 id='system-name'></h2>
+		<table id='system-data'></table>
+	</body>
+	
+	<script type="text/javascript", src="genutil.js"></script>
+	<script type="text/javascript", src="namegen.js"></script>
+	<script type="text/javascript", src="buzzword_generator.js"></script>
+	<script type="text/javascript", src="swnnamegen.js"></script>
+	
+	<script type="text/javascript">
+		var names = [
+			"Ad Astra",
+			"Colonial",
+			"Compass",
+			"Daybreak",
+			"Frontier",
+			"Guo Yin",
+			"Highbeam",
+			"Imani",
+			"Magnus",
+			"Meteor",
+			"Neogen",
+			"New Dawn",
+			"Omnitech",
+			"Outertech",
+			"Overwatch",
+			"Panstellar",
+			"Shogun",
+			"Silverlight",
+			"Spiker",
+			"Stella",
+			"Striker",
+			"Sunbeam",
+			"Terra Prime",
+			"Wayfarer",
+			"West Wind",
+			"Nano",
+			"Spectral",
+			"Planetary",
+			"Universal",
+			"General",
+			"United",
+			"Spinward",
+			"Federal",
+			"Imperial",
+			"Dimensional",
+			"Galactic",
+			"Viking",
+			"Synergy",
+			"Nebula",
+			"White Dwarf",
+			"Orbital",
+			"Sunside",
+			"Dynamic",
+			"Starfire",
+			"Captain's Choice",
+			"Ultraviolet",
+			"Mandate",
+			"SubTek",
+			"Epic",
+			"Garnet",
+			"Hornet",
+			"Crimson",
+			"Cyclotron",
+			"Fourth Wave",
+			"Factorial",
+			"Zero-Point",
+			"Catylist",
+			"Crysalis",
+			"Zeus",
+			"Polytron-6",
+			"Royal",
+			"Meson",
+			"Zero-G",
+			"Tactical",
+			"Splinesoft",
+			"Parhelion"
+		];
+		
+		var poeticWords = [
+			"Amorphous",
+			"Beguile",
+			"Caprice",
+			"Cascade",
+			"Cashmere",
+			"Chrysalis",
+			"Cinnamon",
+			"Coalesce",
+			"Crepuscular",
+			"Crystalline",
+			"Diaphanous",
+			"Dulcet",
+			"Ebullient",
+			"Effervescent",
+			"Elision",
+			"Enchanted",
+			"Encompass",
+			"Enrapture",
+			"Ephemeral",
+			"Epiphany",
+			"Epitome",
+			"Ethereal",
+			"Etiquette",
+			"Evanescent",
+			"Evocative",
+			"Exuberant",
+			"Felicity",
+			"Filament",
+			"Halcyon",
+			"Idyllic",
+			"Incorporeal",
+			"Incandescent",
+			"Ineffable",
+			"Inexorable",
+			"Insouciance",
+			"Iridescent",
+			"Languid",
+			"Lassitude",
+			"Lilt",
+			"Lithe",
+			"Lullaby",
+			"Luminescence",
+			"Mellifluous",
+			"Mist",
+			"Murmur",
+			"Myriad",
+			"Nebulous",
+			"Opulent",
+			"Penumbra",
+			"Plethora",
+			"Quiescent",
+			"Quintessential",
+			"Radiant",
+			"Redolent",
+			"Resonant",
+			"Resplendent",
+			"Rhapsodic",
+			"Sapphire",
+			"Scintilla",
+			"Serendipitous",
+			"Serene",
+			"Somnolent",
+			"Sonorous",
+			"Spherical",
+			"Sublime",
+			"Succulent",
+			"Suffuse",
+			"Susurration",
+			"Symphony",
+			"Talisman",
+			"Tessellated",
+			"Tranquility",
+			"Vestige",
+			"Zenith"
+		];
+		
+		var titles = [
+			"Alliance",
+			"Association",
+			"Band",
+			"Circle",
+			"Clan",
+			"Combine",
+			"Company",
+			"Cooperative",
+			"Corporation",
+			"Enterprises",
+			"Faction",
+			"Group",
+			"Megacorp",
+			"Multistellar",
+			"Organization",
+			"Outfit",
+			"Pact",
+			"Partnership",
+			"Ring",
+			"Society",
+			"Sodality",
+			"Syndicate",
+			"Union",
+			"Unity",
+			"Zaibatsu",
+			"Systems",
+			"Network",
+			"Services",
+			"Trading Company",
+			"Acquisitions",
+			"Operations",
+			"Laboratories",
+			"Scientific",
+			"Industries",
+			"Authority",
+			"Incorporated",
+			"Limited",
+			"Corp.",
+			"Holdings",
+			"Institute",
+			"Foundation",
+			"Guild"
+		];
+
+		/*
+		var markets = [
+			"Aeronautics",
+			"Agriculture",
+			"Art",
+			"Assasination",
+			"Asteroid Mining",
+			"Astrotech",
+			"Biotech",
+			"Bootlegging",
+			"Computer Hardware",
+			"Construction",
+			"Cybernetics",
+			"Electronics",
+			"Engineering",
+			"Energy Weapons",
+			"Entertainment",
+			"Espionage",
+			"Exploration",
+			"Fishing",
+			"Fuel Refining",
+			"Gambling",
+			"Gemstones",
+			"Grav Vehicles",
+			"Heavy Weapons",
+			"Ideology",
+			"Illicit Drugs",
+			"Journalism",
+			"Law Enforcement",
+			"Liquor",
+			"Livestock",
+			"Maltech",
+			"Mercenary Work",
+			"Metallurgy",
+			"Pharmaceuticals",
+			"Piracy",
+			"Planetary Mining",
+			"Plastics",
+			"Pretech",
+			"Prisons",
+			"Programming",
+			"Projectile Guns",
+			"Prostitution",
+			"Psionics",
+			"Psitech",
+			"Robotics",
+			"Security",
+			"Shipyards",
+			"Snacks",
+			"Telecoms",
+			"Transport",
+			"Xenotech"
+		];
+		*/
+		
+		var markets = [
+			{name:"Aeronautics", titles:["Aeronautics", "Airflight", "Atmospheric", "Navigation"], names:["wing", "blue", "silver", "wind", "prop", "jet"]},
+			{name:"Agriculture", titles:["Agriculture", "Farms", "Terraforming", "Cereal", "grains"], names:["agri", "food", "fresh", "grain", "green", "sweet", "corn", "scythe", "field"]},
+			{name:"Art", titles:["Art", "Fashion", "Auctions", "Restoration"], names:["elite", "cool", ""]},
+			{name:"Assasination", titles:["Assasinations", "Security", "Operations"], names:["special", "covert", "shadow", "dark", "ninja"]},
+			{name:"Asteroid Mining", titles:["Asteroids", "Zero-G", "Mining"], names:[]},
+			{name:"Astrotech", titles:["Astrotech", "Space Systems", "Propulsion", "Driveyards", "Mechanics", "Atomics"], names:[]},
+			{name:"Biotech", titles:["Biotech", "Genetics", "Medicine", "Laboratories", "Wetware", "Biologics", "Evolutionary"], names:[]},
+			{name:"Bootlegging", titles:["Runners", "Shipping", "Exchange", "Transporation"], names:[]},
+			{name:"Computer Hardware", titles:["Computers", "Logic", "Machines", "Business Machines", "Terminals"], names:[]},
+			{name:"Construction", titles:["Construction", "Habitations", "Terrascaping", "Stations"], names:[]},
+			{name:"Cybernetics", titles:["Cybernetics", "Prosthetics", "Augments", "Atomics"], names:[]},
+			{name:"Electronics", titles:["Electric", "Electronics", "Circuits", "Controls"], names:[]},
+			{name:"Engineering", titles:["Engineering", "Industrial", "Technical", "Atomics"], names:[]},
+			{name:"Energy Weapons", titles:["Energy", "Blasters", "Plasmonics", "Lasars", "Armaments", "Arms", "Weapons"], names:[]},
+			{name:"Entertainment", titles:["Entertainment", "Spaceball League", "Studios", "Media"], names:[]},
+			{name:"Espionage", titles:["Informants", "Espionage", "Agency", "Bureau"], names:[]},
+			{name:"Exploration", titles:["Company", "Exploration", "Surveying", "Trading Company", "Navigation", "Geographic"], names:[]},
+			{name:"Fishing", titles:["Fishing", "Fish", "Whaling", "Oceanics"], names:[]},
+			{name:"Fuel Refining", titles:["Refining", "Fuel", "Gas"], names:[]},
+			{name:"Gambling", titles:["Gambling", "Gaming", "Games", "Casino", "House"], names:[]},
+			{name:"Gemstones", titles:["Jewelers", "Jewelry", "Gems", "Appraisal"], names:[]},
+			{name:"Grav Vehicles", titles:["Gravitonics", "Gravtech", "Anti-Gravity", "Armored", "Motors"], names:[]},
+			{name:"Heavy Weapons", titles:["Weapons", "Heavy Weapons", "Heavy", "Armaments", "Emplacements"], names:[]},
+			{name:"Ideology", titles:["Ideology", "Spiritual", "Propaganda", "Memetics", "Psychometrics", "Advertising", "Synergistics", "Management"], names:[]},
+			{name:"Illicit Drugs", titles:["Drugs", "Genetics", "Medical", "Pharmaceuticals", "Pain Management", "Dealers", "Stimulants", "Gang", "Psychotropics"], names:[]},
+			{name:"Journalism", titles:["News", "News Network", "Investigational", "Insights", "Journal"], names:[]},
+			{name:"Law Enforcement", titles:["Enforcement", "Security", "Monitors", "Legal", "Collections", "Policing"], names:[]},
+			{name:"Liquor", titles:["Liquor", "Beer", "Distillary", "Wineries", "Alchohol", "Brewing"], names:[]},
+			{name:"Livestock", titles:["Terraforming", "Livestock", "Ranch", "Cattle", "Zoology", "Meats"], names:[]},
+			{name:"Maltech", titles:["Maltech", "Laboratories", "Nanotech", "Atomics", "Intelligence", "Genetics", "Memetics", "Scientific", "Technology"], names:[]},
+			{name:"Mercenary Work", titles:["Mecenaries", "Division", "Squadron", "Firepower", "Wing", "Military", "Killers", "Boys"], names:[]},
+			{name:"Metallurgy", titles:["Metals", "Industries", "Alloys", "Ferrous", "Metallurgy", "Chemicals"], names:[]},
+			{name:"Pharmaceuticals", titles:["Medical", "Genetics", "Pharmaceuticals", "Pillworks", "Chemicals"], names:[]},
+			{name:"Piracy", titles:["Crew", "Racketeering", "Pirates", "Starlines", "Collections", "Fleet", "Wing"], names:[]},
+			{name:"Planetary Mining", titles:["Mining", "Coreworks", "Planetary"], names:[]},
+			{name:"Plastics", titles:["Plastics", "Materials", "Chemical", "Polymers"], names:[]},
+			{name:"Pretech", titles:["Pretech", "Technology", "Metadimensional", "Mandate", "Recovery", "Scientific", "Laboratories"], names:[]},
+			{name:"Prisons", titles:["Prisons", "Lockup", "Jails", "Security", "Vaults", "Cryogenics", "Psychology"], names:[]},
+			{name:"Programming", titles:["Software", "Information", "Systems", "Intelligence", "Logic", "Interactive", "Digital"], names:[]},
+			{name:"Projectile Guns", titles:["projectiles", "Arms", "Armaments", "Mechanical"], names:[]},
+			{name:"Prostitution", titles:["Prostitution", "Sexwork", "Escorts"], names:[]},
+			{name:"Psionics", titles:["Psionics", "Metadimensional", "Academy", "Mindworks", "University", "Institute"], names:[]},
+			{name:"Psitech", titles:["Psitech", "Laboratories", "Mindtech", "Psionics"], names:[]},
+			{name:"Robotics", titles:["Robotics", "Mechanical", "Autonomous", "Drones", "Androids"], names:[]},
+			{name:"Security", titles:["Security", "Protection", "Gaurdians"], names:[]},
+			{name:"Shipyards", titles:["Shipyards", "Spaceyards", "Naval Yards", "Hullsworks", "Space Construction"], names:[]},
+			{name:"Snacks", titles:["Snacks", "Soda", "Cola", "Genetics", "Additives", "Flavors", "Chips", "Restraunts"], names:[]},
+			{name:"Telecoms", titles:["Telecoms", "Communications", "Couriers", "Information", "Network"], names:[]},
+			{name:"Transport", titles:["Transportation", "Postal Service", "Parcel Service", "Spacelines", "Network", "Exchange", "Express", "Starlines", "Shipping", "Logistics"], names:["fast", "express", "ship", "quick"]},
+			{name:"Xenotech", titles:["Xenotech", "Archeaology", "Excavations", "Technology", "Exchange"], names:[]},
+		];
+		
+		var ownerships = [
+			"family",
+			"family",
+			"founder(s)",
+			"founder(s)",
+			"single majority stockholder",
+			"single majority stockholder",
+			"publicly traded",
+			"publicly traded",
+			"publicly traded",
+			"publicly traded",
+			"consortium/cartel",
+			"consortium/cartel",
+			"state-owned",
+			"state-owned",
+			"subsidiary",
+			"subsidiary",
+			"worker-owned",
+			"cooperative"
+			];
+		
+		var marketFocuses = [
+			"General",
+			"Niche"
+		];
+		
+		var growthStrategies = [
+			"market discovery",
+			"racketeering",
+			"marketing",
+			"emerging market",
+			"cartel formation",
+			"undercutting",
+			"R&D",
+			"quality",
+			"market manipulation",
+			"rent-seeking",
+			"production investment",
+			"hostile takeovers",
+			"litigation",
+			"resource monopolization",
+			"shell/front"
+		];
+		
+		var valuations = [
+			"crashing",
+			"crashing",
+			"shrinking",
+			"shrinking",
+			"steady",
+			"steady",
+			"steady",
+			"growing",
+			"growing",
+			"booming",
+			"booming"
+		];
+		
+		var legends = GenUtil.loadTextFile("legends.txt");
+		
+		GenUtil.onAllFilesLoaded(function() {
+			var output = document.getElementById("planet-data");
+			
+			var corpCount = 30;
+			
+			for (var i = 0; i < corpCount; i++) {
+				var interestCount = pickRandom([1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,3,3,4])
+				var interests = [];
+				for (var j = 0; j < interestCount; j++) {
+					interests.push(pickRandom(markets));
+				}
+				
+				var title;
+				var titleRand= Math.random();
+				if (titleRand < 0.333) {
+					title = GenUtil.pickRandom(interests[0].titles);
+					if (Math.random() < 0.15) {
+						title += " " + pickRandom(titles);
+					}
+				} else {
+					title = pickRandom(titles);
+				}
+				
+				var name = ""
+				var nameCount = pickRandom([1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2]);
+				for (var j = 0; j < nameCount; j++) {
+					var nameRand = Math.random();
+					if (nameRand < 0.05) {
+						name += GenUtil.capitalize(GenUtil.pickRandom(legends));
+					} else if (nameRand < 0.1) {
+						name += NameGen.generate(1+Math.floor(Math.random() * 4));
+					} else if (nameRand < 0.3) {
+						name += GenUtil.pickRandom(poeticWords);
+					} else if (nameRand < 0.6) {
+						name += SWNNameGen.getName();
+					} else if (nameRand < 0.65) {
+						name += capitalize(BuzzwordGenerator.generate());
+					} else {
+						name += pickRandom(names);
+					}
+					if (j < nameCount-1) {
+						var breaks = [" ", " ", "-"];
+						name += GenUtil.pickRandom(breaks);
+					}
+				}
+				
+
+				
+				var interestsName = "";
+				for (var j = 0; j < interests.length; j++) {
+					interestsName += (j!=0?", ":"") + interests[j].name;
+				}
+				
+				name += " " + title;
+				appendRow(output, [name, interestsName, pickRandom(ownerships), pickRandom(growthStrategies), pickRandom2d6(valuations)]);
+			}
+			
+			function appendRow(element, values) {
+				var out = "";
+				
+				//console.log(values);
+				
+				out += "<tr>";
+				
+				for (var i = 0; i < values.length; i++) {
+					out += "<td>";
+					out += values[i];
+					out += "</td>";
+				}
+				
+				out += "</tr>";
+				
+				//console.log(out);
+				
+				element.innerHTML += out;
+			}
+			function pickRandom(array) {
+				return array[Math.floor(Math.random() * array.length)];
+			}
+			function pickRandom2d6(array) {
+				var random = Math.floor(6*Math.random()) + Math.floor(6*Math.random());
+				return array[random];
+			}
+			
+			function capitalize(string) {
+				return string[0].toUpperCase() + string.substr(1);
+			}
+		
+		})
+	</script>
+	
+</html>

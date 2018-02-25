@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>HexVG!</title>
+		
+		<link rel="stylesheet" href="planet.css">
+	</head>
+	
+	<body>
+		<h1 id="title">Stars Without Number Planet Generator</h1>
+		
+		<h2 id='system-name'></h2>
+		<table id='planet-data'></table>
+	</body>
+	
+	<script type="text/javascript", src="namegen.js"></script>
+	<script type="text/javascript", src="genutil.js"></script>
+	<script type="text/javascript">
+		var atmospheres = [
+			"corrosive",
+			"inert gas",
+			"airless or thin",
+			"breathable",
+			"breathable",
+			"breathable",
+			"breathable",
+			"breathable",
+			"thick",
+			"invasive",
+			"corrosive and invasive",
+		];
+		
+		var temperatures = [
+			"frozen",
+			"variable cold",
+			"cold",
+			"cold",
+			"temperate",
+			"temperate",
+			"temperate",
+			"warm",
+			"warm",
+			"variable warm",
+			"burning"
+		];
+		
+		var biospheres = [
+			"remnant",
+			"microbial",
+			"none native",
+			"none native",
+			"human-miscible",
+			"human-miscible",
+			"human-miscible",
+			"immiscible",
+			"immiscible",
+			"hybrid",
+			"engineered"
+		];
+		
+		var gravities = [
+			"zero",
+			"nil",
+			"low",
+			"low",
+			"earthlike",
+			"earthlike",
+			"earthlike",
+			"earthlike",
+			"earthlike",
+			"high",
+			"crushing"
+		];
+		
+		var populations = [
+			"failed colony",
+			"outpost",
+			"10K+",
+			"100K+",
+			"1M+",
+			"1M+",
+			"10M+",
+			"10M+",
+			"100M+",
+			"1B+",
+			"alien civ."
+		];
+		
+		var techlevels = [
+			"0",
+			"1",
+			"2",
+			"2",
+			"4",
+			"4",
+			"4",
+			"3",
+			"3",
+			"4+",
+			"5"
+		];
+		
+		var tags = [
+			'Abandoned Colony',
+			'Alien Ruins',
+			'Altered Humanity',
+			'Anarchists',
+			'Anthropomorphs',
+			'Area 51',
+			'Badlands World',
+			'Battleground',
+			'Beastmasters',
+			'Bubble Cities',
+			'Cheap Life',
+			'Civil War',
+			'Cold War',
+			'Colonized Population',
+			'Cultural Power',
+			'Cybercommunists',
+			'Cyborgs',
+			'Cyclical Doom',
+			'Desert World',
+			'Doomed World',
+			'Dying Race',
+			'Eugenic Cult',
+			'Exchange Consulate',
+			'Fallen Hegemon',
+			'Feral World',
+			'Flying Cities',
+			'Forbidden Tech',
+			'Former Warriors',
+			'Freak Geology',
+			'Freak Weather',
+			'Friendly Foe',
+			'Gold Rush',
+			'Great Work',
+			'Hatred',
+			'Heavy Industry',
+			'Heavy Mining',
+			'Hivemind',
+			'Holy War',
+			'Hostile Biosphere',
+			'Hostile Space',
+			'Immortals',
+			'Local Specialty',
+			'Local Tech',
+			'Major Spaceyard',
+			'Mandarinate',
+			'Mandate Base',
+			'Maneaters',
+			'Megacorps',
+			'Mercenaries',
+			'Minimal Contact',
+			'Misandry/Misogyny',
+			'Night World',
+			'Nomads',
+			'Oceanic World',
+			'Out of Contact',
+			'Outpost World',
+			'Perimeter Agency',
+			'Pilgrimage Site',
+			'Pleasure World',
+			'Police State',
+			'Post-Scarcity',
+			'Preceptor Archive',
+			'Pretech Cultists',
+			'Primitive Aliens',
+			'Prison Planet',
+			'Psionics Academy',
+			'Psionics Fear',
+			'Psionics Worship',
+			'Quarantined World',
+			'Radioactive World',
+			'Refugees',
+			'Regional Hegemon',
+			'Restrictive Laws',
+			'Revanchists',
+			'Revolutionaries',
+			'Rigid Culture',
+			'Rising Hegemon',
+			'Ritual Combat',
+			'Robots',
+			'Seagoing Cities',
+			'Sealed Menace',
+			'Secret Masters',
+			'Sectarians',
+			'Seismic Instability',
+			'Shackled World',
+			'Societal Despair',
+			'Sole Supplier',
+			'Taboo Treasure',
+			'Terraform Failure',
+			'Theocracy',
+			'Tomb World',
+			'Trade Hub',
+			'Tyranny',
+			'Unbraked AI',
+			'Urbanized Surface',
+			'Utopia',
+			'Warlords',
+			'Xenophiles',
+			'Xenophobes',
+			'Zombies'
+		];
+		
+		var starClasses = [
+			"Black Hole",
+			"blue supergiant",
+			"blue giant",
+			"brown dwarf",
+			"red dwarf",
+			"yellow dwarf",
+			"yellow dwarf",
+			"red giant",
+			"red supergiant",
+			"white dwarf",
+			"neutron star"
+		];
+		
+		var bodies = [
+			"construct",
+			"debris",
+			"asteroid/comet belt",
+			"methane giant",
+			"hydrogen giant",
+			"rocky planet",
+			"rocky planet",
+			"planetoid",
+			"planetoid",
+			"companion star",
+			"anomaly"
+		];
+		
+		var legends = GenUtil.loadTextFile("legends.txt");
+		var greekLetters = GenUtil.loadTextFile("greek-letters.txt");
+		
+		var planetCountArray = [
+			1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,3
+		];
+		
+		var starNames = GenUtil.loadTextFile("stars.txt");
+		var placeNames = GenUtil.loadTextFile("swnPlaceNames.txt");
+		
+		var outputElement = document.getElementById("planet-data");
+		appendRow(outputElement, ["COORDS", "SYSTEM", "NAME", "ATMOSPHERE", "TEMPERATURE", "BIOSPHERE", "GRAVITY", "POPULATION", "TECH LEVEL", "TAGS", ""]);
+		
+
+		var sectorName = GenUtil.pickRandom(legends) + " " + GenUtil.pickRandom(greekLetters);
+		sectorName = GenUtil.capitalize(sectorName);
+		document.getElementById("title").innerText = "Sector " + sectorName;
+		
+		var systemCount = Math.floor(Math.random() * 10) + 21;
+		
+		var totalPlanets = 0;
+		
+		//document.getElementById("system-name").innerHTML = systemName + " System (0"+locX+"0"+locY+")";
+
+		while (totalPlanets < systemCount) {
+		
+		var systemName = GenUtil.mashup(Math.random() < 0.5 ? GenUtil.pickRandom(starNames) : NameGen.generate(), GenUtil.pickRandom(starNames));
+			systemName = GenUtil.capitalize(systemName);
+			var locX = Math.floor(Math.random() * 8);
+			var locY = Math.floor(Math.random() * 10);
+			
+			var systemLocation = "0"+locX+"0"+locY;
+	
+			var planetCount = GenUtil.pickRandom(planetCountArray);
+			console.log(planetCount);
+	
+			for (var i = 0; i < planetCount; i++) {
+				totalPlanets++;
+			
+				var name = ""
+				if (Math.random() < 0.5) {
+					name = NameGen.simpleName();
+				} else {
+					if (Math.random() < 0.5) {
+						name = GenUtil.mashup(NameGen.simpleName(), GenUtil.pickRandom(placeNames));
+					} else {
+						name = GenUtil.mashup(GenUtil.pickRandom(placeNames), NameGen.simpleName());
+					}
+				}
+				name = GenUtil.capitalize(name);
+							
+				var atmosphere = pickRandom2d6(atmospheres);
+				var temperature = pickRandom2d6(temperatures);
+				var biosphere = pickRandom2d6(biospheres);
+				var gravity = pickRandom2d6(gravities);
+				var population = pickRandom2d6(populations);
+				var techLevel = pickRandom2d6(techlevels);
+				
+				var tag1 = GenUtil.pickRandom(tags);
+				var tag2 = tag1;
+				while (tag2 == tag1) {
+					tag2 = GenUtil.pickRandom(tags);
+				}
+				
+				appendRow(outputElement, [systemLocation, systemName, name, atmosphere, temperature, biosphere, gravity, population, techLevel, tag1+" & "+tag2]);
+			}
+		}
+			
+		var output = document.getElementById("planet-data");
+
+		function appendRow(element, values) {
+			var out = "";
+			
+			//console.log(values);
+			
+			out += "<tr>";
+			
+			for (var i = 0; i < values.length; i++) {
+				out += "<td>";
+				out += values[i];
+				out += "</td>";
+			}
+			
+			out += "</tr>";
+			
+			//console.log(out);
+			
+			element.innerHTML += out;
+		}
+		
+		function pickRandom2d6(array) {
+			var random = Math.floor(6*Math.random()) + Math.floor(6*Math.random());
+			return array[random];
+		}
+	</script>
+	
+</html>

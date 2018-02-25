@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>SWN Sector Viewer</title>
+		
+		<link rel="stylesheet" href="planet.css">
+	</head>
+	
+	<body>
+		<div id="loading-container">
+			<p>LOADING... please wait</p>
+		</div>
+	
+		<div id="generator-container" class='hide-section'>
+			<h2>SWN Sector Generator</h2>
+			<p>This is a generator for Kevin Crawford's <a href="zzzz">Stars Without Number</a>. It uses content from both the revised edition (world tags) and the original edition (other useful tables for corporations, religions, etc)</p>
+			<p>
+				<button id="generate-button">Generate a new sector!</button>
+				or instead load a sector file:
+				<input type="file" id="file-input"></input>
+			</p>
+			
+			<hr>
+
+			<p>It doesn't work on Internet Explorer, sorry</p>
+			<p>This site is not affiliated with the creator of Stars Without Number.</p>
+			<p>Last Updated dd-mmm-yyyy.</p>
+		</div>
+		
+		<div id='viewer-container' class='hide-section'>
+			<p id="sector-name-container"></p>
+			
+			<p>
+				<span id="back-button" class='genmode textbutton'>‹ back to the generator</span>
+				 | 
+				<span id="edit-toggle-button" class='textbutton'>Turn off edit mode</span>
+			</p>
+			
+			<div id="viewer-tabs">
+				<div data-title="Export">
+					<h2>Export</h2>
+					<p><a id="export-json-gm">Download the Sector as JSON File (Full GM Information)</a> to be edited or loaded again later.</p>
+					<p><a id="export-json-player">Download the Sector as JSON File (Limited Player Information)</a> to be edited or loaded again later.</p>
+					<p><input id="export-url-gm" class='url-export'></input> Link to this Sector (Full GM Information)</p>
+					<p><input id="export-url-player" class='url-export'></input> Link to this Sector (Limited Player Information)</p>
+				</div>
+				<div data-title="Sector Map" id="map-container">
+					<div id='inspector'></div>
+					<canvas id='hexmap'></canvas>
+				</div>
+				<div data-title="Worlds">
+					<div id="worlds-output"></div>
+				</div>
+				<div data-title="Corporations">
+					<div id="corporations-output"></div>
+				</div>
+				<div data-title="Political Groups">
+					<div id="political-groups-output"></div>
+				</div>
+				<div data-title="Religions">
+					<div id="religions-output"></div>
+				</div>
+				<div data-title="Aliens">
+					<div id="aliens-output"></div>
+				</div>
+				<div data-title="People">
+					<div id="people-output"></div>
+				</div>
+			</div>
+		</div>
+		
+		<div id='modal-background' class='hide'>
+			<div id='modal-container'>
+			</div>
+		</div>
+	</body>
+	
+	<script type="text/javascript", src="lzstring.min.js"></script>
+	<script type="text/javascript", src="url-param.js"></script>
+	
+	<script type="text/javascript", src="dyntable.js"></script>
+	<script type="text/javascript", src="dyntab.js"></script>
+	<script type="text/javascript", src="dynspoiler.js"></script>
+	<script type="text/javascript", src="dynedit.js"></script>
+	
+	<script type="text/javascript", src="textload.js"></script>
+	<script type="text/javascript", src="generators/genutil.js"></script>
+	
+	<script type="text/javascript", src="generators/namegen.js"></script>
+	<script type="text/javascript", src="generators/swnnamegen.js"></script>
+	<script type="text/javascript", src="generators/buzzword_generator.js"></script>
+	<script type="text/javascript", src="generators/world-terrain-generator.js"></script>
+	<script type="text/javascript", src="generators/star-system-generator.js"></script>
+	
+	<script type="text/javascript", src="generators/world-generator.js"></script>
+	<script type="text/javascript", src="generators/corporation-generator.js"></script>
+	<script type="text/javascript", src="generators/religion-generator.js"></script>
+	<script type="text/javascript", src="generators/political-group-generator.js"></script>
+	<script type="text/javascript", src="generators/alien-generator.js"></script>
+	<script type="text/javascript", src="generators/person-generator.js"></script>
+	
+	<script type="text/javascript", src="hexmap.js"></script>
+	
+	<script type="text/javascript", src="app.js"></script>
+	
+	<script type="text/javascript">
+		App.start();
+	</script>
+	
+</html>

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Character Concept Generator</title>
+	<link rel="stylesheet" href="generator.css">
+	<link href="../hhb-icon.png" rel="icon" type="image/png" />
+</head>
+
+<body>
+	<div class="wrapper">
+		<h1>Character Concept Generator</h1>
+		<p>
+			<p id="output">...loading data...</p>
+		</p>
+		<button id="button-reroll">Generate Another</button>
+	</div>
+</body>
+
+</body>
+
+<script type="text/javascript" src="genutil.js"></script>
+
+<script type="text/javascript">
+
+	var outputElement = document.getElementById("output");
+	var selectCountElement = document.getElementById("select-count");
+	
+	var nouns = GenUtil.loadTextFile('character-nouns.txt');
+	
+	function generate() {
+		outputElement.innerHTML = "";
+		
+		var race = GenUtil.pickRandom(races);
+		var charClass = GenUtil.pickRandom(classes);
+		var background = GenUtil.pickRandom(backgrounds);
+		var gender = GenUtil.pickRandom(genders);
+		var alignment = GenUtil.pickRandom(alignments);
+		var age = GenUtil.pickRandom(ages);
+		var physicalTrait = GenUtil.pickRandom(physicalTraits);
+		var mentalTrait = GenUtil.pickRandom(mentalTraits);
+		var noun = GenUtil.pickRandom(nouns);
+		var noun2 = GenUtil.pickRandom(nouns);
+		
+		outputElement.innerHTML += "<b>Race:</b> " + GenUtil.capitalize(physicalTrait) + " and " + GenUtil.capitalize(mentalTrait) + ' ' + race + ' ' + charClass + ' of ' + GenUtil.capitalize(noun) + ' and ' + GenUtil.capitalize(noun2);
+	}
+	
+	var races = [
+		"Human",
+		"Human",
+		"Human",
+		"Human",
+		"Human",
+		"Human",
+		"Human",
+		"Human",
+		"Human",
+		"Human",
+		"Human",
+		"Human",
+		"Elf",
+		"Elf",
+		"Elf",
+		"Elf",
+		"Dwarf",
+		"Dwarf",
+		"Dwarf",
+		"Dwarf",
+		"Halfling",
+		"Halfling",
+		"Halfling",
+		"Halfling",
+		"Half-Elf",
+		"Half-Elf",
+		"Half-Orc",
+		"Half-Orc",
+		"Gnome",
+		"Gnome",
+		"Dragonborn",
+		"Tiefling",
+		"Drow"
+	];
+	
+	var classes = [
+		"Barbarian",
+		"Bard",
+		"Cleric",
+		"Druid",
+		"Fighter",
+		"Monk",
+		"Paladin",
+		"Ranger",
+		"Rogue",
+		"Sorceror",
+		"Warlock",
+		"Wizard"
+	];
+	
+	var backgrounds = [
+		"Acolyte",
+		"Charlatan",
+		"Criminal",
+		"Entertainer",
+		"Folk Hero",
+		"Artisan or Merchant",
+		"Hermit",
+		"Noble or Knight",
+		"Outlander",
+		"Sage",
+		"Soldier",
+		"Urchin",
+		"Sailor"
+	];
+	
+	var genders = [
+		"male",
+		"female"
+	];
+	
+	var alignments = [
+		"Good",
+		"Good",
+		"Good",
+		"Neutral",
+		"Neutral",
+		"Neutral",
+		"Lawful",
+		"Lawful",
+		"Chaotic",
+		"Chaotic",
+		"Evil"
+	];
+	
+	var ages = [
+		"youthful",
+		"youthful",
+		"youthful",
+		"youthful",
+		"middle-aged",
+		"middle-aged",
+		"middle-aged",
+		"elderly",
+		"elderly"
+	];
+	
+	var physicalTraits = [
+		"bald",
+		"balding",
+		"barrel-chested",
+		"big footed",
+		"large-handed",
+		"bloodshot eyed",
+		"strange-colored eyed",
+		"bony",
+		"booming voiced",
+		"braided haired",
+		"broad browed",
+		"broad chested",
+		"broad hipped",
+		"broad shouldered",
+		"buck toothed",
+		"bushy eyebrowed",
+		"cleft chinned",
+		"crook-toothed",
+		"curly haired",
+		"dark eyed",
+		"dimpled",
+		"dirty",
+		"fair-haired",
+		"fat",
+		"freckled",
+		"full lipped",
+		"furrowed browed",
+		"glowering",
+		"gnarled fingered",
+		"greasy",
+		"hairless",
+		"hawk-nosed",
+		"high cheekboned",
+		"hirsute",
+		"hunchbacked",
+		"husky voiced",
+		"lambchop sideburned",
+		"lanky",
+		"large eared",
+		"large eyed",
+		"large nosed",
+		"lazy eyed",
+		"limping",
+		"long armed",
+		"long bearded",
+		"long fingered",
+		"long legged",
+		"long mustached",
+		"long haired",
+		"elaborate haired",
+		"matted haired",
+		"missing toothed",
+		"nasal voiced",
+		"nearsighted",
+		"nose ringed",
+		"one eared",
+		"one eyed",
+		"one handed",
+		"pale skinned",
+		"peg legged",
+		"persistently coughing",
+		"petite",
+		"pierced",
+		"plump",
+		"pop-eyed",
+		"pot-bellied",
+		"quiet voiced",
+		"rosy cheeked",
+		"rotten toothed",
+		"ruddy",
+		"scarred",
+		"scowly",
+		"sharp chinned",
+		"sharp fingernailed",
+		"short",
+		"short haired",
+		"skinny",
+		"small eared",
+		"beady eyed",
+		"small nosed",
+		"grinning",
+		"square jawed",
+		"stocky",
+		"stubby fingered",
+		"swan necked",
+		"tall",
+		"tattooed",
+		"thick necked",
+		"unibrow",
+		"wavy haired",
+		"weathered",
+		"well-built",
+		"well-groomed",
+		"wheezy",
+		"wild haired",
+		"hulking"
+	];
+
+	var mentalTraits = [
+		"absentminded",
+		"aggressive",
+		"aloof",
+		"ambitious",
+		"arrogant",
+		"callous",
+		"calm",
+		"cantankerous",
+		"cautious",
+		"cheerful",
+		"coarse",
+		"devout",
+		"competitive",
+		"conceited",
+		"confident",
+		"conscientious",
+		"courageous",
+		"courteous",
+		"covetous",
+		"cowardly",
+		"crazy",
+		"crude",
+		"curious",
+		"cynical",
+		"daring",
+		"deceitful",
+		"decisive",
+		"dignified",
+		"disciplined",
+		"drunkard",
+		"earnest",
+		"earthy",
+		"efficient",
+		"egocentric",
+		"enthusiastic",
+		"fatalistic",
+		"fiery",
+		"foolish",
+		"forgiving",
+		"forthright",
+		"friendly",
+		"frugal",
+		"generous",
+		"gentle",
+		"good-natured",
+		"gracious",
+		"greedy",
+		"gullible",
+		"helpful",
+		"honorable",
+		"humble",
+		"honorable",
+		"humble",
+		"impulsive",
+		"kind",
+		"lazy",
+		"loyal",
+		"melancholic",
+		"methodical",
+		"modest",
+		"moralistic",
+		"morbid",
+		"mystical",
+		"naive",
+		"neat",
+		"nihilistic",
+		"obedient",
+		"obsessive",
+		"opportunistic",
+		"optimistic",
+		"outspoken",
+		"paranoid",
+		"peaceful",
+		"pedantic",
+		"plodding",
+		"power-hungry",
+		"protective",
+		"proud",
+		"quiet",
+		"realistic",
+		"religious",
+		"romantic",
+		"sadistic",
+		"sanctimonious",
+		"sarcastic",
+		"secretive",
+		"selfless",
+		"serious",
+		"shrewd",
+		"solitary",
+		"steadfast",
+		"stoic",
+		"stone-cold",
+		"stubborn",
+		"superstitious",
+		"suspicious",
+		"thorough",
+		"timid",
+		"treacherous",
+		"trusting",
+		"bookish"
+	];
+	
+	var bonds = [
+		"This is not my first adventure with ___.",
+		"I sang stories of ___ long before I met them in person.",
+		"___ is often the butt of my jokes.",
+		"I am writing a ballad about the adventures of ___.",
+		"___ trusted me with a secret.",
+		"___ does not trust me, and for good reason.",
+		"___ has insulted my deity; I do not trust them.",
+		"___ is a good and faithful person; I trust them implicitly.",
+		"___ is in constant danger, I will keep them safe.",
+		"___ I am working on converting ___ to my faith",
+		"___ smells more like prey than hunter.",
+		"The spirits spoke to me of a great danger that follows ___.",
+		"I have showed ___ a secret rite.",
+		"___ has tasted my blood, and I theirs, we are bound by it.",
+		"___ owes me their life, whether they admit it or not.",
+		"I have sworn to protect ___.",
+		"I worry about the ability of ___ to survive to rigors ahead.",
+		"___ is soft, I will make them hard, like me.",
+		"___'s misguided behavior endangers their very soul!",
+		"___ has stood by me in battle and can be trusted completely.",
+		"I respect the beliefs of ___ but hope they will someday see the true way.",
+		"___ is a brave soul, I have much to learn from them.",
+		"I have guided ___ before and they owe me for it.",
+		"___ is a friend of [???], so I must be their friend as well.",
+		"___ has no respect for [???], so I have no respect for them.",
+		"___ does not understand life in the wild, so I will teach them.",
+		"I stole something from ___.",
+		"___ has my back when things go wrong.",
+		"___ knows incriminating details about me.",
+		"___ and I have a con running.",
+		"___ will play an important role in the things to come, I have forseen it!",
+		"___ is keeping an important secret from me.",
+		"___ is woefully misinformed abount the world; I will teach them all that I can."
+	];
+	
+	var druidBonds = [
+
+	];
+	
+	generate();
+
+	document.getElementById("button-reroll")
+		.addEventListener("click", generate);
+	
+</script>
+
+</html>

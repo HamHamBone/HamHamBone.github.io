@@ -59,11 +59,22 @@
 		httpRequest.onload = function() {
 			onLoad(JSON.parse(httpRequest.response).data);
 		}
+		httpRequest.addEventListener("progress", onProgress);
 		httpRequest.open("GET", redditURL + ".json", true);
 		httpRequest.send()
 		
 		var data = null;
 		
+		function onProgress(event) {
+			if (event.lengthComputable) {
+				console.log(event.loaded, event.total);
+				console.log("percent complete = " + (100 * event.loaded / event.total).toFixed(1));
+				// ...
+			} else {
+				// Unable to compute progress information since the total size is unknown
+			}
+		}		
+
 		function onLoad(_data) {
 			data = _data;
 			

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>megacorp!</title>
+		
+		<link rel="stylesheet" href="planet.css">
+	</head>
+	
+	<body>
+		<h1>Corporation Generator</h1>
+		
+		<h2 id='planet-name'></h2>
+		<table id='planet-data'></table>
+		<h2 id='system-name'></h2>
+		<table id='system-data'></table>
+	</body>
+	
+	<script type="text/javascript", src="namegen.js"></script>
+	<script type="text/javascript", src="buzzword_generator.js"></script>
+	<script type="text/javascript", src="swnnamegen.js"></script>
+	<script type="text/javascript">
+		
+		var insectBodyParts = [
+			"Sucking Mouthparts",
+			"Chewing Mouthparts",
+			"Jewel-Colored Chitin",
+			"2d4 pairs of limbs",
+			"Membranous Wings",
+			"Deposits eggs in live prey",
+			"Has \"silk\" spinnerettes",
+			"Has a chysalis life stage",
+			"No Mouth, adult form lives only to reproduce",
+			"1d4 pairs of eyes of eyespots",
+			"Sluglike body",
+			"Color-changing exoskeleton",
+			"Always encountered in groups",
+			"Hums or buzzes in intricate patterns",
+			"Lives in hives led by a queen",
+			"Killing one causes others nearby to go berserk",
+			"Emits powerful pheromones",
+			"Hides itself to ambush prey",
+			"Prefers subterranean environments",
+			"Emits noxious or poisonous stench when killed"
+		];
+		
+		var reptileBodyParts = [
+			"Sharp-edged scales",
+			"1d4 pairs of eyes",
+			"Extremely long tail",
+			"Bellowing vocalization",
+			"Burrowing foreclaws",
+			"Hide is damp and slimy",
+			"Eyeless",
+			"Strong swimmer",
+			"Spits venom",
+			"Lies in ambush in bodies of water",
+			"Brilliantly-hued scales or hide",
+			"Horns or body spikes",
+			"Large membranous frills",
+			"Hibernates in caves and undisturbed nooks",
+			"Glowing body parts",
+			"Body is patterned with both scales and hide",
+			"Springs on prey from elevated places",
+			"Warm-blooded",
+			"Furred",
+			"Limbless body"
+		];
+		
+		var mammalBodyParts = [
+			"Quill-like fur",
+			"Prehensile tail",
+			"Eyes or eyespots on body",
+			"Membranous wings",
+			"Stench glands",
+			"Peculiar vocalization",
+			"Marsupial pouch",
+			"Patterned fur or hide",
+			"Expands or inflates when threatened",
+			"Strictly nocturnal",
+			"1d6+1 limbs, including any tail",
+			"Mottled or mangy fur",
+			"Fires darts or quills",
+			"Animal is cold-blooded",
+			"Horns or body spikes",
+			"Superb scent tracker",
+			"Burrowing creature",
+			"Creature lacks a sense- hearing, sight, or smell",
+			"Creature is abnormally clever for an animal"
+		];
+		
+		var avianBodyParts = [
+			"Sharp feathers",
+			"1d3 pairs of wings",
+			"Long, sinuous neck",
+			"Brilliant coloration",
+			"Membranous wings",
+			"Can hover",
+			"Beautiful song",
+			"Flightless",
+			"Fights prey on the ground",
+			"Launches secretions at prey",
+			"Lifts and drops prey",
+			"Exhales flame or other toxic substance",
+			"Always appears in groups",
+			"Long prehensile tail",
+			"Animal is cold-blooded",
+			"Fur instead of feathers",
+			"Scales instead of feathers",
+			"Toothed beak",
+			"Has valuable or delicious eggs",
+			"Flies by means of lighter-than-air gas"
+		];
+		
+		var exoticBodyParts = [
+			"Rocklike body",
+			"1d4 pairs of eyestalks",
+			"Rolls on wheels",
+			"Chainsaw-like mouthparts or claws",
+			"Metallic hide",
+			"Natural laser emitters",
+			"Launches chemically-powered darts",
+			"Amoeba-like body",
+			"Crystalline tissues",
+			"Gas-sack body",
+			"2d10 tentacles",
+			"Gelatinous liquid body",
+			"Radioactive flesh",
+			"Uses sonic attacks to stun prey",
+			"Colony entity made up of numerous small animals",
+			"Controlled by neural symbiont",
+			"Absorbs electromagnetic energy",
+			"Precious mineral carapace or exoskeleton",
+			"Double damage from a particular type of injury",
+			"Mobile plant life"
+		];
+		
+		var types = [
+			{name:"insectile", parts:insectBodyParts},
+			{name:"reptillian", parts:reptileBodyParts},
+			{name:"mammallian", parts:mammalBodyParts},
+			{name:"avian", parts:avianBodyParts},
+			{name:"exotic", parts:exoticBodyParts},
+		];
+		
+		var lenses = [
+			"Collectivity",
+			"Journeying",
+			"Curiosity",
+			"Joy",
+			"Despair",
+			"Pacifism",
+			"Domination",
+			"Pride",
+			"Faith",
+			"Sagacity",
+			"Fear",
+			"Subtlety",
+			"Gluttony",
+			"Tradition",
+			"Greed",
+			"Treachery",
+			"Hate",
+			"Tribalism",
+			"Honor",
+			"Wrath"
+		];
+		
+		var output = document.getElementById("planet-data");
+		
+		var corpCount = 3 + Math.floor(Math.random() * 6);;
+		
+		var lengths = [
+			1,
+			2,2,2,
+			3,3,3,3,3,3,3,
+			4,4,4,4,4,4,4,4,4,4,
+			5,5,5,5,5,5,5,
+			6,6,6,6,6,
+			7,7,7,
+			8,8,
+			9
+		];
+		
+		for (var i = 0; i < corpCount; i++) {
+			var name = NameGen.generate(pickRandom(lengths));
+			var type = pickRandom(types);
+			var type2 = type;
+			var typeName = type.name;
+			if (Math.random() < 0.5) {
+				var type2 = pickRandom(types);
+				if (type != type2) {
+					typeName = type.name + "/" + type2.name;
+				}
+			}
+			var part1 = pickRandom(type.parts);
+			var part2 = pickRandom(type2.parts);
+			var lens1 = pickRandom(lenses);
+			if (Math.random() < 0.5) {
+				lens1 += ' & ' + pickRandom(lenses);
+			}
+			appendRow(output, [name, typeName, part1 + ", " + part2, lens1 + " & " + lens2])
+		}
+		
+		function appendRow(element, values) {
+			var out = "";
+			
+			//console.log(values);
+			
+			out += "<tr>";
+			
+			for (var i = 0; i < values.length; i++) {
+				out += "<td>";
+				out += values[i];
+				out += "</td>";
+			}
+			
+			out += "</tr>";
+			
+			//console.log(out);
+			
+			element.innerHTML += out;
+		}
+		function pickRandom(array) {
+			return array[Math.floor(Math.random() * array.length)];
+		}
+		function pickRandom2d6(array) {
+			var random = Math.floor(6*Math.random()) + Math.floor(6*Math.random());
+			return array[random];
+		}
+		
+		function capitalize(string) {
+			return string[0].toUpperCase() + string.substr(1);
+		}
+	</script>
+	
+</html>

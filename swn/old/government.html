@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>megacorp!</title>
+		
+		<link rel="stylesheet" href="planet.css">
+	</head>
+	
+	<body>
+		<h1>Government Generator</h1>
+		
+		<h2 id='planet-name'></h2>
+		<table id='planet-data'></table>
+		<h2 id='system-name'></h2>
+		<table id='system-data'></table>
+	</body>
+	
+	<script type="text/javascript", src="namegen.js"></script>
+	<script type="text/javascript", src="buzzword_generator.js"></script>
+	<script type="text/javascript", src="swnnamegen.js"></script>
+	<script type="text/javascript">
+		
+		var powerStructures = [
+			"confederacy",
+			"federation",
+			"state",
+			"state",
+			"state",
+			"empire"
+		];
+		
+		var powerSources = [
+			"Autocratic",
+			"Autocratic",
+			"Autocratic",
+			"Oligarchal",
+			"Oligarchal",
+			"Oligarchal",
+			"Oligarchal",
+			"Republican",
+			"Republican",
+			"Republican",
+			"Democratic",
+			"Democratic",
+			"Pantocratic"
+		];
+		
+		var elites = [
+			"Nobility",
+			"Merchants",
+			"Pious",
+			"Intellectuals",
+			"Populists",
+			"Technology",
+			"Bureaucrats",
+			"Warlords"
+		];
+		
+		var output = document.getElementById("planet-data");
+		
+		var govCount = 20;
+		
+		for (var i = 0; i < govCount; i++) {
+			var powerSource = pickRandom(powerSources);
+			var powerStructure = pickRandom(powerStructures);
+			var elite = pickRandom(elites ) + (Math.random() < 0.5 ? ", " + pickRandom(elites) : "");
+			
+			appendRow(output, [powerSource, powerStructure, elite]);
+		}
+		
+		function appendRow(element, values) {
+			var out = "";
+			
+			//console.log(values);
+			
+			out += "<tr>";
+			
+			for (var i = 0; i < values.length; i++) {
+				out += "<td>";
+				out += values[i];
+				out += "</td>";
+			}
+			
+			out += "</tr>";
+			
+			//console.log(out);
+			
+			element.innerHTML += out;
+		}
+		function pickRandom(array) {
+			return array[Math.floor(Math.random() * array.length)];
+		}
+		function pickRandom2d6(array) {
+			var random = Math.floor(6*Math.random()) + Math.floor(6*Math.random());
+			return array[random];
+		}
+		
+		function capitalize(string) {
+			return string[0].toUpperCase() + string.substr(1);
+		}
+	</script>
+	
+</html>

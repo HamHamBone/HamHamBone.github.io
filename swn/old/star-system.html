@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>Star System Generator</title>
+		
+		<link rel="stylesheet" href="planet.css">
+	</head>
+	
+	<body>
+		<h1>Star System Generator</h1>
+		
+		<h2 id='system-name'></h2>
+		<table id='planet-data'></table>
+	</body>
+	
+	<script type="text/javascript", src="namegen.js"></script>
+	<script type="text/javascript", src="genutil.js"></script>
+	<script type="text/javascript">
+		var starClasses = [
+			"Black Hole",
+			"blue supergiant",
+			"blue giant",
+			"brown dwarf",
+			"red dwarf",
+			"yellow dwarf",
+			"yellow dwarf",
+			"red giant",
+			"red supergiant",
+			"white dwarf",
+			"neutron star"
+		];
+		
+		var bodies = [
+			"construct",
+			"debris",
+			"asteroid/comet belt",
+			"gas giant",
+			"gas giant",
+			"planet",
+			"planet",
+			"planetoid",
+			"planetoid",
+			"companion star",
+			"anomaly"
+		];
+		
+		var output = document.getElementById("planet-data");
+
+		var starCount = 10;
+		for (var i = 0; i < starCount; i++) {
+			generateSystem();
+			printOut("");
+		}
+		
+		function generateSystem() {
+			printOut(pickRandom2d6(starClasses));
+			
+			var bodyCount = Math.floor(Math.pow(Math.random(), 1.0) * 9) + 1;
+			
+			for (var i = 0; i < bodyCount; i++) {
+				var body = pickRandom2d6(bodies);
+
+				if (body == "gas giant" || body == "hydrogen giant") {
+					if (Math.random() < 0.8) {
+						var moons = Math.floor(Math.random() * 12)+1;
+						body += ", " + moons + " moon";
+						if (moons > 1) body+="s";
+					}
+				} else if (body == "planet") {
+					if (Math.random() < 0.5) {
+						var moons = Math.floor(Math.pow(Math.random(), 2) * 6)+1;
+						body += ", " + moons + " moon";
+						if (moons > 1) body+="s";
+					}
+				} else if (body == "planetoid") {
+					if (Math.random() < 0.25) {
+						var moons = Math.floor(Math.pow(Math.random(), 2) * 6)+1;
+						body += ", " + moons + " moon";
+						if (moons > 1) body+="s";
+					}
+				}
+				
+				if (body == "companion star") {
+					printOut(pickRandom2d6(starClasses));
+				} else {
+					printOut(body);
+				}
+			}
+		}
+
+		function printOut(string) {	
+			output.innerHTML += string + "<br>";
+		}
+		
+		function pickRandom2d6(array) {
+			var random = Math.floor(6*Math.random()) + Math.floor(6*Math.random());
+			return array[random];
+		}
+	</script>
+	
+</html>

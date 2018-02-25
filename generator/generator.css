@@ -1,8 +1,8 @@
 body {
-	font-family: "Segoa UI Light", Corbel, "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", "Bitstream Vera Sans", "Liberation Sans", Verdana, "Verdana Ref", sans-serif;
-	font-size:16px;
-	background-color:rgb(250,250,250);
-	color:#333;
+	font-family: "Segoe UI";
+	font-size:14px;
+	background-color:#E5E8EB;
+	color:#444;
 }
 
 .attrib {
@@ -10,19 +10,33 @@ body {
 }
 
 br {
-	margin:3px 0px;
+	margin:2px 0px;
+}
+
+p {
+	margin-top: 12px;
+	margin-bottom: 12px;
 }
 
 h1 {
 	width:100%;
 	font-size:24px;
 	text-align:center;
+	margin-top:0px;
+	margin-bottom:12px;
 }
 
 .wrapper {
 	max-width:400px;
+	padding:20px;
+	background-color:rgb(250,250,250);
+	border-radius:12px;
 	
 	margin:0 auto;
+}
+
+.attrib {
+	margin-bottom: 0px;
 }
 
 @media (min-width: 480px) {

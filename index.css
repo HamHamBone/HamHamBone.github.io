@@ -2,7 +2,7 @@ body {
 	font-family: "Segoe UI Light", Corbel, "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", "Bitstream Vera Sans", "Liberation Sans", Verdana, "Verdana Ref", sans-serif;
 	font-size:16px;
 	color:#333;
-	background-color:rgb(250,250,250);
+	background-color:rgb(230,230,230);
 }
 
 p {
@@ -34,12 +34,15 @@ h2 {
 	width:100%;
 	font-size:36px;
 	text-align:center;
-	margin-top:16px;
+	margin-top:0px;
 	margin-bottom:16px;
 }
 
 .wrapper {
 	max-width:600px;
+	padding:20px 20px;
+	background-color:rgb(250,250,250);
+	border-radius:12px;
 	
 	margin:0 auto;
 }
