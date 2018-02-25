@@ -10,9 +10,9 @@
 	</head>
 	
 	<body>
-		<div id="generator-container">
+		<div id="generator-container" class='hide-section'>
 			<h2>SWN Sector Generator</h2>
-			<p>This is a generator for Kevin Crawford's <a href="zzzz">Stars Without Number</a>. It uses content from both the revised edition (world tags) and the original edition (other useful tables for corporations, religions, etc)</p>
+			<p>This is a fan-made generator for Kevin Crawford's <a href="http://www.sinenomine-pub.com/?page_id=395">Stars Without Number</a>. It uses content from both the revised edition (world tags) and the original edition (other useful tables for corporations, religions, etc)</p>
 			<p>
 				<button id="generate-button">Generate a new sector!</button>
 				or instead load a sector file:
@@ -21,9 +21,7 @@
 			
 			<hr>
 
-			<p>It doesn't work on Internet Explorer, sorry</p>
-			<p>This site is not affiliated with the creator of Stars Without Number.</p>
-			<p>Last Updated dd-mmm-yyyy.</p>
+			<p>It doesn't work on Internet Explorer.</p>
 		</div>
 		
 		<div id='viewer-container' class='hide-section'>
@@ -38,8 +36,8 @@
 					<h2>Export</h2>
 					<p><a id="export-json-gm">Download the Sector as JSON File (Full GM Information)</a> to be edited or loaded again later.</p>
 					<p><a id="export-json-player">Download the Sector as JSON File (Limited Player Information)</a> to be edited or loaded again later.</p>
-					<p><input id="export-url-gm" class='url-export'></input> Link to this Sector (Full GM Information)</p>
-					<p><input id="export-url-player" class='url-export'></input> Link to this Sector (Limited Player Information)</p>
+					<p><input id="export-url-gm" readonly class='url-export'></input> Link to this Sector (Full GM Information)</p>
+					<p><input id="export-url-player" readonly class='url-export'></input> Link to this Sector (Limited Player Information)</p>
 				</div>
 				<div data-title="Sector Map" id="map-container">
 					<div id='inspector'></div>

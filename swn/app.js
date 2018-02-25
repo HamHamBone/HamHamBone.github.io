@@ -6,13 +6,20 @@ TextLoad.load('generators/data/legends.txt', function(data) { App.legendaryNames
 App.greekLetters = ['alpha', 'beta', 'gamma', 'delta', 'epsilon', 'zeta', 'eta', 'theta', 'iota', 'kappa', 'lambda', 'mu', 'nu', 'xi', 'omicron', 'pi', 'rho', 'sigma', 'tau', 'upsilon', 'phi', 'chi', 'psi', 'omega'];
 
 App.start = function() {
+	document.getElementById('export-url-gm').addEventListener('click', function(event) { this.select(); });
+	document.getElementById('export-url-player').addEventListener('click', function(event) { this.select(); });
+	
 	let modalElement = App.showModal();
 	let loadingElement = document.createElement('p');
 	loadingElement.innerHTML = 'Loading, please wait...';
 	modalElement.appendChild(loadingElement);
 	
+	let generatorContainerElement = document.getElementById('generator-container');
+	
 	TextLoad.onAllLoad(function() {
 		App.hideModal();
+		
+		generatorContainerElement.classList.remove('hide-section');
 		
 		App.initialize();
 	});
@@ -633,8 +640,10 @@ App.displaySystemInspector = function(inspectorElement, system, sector) {
 			let body = system.bodies[i];
 			
 			let name = body.name;
-			if (body.name != '') {
+			if (body.name != '*') {
 				name = system.name + body.name;
+			} else {
+				name = '';
 			}
 			
 			appendRow(bodyTable, [body.type, name]);

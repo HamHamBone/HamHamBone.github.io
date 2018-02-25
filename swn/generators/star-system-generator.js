@@ -96,7 +96,7 @@ StarSystemGenerator.generate = function(minBodies=0) {
 			type = type.toUpperCase();
 		} else {
 			if (body.bodyClass == 'N') {
-				name = '';
+				name = '*';
 			} else {
 				planetIndex++;
 				name = (starCount > 1 ? ' ' + letters[starIndex] : '') + ' ' + this.romanize(planetIndex);
