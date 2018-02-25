@@ -394,7 +394,7 @@ App.displayWorlds = function(sector) {
 		DynTable.basicColumn('Atmosphere', 'planet.atmosphere'),
 		DynTable.basicColumn('Gravity', 'planet.gravity'),
 		DynTable.basicColumn('Temperature', 'planet.temperature'),
-		DynTable.basicColumn('Biosphere', 'planet.biossphere'),
+		DynTable.basicColumn('Biosphere', 'planet.biosphere'),
 		DynTable.basicColumn('Population', 'planet.population'),
 		DynTable.basicColumn('Tech Level', 'planet.techLevel'),
 		DynTable.basicColumn('Tag', 'planet.tag1'),
