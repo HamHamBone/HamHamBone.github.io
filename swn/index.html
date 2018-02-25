@@ -10,11 +10,7 @@
 	</head>
 	
 	<body>
-		<div id="loading-container">
-			<p>LOADING... please wait</p>
-		</div>
-	
-		<div id="generator-container" class='hide-section'>
+		<div id="generator-container">
 			<h2>SWN Sector Generator</h2>
 			<p>This is a generator for Kevin Crawford's <a href="zzzz">Stars Without Number</a>. It uses content from both the revised edition (world tags) and the original edition (other useful tables for corporations, religions, etc)</p>
 			<p>
@@ -35,8 +31,6 @@
 			
 			<p>
 				<span id="back-button" class='genmode textbutton'>‹ back to the generator</span>
-				 | 
-				<span id="edit-toggle-button" class='textbutton'>Turn off edit mode</span>
 			</p>
 			
 			<div id="viewer-tabs">
@@ -65,9 +59,6 @@
 				</div>
 				<div data-title="Aliens">
 					<div id="aliens-output"></div>
-				</div>
-				<div data-title="People">
-					<div id="people-output"></div>
 				</div>
 			</div>
 		</div>
@@ -100,7 +91,6 @@
 	<script type="text/javascript", src="generators/religion-generator.js"></script>
 	<script type="text/javascript", src="generators/political-group-generator.js"></script>
 	<script type="text/javascript", src="generators/alien-generator.js"></script>
-	<script type="text/javascript", src="generators/person-generator.js"></script>
 	
 	<script type="text/javascript", src="hexmap.js"></script>
 	

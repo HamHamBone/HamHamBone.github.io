@@ -5,17 +5,14 @@ TextLoad.load('generators/data/legends.txt', function(data) { App.legendaryNames
 
 App.greekLetters = ['alpha', 'beta', 'gamma', 'delta', 'epsilon', 'zeta', 'eta', 'theta', 'iota', 'kappa', 'lambda', 'mu', 'nu', 'xi', 'omicron', 'pi', 'rho', 'sigma', 'tau', 'upsilon', 'phi', 'chi', 'psi', 'omega'];
 
-App._ignoreHashchange = false;
-
-App._mode = 'gm';
-
 App.start = function() {
-	let generatorContainerElement = document.getElementById('generator-container');
-	let loadingContainerElement = document.getElementById('loading-container');
+	let modalElement = App.showModal();
+	let loadingElement = document.createElement('p');
+	loadingElement.innerHTML = 'Loading, please wait...';
+	modalElement.appendChild(loadingElement);
 	
 	TextLoad.onAllLoad(function() {
-		generatorContainerElement.classList.remove('hide-section');
-		loadingContainerElement.classList.add('hide-section');
+		App.hideModal();
 		
 		App.initialize();
 	});
@@ -168,12 +165,13 @@ App.generateSector = function() {
 	let sectorName = App.generateSectorName();
 	
 	sector.name = sectorName;
+	sector.gmMode = true;
+	
 	sector.systems = WorldGenerator.generate();
 	sector.corporations = CorporationGenerator.generate();
 	sector.religions = ReligionGenerator.generate();
 	sector.politicalGroups = PoliticalGroupGenerator.generate();
 	sector.aliens = AlienGenerator.generate();
-	sector.people = PersonGenerator.generate();
 	
 	return sector;
 }
@@ -188,6 +186,7 @@ App.censorSector = function(sector) {
 	let newSector = {};
 	
 	newSector.name = sector.name;
+	newSector.gmMode = false;
 	
 	newSector.systems = App.censorObjects(sector.systems, ['pointsOfInterest', 'bodies']);
 	for (let i = 0; i < newSector.systems.length; i++) {
@@ -196,10 +195,9 @@ App.censorSector = function(sector) {
 	}
 	
 	newSector.corporations = App.censorObjects(sector.corporations, ['markets', 'strategy', 'valuation']);
-	newSector.aliens = App.censorObjects(sector.aliens, ['lenses', 'government']);
+	newSector.aliens = App.censorObjects(sector.aliens, ['lenses', 'government', 'body']);
 	newSector.religions = App.censorObjects(sector.religions, ['doctrine']);
 	newSector.politicalGroups = App.censorObjects(sector.politicalGroups, ['leadership']);
-	newSector.people = App.censorObjects(sector.people, []);
 	
 	return newSector;
 }
@@ -230,6 +228,13 @@ App.censorObjects = function(objects, attributes) {
 // ************************************************************************** //
 
 App.displaySector = function(sector) {
+	// set up edit mode
+	if (sector.gmMode) {
+		document.body.classList.remove('no-edit');
+	} else {
+		document.body.classList.add('no-edit');
+	}
+	
 	// display sector name
 	App.displaySectorName(sector);
 	
@@ -296,24 +301,15 @@ App.displaySector = function(sector) {
 	
 	aliensTable.addRows(sector.aliens);
 	aliensTable.sort(0);
-	
-	// create people table
-	console.log(sector.people);
-	
-	let peopleOutput = document.getElementById('people-output');
-	peopleOutput.innerHTML = '';
-	let peopleTable = new DynTable([
-		DynTable.basicColumn('Name', 'name'),
-	]);
-	peopleOutput.appendChild(peopleTable.getElement());
-	
-	peopleTable.addRows(sector.people);
 }
 
 App.displaySectorName = function(sector) {
 	let nameElem = document.createElement('span')
 	nameElem.className = 'sector-name';
 	nameElem.innerText = "Sector " + sector.name;
+	
+	let editButtonContainer = document.createElement('span');
+	editButtonContainer.className = 'edit-zone';
 	
 	let editButtonElem = document.createElement('span');
 	editButtonElem.innerText = 'edit';
@@ -322,15 +318,16 @@ App.displaySectorName = function(sector) {
 	let sectorNameContainer = document.getElementById('sector-name-container')
 	sectorNameContainer.innerHTML = '';
 	sectorNameContainer.appendChild(nameElem);
-	sectorNameContainer.appendChild(document.createTextNode(' '));
-	sectorNameContainer.appendChild(editButtonElem);
+	sectorNameContainer.appendChild(editButtonContainer);
+	editButtonContainer.appendChild(document.createTextNode(' '));
+	editButtonContainer.appendChild(editButtonElem);
 	
 	editButtonElem.addEventListener('click', function() {
 		let title = 'Editing: Sector ' + sector.name;		
 		App.showEditor(
 			title,
 			sector,
-			{lists:{},generators:{name:() => App.generateSectorName()}},
+			{lists:{},generators:{name:() => App.generateSectorName()},hide:['gmMode']},
 			function() {
 				App.setURL(sector);
 				App.createDownloadLink(sector);
@@ -407,9 +404,9 @@ App.showEditor = function(title, object, template, redraw) {
 	containerElement = App.showModal();
 	containerElement.innerHTML = '';
 	
-	let dynEdit = new DynEdit(title, object, function() {
+	let dynEdit = new DynEdit(title, object, function(saved) {
 		App.hideModal();
-		redraw();
+		redraw(saved);
 	}, template);
 	
 	containerElement.appendChild(dynEdit.getElement());	
@@ -455,8 +452,10 @@ App.displaySystemInspector = function(inspectorElement, system, sector) {
 	let systemHeader = simpleAppend(inspectorElement, 'p');
 	simpleAppend(systemHeader, 'span', system.name + ' System ', 'inspector-system-name');
 	simpleAppend(systemHeader, 'span', '(' + '0'+system.x+'0'+system.y + ')', 'secondary');
-	appendText(systemHeader, ' ');
-	let editSystemLink = simpleAppend(systemHeader, 'span', 'edit', 'edit-link textbutton');
+	
+	let systemEditContainer = simpleAppend(inspectorElement, 'span', '', 'edit-zone');
+	appendText(systemEditContainer, ' ');
+	let editSystemLink = simpleAppend(systemEditContainer, 'span', 'edit', 'edit-link textbutton');
 	(function(system) {
 		editSystemLink.addEventListener('click', function() {
 			let title = 'Editing: ' + system.name;
@@ -469,8 +468,9 @@ App.displaySystemInspector = function(inspectorElement, system, sector) {
 			});
 		});
 	}) (system);
-	appendText(systemHeader, ' | ');
-	let deleteSystemLink = simpleAppend(systemHeader, 'span', 'delete', 'textbutton');
+	
+	appendText(systemEditContainer, ' | ');
+	let deleteSystemLink = simpleAppend(systemEditContainer, 'span', 'delete', 'textbutton');
 	deleteSystemLink.addEventListener('click', function() {
 		App.showConfirmation('Delete system ' + system.name + '?', function(confirmed) {
 			if (!confirmed) { return; }
@@ -485,15 +485,19 @@ App.displaySystemInspector = function(inspectorElement, system, sector) {
 		});
 	});
 	
-	let systemSubheader = simpleAppend(inspectorElement, 'p');
-	let addPlanetLink = simpleAppend(inspectorElement, 'span', 'add planet', 'textbutton');
+	appendText(systemEditContainer, ' | ');
+	let addPlanetLink = simpleAppend(systemEditContainer, 'span', 'add planet', 'textbutton');
 	addPlanetLink.addEventListener('click', function() {
 		let planet = WorldGenerator.generatePlanet();
 		
-		system.planets.push(planet);
-		
 		let title = 'Adding planet to the ' + system.name + ' system';
-		App.showEditor(title, planet, WorldGenerator.planetTemplate, function() {
+		App.showEditor(title, planet, WorldGenerator.planetTemplate, function(saved) {
+			if (!saved) {
+				return;
+			}
+			
+			system.planets.push(planet);
+			
 			App.setURL(sector);
 			App.createDownloadLink(sector);
 			
@@ -520,7 +524,9 @@ App.displaySystemInspector = function(inspectorElement, system, sector) {
 		if ('tag1' in planet && 'tag2' in planet) { simpleAppend(planetHeaderElement,'span', '(' + planet.tag1 + ', ' + planet.tag2 + ')', 'secondary') };
 		appendText(planetHeaderElement, ' ');
 		
-		let editPlanetLink = simpleAppend(planetHeaderElement, 'span', 'edit', 'edit-link textbutton');
+		let editPlanetContainer = simpleAppend(planetHeaderElement, 'span', '', 'edit-zone');
+		
+		let editPlanetLink = simpleAppend(editPlanetContainer, 'span', 'edit', 'edit-link textbutton');
 		(function(planet) {
 			editPlanetLink.addEventListener('click', function() {
 				let title = 'Editing: ' + planet.name + ', ' + system.name + ' system';
@@ -534,9 +540,9 @@ App.displaySystemInspector = function(inspectorElement, system, sector) {
 			});
 		}) (planet);
 		
-		appendText(planetHeaderElement, ' | ');
+		appendText(editPlanetContainer, ' | ');
 		
-		let deletePlanetLink = simpleAppend(planetHeaderElement, 'span', 'delete', 'textbutton');
+		let deletePlanetLink = simpleAppend(editPlanetContainer, 'span', 'delete', 'textbutton');
 		(function(system, planet) {
 			deletePlanetLink.addEventListener('click', function() {
 				App.showConfirmation('Delete planet ' + planet.name + '?', function(confirmed) {
@@ -606,10 +612,32 @@ App.displaySystemInspector = function(inspectorElement, system, sector) {
 		simpleAppend(inspectorElement, 'hr');
 		simpleAppend(inspectorElement, 'hr');
 		
+		let systemHeader = simpleAppend(inspectorElement, 'p', '', 'inspector-object-header');
+		simpleAppend(systemHeader, 'span', 'System Survey', 'inspector-object-name');
+		let editBodyContainer = simpleAppend(systemHeader, 'span', '', 'edit-zone');
+		appendText(editBodyContainer, ' ');
+		let rerollBodiesButton = simpleAppend(editBodyContainer, 'span', 'reroll', 'textbutton');
+		
+		rerollBodiesButton.addEventListener('click', function(event) {
+			system.bodies = StarSystemGenerator.generate('planets' in system ? system.planets.length : 0);
+			
+			App.setURL(sector);
+			App.createDownloadLink(sector);
+			
+			App.displayHexmap(sector, system);
+			App.displayWorlds(sector);				
+		});
+		
 		let bodyTable = simpleAppend(inspectorElement, 'table');
 		for (let i = 0; i < system.bodies.length; i++) {
 			let body = system.bodies[i];
-			appendRow(bodyTable, [body.type, body.name]);
+			
+			let name = body.name;
+			if (body.name != '') {
+				name = system.name + body.name;
+			}
+			
+			appendRow(bodyTable, [body.type, name]);
 		}
 	}
 	

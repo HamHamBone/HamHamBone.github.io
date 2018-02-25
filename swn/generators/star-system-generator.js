@@ -28,11 +28,11 @@ StarSystemGenerator.BODIES = [
 	{type:"anomaly", bodyClass:'N'}
 ];
 
-StarSystemGenerator.generate = function(systemName, minBodies=0) {
+StarSystemGenerator.generate = function(minBodies=0) {
 	let bodies = [];
 	let stars = [];
 	
-	let letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'];
+	let letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y'];
 	
 	let bodyCount = GenUtil.randInt(minBodies+1,13);
 	
@@ -91,7 +91,7 @@ StarSystemGenerator.generate = function(systemName, minBodies=0) {
 			planetIndex = 0
 			
 			type = this.pickRandom2d6(this.STAR_CLASSES);
-			name = systemName + (starCount > 1 ? ' ' + letters[starIndex] : '');
+			name = (starCount > 1 ? ' ' + letters[starIndex] : '');
 			
 			type = type.toUpperCase();
 		} else {
@@ -99,7 +99,7 @@ StarSystemGenerator.generate = function(systemName, minBodies=0) {
 				name = '';
 			} else {
 				planetIndex++;
-				name = systemName + (starCount > 1 ? '-' + letters[starIndex] : '') + ' ' + this.romanize(planetIndex);
+				name = (starCount > 1 ? ' ' + letters[starIndex] : '') + ' ' + this.romanize(planetIndex);
 			}
 		}
 		

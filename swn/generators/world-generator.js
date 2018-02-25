@@ -94,7 +94,7 @@ WorldGenerator.generate = function() {
 			system.pointsOfInterest.push(this.generatePointOfInterest());
 		}
 		
-		system.bodies = StarSystemGenerator.generate(systemName, system.planets.length);
+		system.bodies = StarSystemGenerator.generate(system.planets.length);
 		
 		systems.push(system);
 	}
@@ -128,7 +128,7 @@ WorldGenerator.generate = function() {
 			prefixList = ['Major', 'Minor'];
 		}
 		
-		primaryStar.name = baseName + ' ' + GenUtil.capitalize(prefixList[0]);
+		primaryStar.name = baseName + ' ' + prefixList[0];
 		
 		for (let j = 0; j < clusterSize; j++) {
 			let closestStar = null;
@@ -155,7 +155,7 @@ WorldGenerator.generate = function() {
 			
 			let nextStar = GenUtil.pickRandom(picks);
 			
-			nextStar.name = baseName + ' ' + GenUtil.capitalize(prefixList[j+1]);
+			nextStar.name = baseName + ' ' + prefixList[j+1];
 			starPool.splice(starPool.indexOf(nextStar), 1);
 			
 			primaryStar = nextStar;
@@ -359,6 +359,14 @@ WorldGenerator.generatePlanetName = function() {
 		}
 	}
 	
+	if (Math.random() < (1/30)) {
+		planetName = SWNNameGen.getName();
+		
+		if (Math.random() < 0.5) {
+			planetName += GenUtil.pickRandom(['world', '\'s Planet']);
+		}
+	}
+	
 	planetName = GenUtil.capitalize(planetName);
 	
 	if (Math.random() < (1/30)) {
@@ -379,11 +387,12 @@ TextLoad.load('generators/data/swnPlaceNames.txt', (data) => {WorldGenerator.pla
 TextLoad.load('generators/data/stars.txt', (data) => {WorldGenerator.starNames = data;} );
 TextLoad.load('generators/data/legends.txt', (data) => {WorldGenerator.legends = data;} );
 
-WorldGenerator.greekLetters = ['alpha', 'beta', 'gamma', 'delta', 'epsilon', 'zeta', 'eta', 'theta', 'iota', 'kappa', 'lambda', 'mu', 'nu', 'xi', 'omicron', 'pi', 'rho', 'sigma', 'tau', 'upsilon', 'phi', 'chi', 'psi', 'omega'];
+//WorldGenerator.greekLetters = ['α', 'β', 'γ', 'δ', 'ε', 'ζ', 'η', 'θ', 'ι', 'κ', 'λ', 'μ', 'ν', 'ξ', 'ο', 'π', 'ρ', 'σ', 'τ', 'υ', 'φ', 'χ', 'ψ', 'ω'];
+WorldGenerator.greekLetters = ['Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon', 'Zeta', 'Eta', 'Theta', 'Iota', 'Kappa', 'Lambda', 'Mu', 'Nu', 'Xi', 'Omicron', 'Pi', 'Rho', 'Sigma', 'Tau', 'Upsilon', 'Phi', 'Chi', 'Psi', 'Omega'];
 WorldGenerator.numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 WorldGenerator.letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'];
 
-WorldGenerator.news = ['New {name}', 'New {name}', 'New {name}', 'New {name}', 'New {name}', 'New {name}', 'Neo{name}', 'Novo {name}', 'Nuevo {name}'];
+WorldGenerator.news = ['New {name}', 'New {name}', 'New {name}', 'New {name}', 'New {name}', 'New {name}', 'Neo {name}', 'Novo {name}', 'Nuevo {name}'];
 
 WorldGenerator.atmospheres = [
 	"corrosive",
@@ -428,15 +437,15 @@ WorldGenerator.biospheres = [
 ];
 
 WorldGenerator.gravities = [
-	"nil",
+	"zero",
 	"nil",
 	"low",
 	"low",
-	"earthlike",
-	"earthlike",
-	"earthlike",
-	"earthlike",
-	"earthlike",
+	"standard",
+	"standard",
+	"standard",
+	"standard",
+	"standard",
 	"high",
 	"high"
 ];
@@ -519,7 +528,7 @@ WorldGenerator.pointsOfInterest = [
 	},
 	{
 		name:'Ancient orbital ruin',
-		names:['Outpost', 'Station', 'Ruins', 'Construct', 'Ring', 'Station', 'Object', 'Platform', '$MSS'],
+		names:['Outpost', 'Station', 'Ruins', 'Construct', 'Ring', 'Station', 'Object', 'Platform', '$TMS'],
 		occupants:['Robots of dubious sentience', 'Trigger-happy scavengers', 'Government researchers', 'Military quarantine enforcers', 'Heirs of the original alien builders'],
 		situations:['Trying to stop it awakening', 'Meddling with strange tech', 'Impending tech calamity', 'A terrible secret is unearthed', 'Fighting outside interlopers']
 	},

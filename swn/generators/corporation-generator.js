@@ -60,8 +60,7 @@ CorporationGenerator.generate = function() {
 			name:name + ' ' + title,
 			markets:interestsName,
 			ownership:GenUtil.pickRandom(this.ownerships),
-			strategy:GenUtil.pickRandom(this.growthStrategies),
-			valuation:pickRandom2d6(this.valuations)
+			strategy:GenUtil.pickRandom(this.growthStrategies)
 		}
 		
 		corps.push(corp);

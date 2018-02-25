@@ -190,6 +190,10 @@ h2,.sector-name {
   user-select: none;	
 }
 
+.no-edit .edit-zone {
+	display:none;
+}
+
 .textbutton:hover {
 	color:var(--button-hover-color);
 }

@@ -26,11 +26,9 @@ URLParam.createHash = function(values) {
 
 URLParam.createURL = function(values) {
 	let url = parent.location.href;
-	let hash = parent.location.hash;
+	url = url.split('#')[0];
 	
-	let baseURL = url.slice(0, url.length - hash.length);
-	
-	return baseURL + '#' + URLParam.createHash(values)
+	return url + '#' + URLParam.createHash(values)
 }
 
 URLParam.clear = function() {

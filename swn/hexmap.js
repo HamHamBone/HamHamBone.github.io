@@ -44,14 +44,14 @@ Hexmap.draw = function(canvasElement, sector, selectedStar = null) {
 			var offset = 10*((system.planets.length-1)/2) + HEX_Y*HEX_RADIUS*0.5*(1 - (system.planets.length-1)/2)
 			context.textAlign = "center";
 			context.textBaseline = "middle";
-			context.font = '12px "Segoe UI"';
+			context.font = 'italic 11px "Verdana","Segoe UI"';
 			context.fillStyle = this.getStyle('--hexmap-planet-name-color');
 			context.fillText(system.planets[j].name, starCoords.x, starCoords.y + offset + 11*j);		
 		}
 		
 		context.textAlign = "center";
 		context.textBaseline = "middle";
-		context.font = '14px "Segoe UI"';
+		context.font = '12px "Verdana","Segoe UI"';
 		context.fillStyle = this.getStyle('--hexmap-system-name-color');
 		context.fillText(system.name, starCoords.x, starCoords.y - HEX_Y*HEX_RADIUS*0.37);
 	}

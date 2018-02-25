@@ -18,6 +18,12 @@ let DynEdit = function(title, object, callback=null, template=null) {
 	for (property in object) {
 		let value = object[property];
 		
+		if (template && template.hide) {
+			if (template.hide.indexOf(property) >= 0) {
+				continue;
+			}
+		}
+		
 		if (!(typeof value == 'string' || typeof value == 'number' || typeof value == 'boolean')) {
 			continue;
 		}
@@ -52,6 +58,11 @@ let DynEdit = function(title, object, callback=null, template=null) {
 			
 			if (typeof value == 'number') {
 				inputElem.type = 'number';
+			}
+			
+			if (typeof value == 'boolean') {
+				inputElem.type = 'checkbox'
+				inputElem.checked = value;
 			}
 		}
 		
@@ -128,6 +139,9 @@ let DynEdit = function(title, object, callback=null, template=null) {
 			for (property in data) {
 				let propertyData = data[property];
 				let value = propertyData.inputElem.value;
+				if (propertyData.type == 'boolean') {
+					value = propertyData.inputElem.checked;
+				}
 				if (propertyData.type == 'number') {
 					console.log(value);
 					
@@ -142,13 +156,13 @@ let DynEdit = function(title, object, callback=null, template=null) {
 				
 				object[property] = value;
 			}
-			callback();
+			callback(true);
 		}
 	}
 	
 	function onCancel() {
 		if (callback) {
-			callback();
+			callback(false);
 		}
 	}
 	
