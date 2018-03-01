@@ -9,15 +9,15 @@ App.start = function() {
 	document.getElementById('export-url-gm').addEventListener('click', function(event) { this.select(); });
 	document.getElementById('export-url-player').addEventListener('click', function(event) { this.select(); });
 	
-	let modalElement = App.showModal();
+	let modal = DynModal.show();
 	let loadingElement = document.createElement('p');
 	loadingElement.innerHTML = 'Loading, please wait...';
-	modalElement.appendChild(loadingElement);
+	modal.container.appendChild(loadingElement);
 	
 	let generatorContainerElement = document.getElementById('generator-container');
 	
 	TextLoad.onAllLoad(function() {
-		App.hideModal();
+		DynModal.hide(modal);
 		
 		generatorContainerElement.classList.remove('hide-section');
 		
@@ -137,31 +137,6 @@ App.decompressSector = function(data) {
 
 App.setURL = function(sector) {
 	URLParam.encode({data:App.compressSector(sector)});
-}
-
-// ************************************************************************** //
-
-document.addEventListener('keyup', function(event) {
-	if (event.key == 'Escape') {
-		App.hideModal();
-	}
-});
-
-App.showModal = function() {
-	let modalBackground = document.getElementById('modal-background');
-	let modalContainer = document.getElementById('modal-container');
-		
-	modalBackground.classList.remove('hide');
-	
-	return modalContainer;
-}
-
-App.hideModal = function() {
-	let modalBackground = document.getElementById('modal-background');
-	let modalContainer = document.getElementById('modal-container');
-	
-	modalBackground.classList.add('hide');
-	modalContainer.innerHTML = '';
 }
 
 // ************************************************************************** //
@@ -331,7 +306,7 @@ App.displaySectorName = function(sector) {
 	
 	editButtonElem.addEventListener('click', function() {
 		let title = 'Editing: Sector ' + sector.name;		
-		App.showEditor(
+		DynEdit.edit(
 			title,
 			sector,
 			{lists:{},generators:{name:() => App.generateSectorName()},hide:['gmMode']},
@@ -401,27 +376,19 @@ App.displayWorlds = function(sector) {
 		DynTable.basicColumn('Tag', 'planet.tag2'),
 		DynTable.basicColumn('Terrain', 'planet.terrain'),
 	]);
+	worldTable.enableEditing(
+		WorldGenerator.planetTemplate,
+		function() { App.displayHexmap(sector); },
+		'planet'
+	);
 	worldOutput.appendChild(worldTable.getElement());
 		
 	worldTable.addRows(worlds);
 	worldTable.sort(0);	
 }
 
-App.showEditor = function(title, object, template, redraw) {
-	containerElement = App.showModal();
-	containerElement.innerHTML = '';
-	
-	let dynEdit = new DynEdit(title, object, function(saved) {
-		App.hideModal();
-		redraw(saved);
-	}, template);
-	
-	containerElement.appendChild(dynEdit.getElement());	
-}
-
 App.showConfirmation = function(title, callback) {
-	containerNode = App.showModal();
-	containerNode.innerHTML = '';
+	let modal = DynModal.show();
 	
 	let titleNode = document.createElement('p');
 	titleNode.innerText = title;
@@ -436,19 +403,19 @@ App.showConfirmation = function(title, callback) {
 	cancelButtonNode.className = 'textbutton';
 	cancelButtonNode.innerText = 'Cancel'
 	
-	containerNode.appendChild(titleNode);
-	containerNode.appendChild(buttonRowNode);
+	modal.container.appendChild(titleNode);
+	modal.container.appendChild(buttonRowNode);
 	buttonRowNode.appendChild(okButtonNode);
 	buttonRowNode.appendChild(document.createTextNode(' | '));
 	buttonRowNode.appendChild(cancelButtonNode);
 	
 	okButtonNode.addEventListener('click', function(event) {
-		App.hideModal();
+		DynModal.hide(modal);
 		callback(true);
 	});
 	
 	cancelButtonNode.addEventListener('click', function(event) {
-		App.hideModal();
+		DynModal.hide(modal);
 		callback(false);
 	});
 }
@@ -466,7 +433,7 @@ App.displaySystemInspector = function(inspectorElement, system, sector) {
 	(function(system) {
 		editSystemLink.addEventListener('click', function() {
 			let title = 'Editing: ' + system.name;
-			App.showEditor(title, system, WorldGenerator.systemTemplate, function() {
+			DynEdit.edit(title, system, WorldGenerator.systemTemplate, function() {
 				App.setURL(sector);
 				App.createDownloadLink(sector);
 				
@@ -498,7 +465,7 @@ App.displaySystemInspector = function(inspectorElement, system, sector) {
 		let planet = WorldGenerator.generatePlanet();
 		
 		let title = 'Adding planet to the ' + system.name + ' system';
-		App.showEditor(title, planet, WorldGenerator.planetTemplate, function(saved) {
+		DynEdit.edit(title, planet, WorldGenerator.planetTemplate, function(saved) {
 			if (!saved) {
 				return;
 			}
@@ -537,7 +504,7 @@ App.displaySystemInspector = function(inspectorElement, system, sector) {
 		(function(planet) {
 			editPlanetLink.addEventListener('click', function() {
 				let title = 'Editing: ' + planet.name + ', ' + system.name + ' system';
-				App.showEditor(title, planet, WorldGenerator.planetTemplate, function() {
+				DynEdit.edit(title, planet, WorldGenerator.planetTemplate, function() {
 					App.setURL(sector);
 					App.createDownloadLink(sector);
 					

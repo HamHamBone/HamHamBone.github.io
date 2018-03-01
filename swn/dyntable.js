@@ -12,12 +12,20 @@ var DynTable = function(columns) {
 	this.columns = columns;
 	this.rowData = [];
 	
+	this.editTemplate = null;
+	this.editCallback = null;
+	this.editPath = null;
+	
 	for (var i = 0; i < columns.length; i++) {
 		var colElement = document.createElement('col');
 		this.colgroupElement.appendChild(colElement);
 		
 		this.columns[i].element = colElement;
 	}
+	
+	this.editColumn = document.createElement('col');
+	this.editColumn.classList.add('edit-column');
+	this.colgroupElement.appendChild(this.editColumn);
 	
 	for (var i = 0; i < columns.length; i++) {
 		var cellElement = document.createElement('td');
@@ -90,6 +98,16 @@ DynTable.prototype.getElement = function() {
 	return this.tableElement;
 }
 
+DynTable.prototype.enableEditing = function(template, callback, path=null) {
+	this.editTemplate = template;
+	this.editCallback = callback;
+	this.editPath = path;
+}
+
+DynTable.prototype.setEditFunction = function(func) {
+	this.getEditObject = func;
+}
+
 DynTable.prototype.addRow = function(object) {
 	this._addRowNoValidate(object);
 	this._validateColumns();
@@ -99,17 +117,51 @@ DynTable.prototype._addRowNoValidate = function(object) {
 	this.rowData.push(object);
 	
 	var rowElement = document.createElement('tr');
+	this.bodyElement.appendChild(rowElement);	
 	
-	for (var i = 0; i < this.columns.length; i++) {
-		var cellElement = document.createElement('td');
+	let self = this;
+	
+	constructRow();
+	
+	function constructRow() {
+		rowElement.innerHTML = '';
 		
-		if (this.columns[i].validate === undefined || this.columns[i].validate(object)) {
-			cellElement.innerText = this.columns[i].get(object);
+		for (var i = 0; i < self.columns.length; i++) {
+			var cellElement = document.createElement('td');
+			
+			if (self.columns[i].validate === undefined || self.columns[i].validate(object)) {
+				cellElement.innerText = self.columns[i].get(object);
+			}
+			
+			rowElement.appendChild(cellElement);
 		}
 		
-		rowElement.appendChild(cellElement);
+		let editCellElement = document.createElement('td');
+		let editElement = document.createElement('div');
+		editElement.innerText = 'edit';
+		editElement.className = 'textbutton';
+		
+		editCellElement.appendChild(editElement);
+		
+		editElement.addEventListener('click', function(event) {
+			
+			let editObject = object;
+			console.log(editObject, self.editPath);
+			if (self.editPath && DynTable.validateHasAttribute(editObject, self.editPath)) {
+				editObject = DynTable.getAttributeByString(editObject, self.editPath);
+			}
+			
+			DynEdit.edit('Editing', editObject, self.editTemplate, function() {
+				constructRow();
+				
+				if (self.editCallback) {
+					self.editCallback();
+				}
+			});
+		});
+		
+		rowElement.appendChild(editCellElement);
 	}
-	this.bodyElement.appendChild(rowElement);	
 }
 
 DynTable.prototype.addRows = function(objects) {

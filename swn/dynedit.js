@@ -1,6 +1,11 @@
-let DynEdit = function(title, object, callback=null, template=null) {
+let DynEdit = {};
+
+DynEdit.edit = function(title, object, template=null, callback=null) {
+	let modal = DynModal.show();
+	
 	let parentElem = document.createElement('div');
 	parentElem.className = 'dynedit';
+	modal.container.appendChild(parentElem);
 	
 	let data = {};
 	
@@ -112,9 +117,6 @@ let DynEdit = function(title, object, callback=null, template=null) {
 	let cancelButton = simpleAppend(buttonRowElem, 'span', '(Cancel)', 'textbutton');
 	cancelButton.addEventListener('click', onCancel);
 	
-	this.object = object;
-	this.parentElem = parentElem;
-	
 	/* ======================================================================== */
 	
 	function onRandomizeAll() {
@@ -135,6 +137,7 @@ let DynEdit = function(title, object, callback=null, template=null) {
 	}
 	
 	function onSave() {
+		DynModal.hide(modal);
 		if (callback) {
 			for (property in data) {
 				let propertyData = data[property];
@@ -161,6 +164,7 @@ let DynEdit = function(title, object, callback=null, template=null) {
 	}
 	
 	function onCancel() {
+		DynModal.hide(modal);
 		if (callback) {
 			callback(false);
 		}
@@ -198,10 +202,4 @@ let DynEdit = function(title, object, callback=null, template=null) {
 		
 		return rowElem;
 	}
-}
-
-/* ========================================================================== */
-
-DynEdit.prototype.getElement = function() {
-	return this.parentElem;
 }
