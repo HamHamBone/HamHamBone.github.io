@@ -260,8 +260,8 @@ h2,.sector-name {
 	background-color:var(--table-header-hover-color);
 }
 
-.dyntable .dyntable-hidden, .no-edit .dyntable .edit-column {
-	visibility:collapse;
+.dyntable .dyntable-hidden, .no-edit .dyntable .edit-cell {
+	display:none;
 }
 
 /* ========================================================================== */

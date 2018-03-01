@@ -21,6 +21,7 @@ var DynTable = function(columns) {
 		this.colgroupElement.appendChild(colElement);
 		
 		this.columns[i].element = colElement;
+		this.columns[i].index = i;
 	}
 	
 	this.editColumn = document.createElement('col');
@@ -137,6 +138,7 @@ DynTable.prototype._addRowNoValidate = function(object) {
 		}
 		
 		let editCellElement = document.createElement('td');
+		editCellElement.classList.add('edit-cell');
 		let editElement = document.createElement('div');
 		editElement.innerText = 'edit';
 		editElement.className = 'textbutton';
@@ -161,6 +163,32 @@ DynTable.prototype._addRowNoValidate = function(object) {
 		});
 		
 		rowElement.appendChild(editCellElement);
+	}
+}
+
+DynTable.prototype.setColumnVisible = function(index, isVisible) {
+	let rows = this.bodyElement.childNodes;
+	
+	for (let row of rows) {
+		setNthCell(row);
+	}
+	
+	setNthCell(this.headElement);
+	
+	function setNthCell(row) {
+		let cells = row.childNodes;
+		
+		if (cells.length <= index) {
+			return;
+		}
+		
+		let cell = cells[index];
+		
+		if (isVisible) {
+			cell.classList.remove('dyntable-hidden');
+		} else {
+			cell.classList.add('dyntable-hidden');
+		}		
 	}
 }
 
@@ -208,10 +236,6 @@ DynTable.prototype._validateColumns = function() {
 			}
 		}
 
-		if (visibleColumn) {
-			column.element.classList.remove('dyntable-hidden');
-		} else {
-			column.element.classList.add('dyntable-hidden');
-		}
+		this.setColumnVisible(column.index, visibleColumn);
 	}
 }
