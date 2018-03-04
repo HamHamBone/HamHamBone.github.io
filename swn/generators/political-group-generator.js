@@ -292,21 +292,26 @@ let PoliticalGroupGenerator = (function() {
 	TextLoad.load('generators/data/swnPlaceNames.txt', function(loadedData) { data.placeName = loadedData; });
 	TextLoad.load('generators/data/legends.txt', function(loadedData) { data.legends = loadedData; });
 
-	PoliticalGroupGenerator.generate = function() {
+	function generateName() {
+		let name = '';
+		let pattern = GenUtil.pickRandom(namePatterns);
+		
+		name = GenUtil.generatePattern(pattern, data);
+		name = GenUtil.generatePattern(name, data);
+		
+		name = GenUtil.capitalize(name);
+		
+		return name;
+	}
 	
+	PoliticalGroupGenerator.generate = function() {
+		
 		var count = 20;
 		
 		let groups = [];
 		
 		for (var i = 0; i < count; i++) {
-			var pattern = "";
-
-			var pattern = GenUtil.pickRandom(namePatterns);
-			
-			name = GenUtil.generatePattern(pattern, data);
-			name = GenUtil.generatePattern(name, data);
-			
-			name = GenUtil.capitalize(name);
+			let name = generateName();
 			
 			var leadership = GenUtil.pickRandom(leaderships);
 			
@@ -314,6 +319,15 @@ let PoliticalGroupGenerator = (function() {
 		}
 		
 		return groups;
+	}
+	
+	PoliticalGroupGenerator.template = {
+		lists:{
+			leadership:leaderships
+		},
+		generators:{
+			name:() => generateName()
+		}
 	}
 	
 	return PoliticalGroupGenerator;

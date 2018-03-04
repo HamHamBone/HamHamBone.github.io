@@ -265,6 +265,7 @@ App.displaySector = function(sector) {
 		DynTable.basicColumn('Leadership', 'leadership')
 	]);
 	politicalGroupsOutput.appendChild(politicalGroupsTable.getElement());
+	politicalGroupsTable.enableEditing(PoliticalGroupGenerator.template);
 	
 	politicalGroupsTable.addRows(sector.politicalGroups);
 	politicalGroupsTable.sort(0);
@@ -279,6 +280,7 @@ App.displaySector = function(sector) {
 		DynTable.basicColumn('Lenses', 'lenses'),
 		DynTable.basicColumn('Government', 'government'),
 	]);
+	aliensTable.enableEditing(AlienGenerator.template);	
 	aliensOutput.appendChild(aliensTable.getElement());
 	
 	aliensTable.addRows(sector.aliens);

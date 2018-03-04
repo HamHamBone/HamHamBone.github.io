@@ -411,13 +411,13 @@ WorldGenerator.atmospheres = [
 WorldGenerator.temperatures = [
 	"frozen",
 	"cold (variable)",
+	"cold (variable)",
 	"cold",
-	"cold/temperate",
 	"temperate",
 	"temperate",
 	"temperate",
-	"warm/temperate",
 	"warm",
+	"warm (variable)",
 	"warm (variable)",
 	"burning"
 ];

@@ -169,31 +169,63 @@ AlienGenerator.lenses = [
 	"Wrath"
 ];
 
-AlienGenerator.generate = function() {
-	var alienCount = 3 + Math.floor(Math.random() * 6);;
-
+AlienGenerator.generateName = function() {
 	var lengths = [
-		1,
-		2,2,2,
-		3,3,3,3,3,3,3,
-		4,4,4,4,4,4,4,4,4,4,
-		5,5,5,5,5,5,5,
+		1,1,1,
+		2,2,2,2,2,2,2,2,2,2,2,2,
+		3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+		4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
+		5,5,5,5,5,5,5,5,5,5,5,5,
 		6,6,6,6,6,
 		7,7,7,
 		8,8,
 		9
 	];
+	var name = '';
+	if (Math.random() < 0.5) {
+		name = NameGen.generate(GenUtil.pickRandom(lengths), NameGen.LANGUAGE_ALIEN);
+	} else {
+		name = NameGen.generate(GenUtil.pickRandom(lengths), NameGen.LANGUAGE_ENGLISH);
+	}
+	
+	if (Math.random() < 0.5) {
+		name += AlienGenerator.generateSuffix();
+	}
+	
+	name = GenUtil.capitalize(name);
+	return name;
+}
+
+AlienGenerator.generateSuffix = function() {
+	let suffixes = [
+		'ian',
+		'ian',
+		'ian',
+		'an',
+		'an',
+		'oid',
+		'loid',
+		'ean',
+		'ite',
+		'ar',
+		'morph',
+		'ling',
+		'gen',
+		'on'
+	];
+	
+	return GenUtil.pickRandom(suffixes);
+}
+
+AlienGenerator.generate = function() {
+	var alienCount = 3 + Math.floor(Math.random() * 6);;
+
+
 
 	var aliens = [];
 	
 	for (var i = 0; i < alienCount; i++) {
-		var name = '';
-		if (Math.random() < 0.5) {
-			name = NameGen.generate(GenUtil.pickRandom(lengths), NameGen.LANGUAGE_ALIEN);
-		} else {
-			name = NameGen.generate(GenUtil.pickRandom(lengths), NameGen.LANGUAGE_ENGLISH);
-		}
-		name = GenUtil.capitalize(name);
+		let name = AlienGenerator.generateName();
 		var type = GenUtil.pickRandom(this.types);
 		var type2 = type;
 		var typeName = type.name;
@@ -232,4 +264,13 @@ AlienGenerator.generate = function() {
 	}
 	
 	return aliens;
+}
+
+AlienGenerator.template = {
+	lists:{
+		
+	},
+	generators:{
+		name:() => AlienGenerator.generateName()
+	}
 }
