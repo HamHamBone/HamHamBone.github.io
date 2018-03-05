@@ -1,17 +1,17 @@
 let StarSystemGenerator = {};
 
 StarSystemGenerator.STAR_CLASSES = [
-	"Black Hole",
-	"blue supergiant",
-	"blue giant",
-	"brown dwarf",
-	"red dwarf",
-	"yellow dwarf",
-	"yellow dwarf",
-	"red giant",
-	"red supergiant",
-	"white dwarf",
-	"neutron star"
+	{name:"Black Hole", masses:[0,1,2,3,4]},
+	{name:"blue supergiant", masses:[4]},
+	{name:"blue giant", masses:[3]},
+	{name:"brown dwarf", masses:[0]},
+	{name:"red dwarf", masses:[1]},
+	{name:"yellow dwarf", masses:[2]},
+	{name:"yellow dwarf", masses:[2]},
+	{name:"red giant", masses:[1,2,3]},
+	{name:"red supergiant", masses:[4]},
+	{name:"white dwarf", masses:[1,2]},
+	{name:"neutron star", masses:[2,3]},
 ];
 
 StarSystemGenerator.BODIES = [
@@ -30,7 +30,6 @@ StarSystemGenerator.BODIES = [
 
 StarSystemGenerator.generate = function(minBodies=0) {
 	let bodies = [];
-	let stars = [];
 	
 	let letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y'];
 	
@@ -55,6 +54,21 @@ StarSystemGenerator.generate = function(minBodies=0) {
 	}
 	
 	let starIndex = -1;
+	
+	let stars = [];
+	for (let i = 0; i < starCount; i++) {
+		
+		let starClass = this.pickRandom2d6(this.STAR_CLASSES);
+		
+		let star = {name:starClass.name, mass:GenUtil.pickRandom(starClass.masses)};
+		
+		stars.push(star);
+	}
+	stars.sort(function(sA, sB) {
+		return sB.mass - sA.mass;
+	});
+	
+	console.log(stars);
 	
 	for (let i = 0; i < bodyCount; i++) {
 		let body = bodies[i];
@@ -90,7 +104,7 @@ StarSystemGenerator.generate = function(minBodies=0) {
 			starIndex++;
 			planetIndex = 0
 			
-			type = this.pickRandom2d6(this.STAR_CLASSES);
+			type = stars[starIndex].name;
 			name = (starCount > 1 ? ' ' + letters[starIndex] : '');
 			
 			type = type.toUpperCase();

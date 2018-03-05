@@ -279,10 +279,16 @@ WorldGenerator.generateSequence = function(array, count) {
 }
 
 WorldGenerator.generateSystemName = function() {
+	let nameLengths = GenUtil.probArray([
+		[3,1],
+		[24,2],
+		[12,3],
+		[1,4]
+	]);
 	let name = systemName = '';
 	if (Math.random() < 0.75) {
 		if (Math.random() < 0.5) {
-			systemName = NameGen.generate(GenUtil.randInt(2, 4));
+			systemName = NameGen.generate(GenUtil.pickRandom(nameLengths));
 			systemName += this.generateSuffix(systemName);
 		} else {
 			systemName = WorldGenerator.generateStarlikeName();
@@ -296,27 +302,31 @@ WorldGenerator.generateSystemName = function() {
 }
 
 WorldGenerator.generateStarlikeName = function() {
-	return GenUtil.mashup(Math.random() < 0.5 ? GenUtil.pickRandom(this.starNames) : NameGen.generate(GenUtil.randInt(3, 5)), GenUtil.pickRandom(this.starNames));
+	let nameLengths = GenUtil.probArray([
+		[3,1],
+		[24,2],
+		[12,3],
+		[1,4]
+	]);
+	return GenUtil.mashup(Math.random() < 0.5 ? GenUtil.pickRandom(this.starNames) : NameGen.generate(GenUtil.pickRandom(nameLengths)), GenUtil.pickRandom(this.starNames));
 }
 
 WorldGenerator.generatePlanetName = function() {
+	let nameLengths = GenUtil.probArray([
+		[3,1],
+		[24,2],
+		[12,3],
+		[1,4]
+	]);
+	//return NameGen.generate(GenUtil.pickRandom(nameLengths));
+	
 	planetName = ""
 	var planetNameRandom = Math.random();
-	let nameLengths = [3,3,3,4,4,4,4,4,4,4,4,4,5,5,5];
+	
 	if (planetNameRandom < 0.01) {
 		planetName = this.generateDesignation();
 	} else if (planetNameRandom < 0.06) {
-		let lengths = [
-			2,
-			3,3,3,3,3,3,3,
-			4,4,4,4,4,4,4,4,4,4,
-			5,5,5,5,5,5,5,
-			6,6,6,6,6,
-			7,7,7,
-			8,8,
-			9
-		];
-		planetName = NameGen.generate(GenUtil.pickRandom(lengths), NameGen.LANGUAGE_ALIEN);
+		planetName = NameGen.generate(GenUtil.pickRandom(nameLengths), NameGen.LANGUAGE_ALIEN);
 		if (Math.random() < 0.5) {
 			planetName += this.generateSuffix(planetName); 
 		}
@@ -326,7 +336,7 @@ WorldGenerator.generatePlanetName = function() {
 		if (Math.random() < 0.5) {
 			planetName = NameGen.generate(GenUtil.pickRandom(nameLengths));
 		} else {
-			planetName = NameGen.generate(GenUtil.pickRandom(nameLengths)-1);
+			planetName = NameGen.generate(Math.max(1, GenUtil.pickRandom(nameLengths)-1));
 			planetName += this.generateSuffix(planetName); 
 		}
 	} else {
@@ -339,7 +349,7 @@ WorldGenerator.generatePlanetName = function() {
 				randomName = NameGen.generate(GenUtil.pickRandom(nameLengths));
 				planetName = GenUtil.mashup(placeName, randomName);
 			} else {
-				randomName = NameGen.generate(GenUtil.pickRandom(nameLengths)-1);
+				randomName = NameGen.generate(Math.max(1, GenUtil.pickRandom(nameLengths)-1));
 				planetName = GenUtil.mashup(placeName, randomName);
 				planetName += this.generateSuffix(planetName);
 			}
@@ -349,11 +359,11 @@ WorldGenerator.generatePlanetName = function() {
 	planetName = GenUtil.cleanup(planetName.toLowerCase());
 	
 	if (Math.random() < (1/30)) {
-		let secondaryName = NameGen.generate(GenUtil.randInt(2,4));
+		let secondaryName = NameGen.generate(GenUtil.randInt(1,2));
 		secondaryName = GenUtil.cleanup(secondaryName.toLowerCase());
 		planetName = secondaryName + ' ' + planetName;
 		if (Math.random() < (1/10)) {
-			let secondaryName = NameGen.generate(GenUtil.randInt(2,3));
+			let secondaryName = NameGen.generate(GenUtil.randInt(1,2));
 			secondaryName = GenUtil.cleanup(secondaryName.toLowerCase());
 			planetName = secondaryName + ' ' + planetName;
 		}
@@ -468,7 +478,7 @@ WorldGenerator.techlevels = [
 	{value:"0", outpostCount:-2},
 	{value:"1", outpostCount:-2},
 	{value:"2", outpostCount:-2},
-	{value:"2", outpostCount:-2},
+	{value:"4", outpostCount:0},
 	{value:"4", outpostCount:0},
 	{value:"4", outpostCount:0},
 	{value:"4",outpostCount:0},

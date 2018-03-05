@@ -155,6 +155,7 @@ DynTable.prototype._addRowNoValidate = function(object) {
 			
 			DynEdit.edit('Editing', editObject, self.editTemplate, function() {
 				constructRow();
+				self._validateColumns();
 				
 				if (self.editCallback) {
 					self.editCallback();

@@ -170,17 +170,12 @@ AlienGenerator.lenses = [
 ];
 
 AlienGenerator.generateName = function() {
-	var lengths = [
-		1,1,1,
-		2,2,2,2,2,2,2,2,2,2,2,2,
-		3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
-		4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
-		5,5,5,5,5,5,5,5,5,5,5,5,
-		6,6,6,6,6,
-		7,7,7,
-		8,8,
-		9
-	];
+	let lengths = GenUtil.probArray([
+		[2,1],
+		[5,2],
+		[2,3],
+		[1,4]
+	]);
 	var name = '';
 	if (Math.random() < 0.5) {
 		name = NameGen.generate(GenUtil.pickRandom(lengths), NameGen.LANGUAGE_ALIEN);
@@ -188,7 +183,7 @@ AlienGenerator.generateName = function() {
 		name = NameGen.generate(GenUtil.pickRandom(lengths), NameGen.LANGUAGE_ENGLISH);
 	}
 	
-	if (Math.random() < 0.5) {
+	if (Math.random() < 0.25) {
 		name += AlienGenerator.generateSuffix();
 	}
 	
@@ -210,7 +205,6 @@ AlienGenerator.generateSuffix = function() {
 		'ar',
 		'morph',
 		'ling',
-		'gen',
 		'on'
 	];
 	

@@ -136,8 +136,8 @@ GenUtil.CONSONANTS = ['b','c','ch','d','f','g','h','k','l','m','n','p','r','s','
 GenUtil.mashup = function(stringA, stringB) {
 	var fraction = 0.33333 + 0.33333 * Math.random();
 	
-	stringA = stringA.slice(0, Math.ceil(stringA.length * fraction));
-	stringB = stringB.slice(Math.floor(stringB.length * fraction));
+	stringA = stringA.slice(0, Math.round(stringA.length * fraction));
+	stringB = stringB.slice(Math.round(stringB.length * fraction));
 
 	var consA = stringA.match(/[^aeiouAEIOU]+$/);
 	if (consA != null) {
