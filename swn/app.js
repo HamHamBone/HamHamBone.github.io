@@ -240,6 +240,13 @@ App.displaySector = function(sector) {
 		DynTable.basicColumn('Valuation', 'valuation'),
 	]);
 	corporationsOutput.appendChild(corporationsTable.getElement());
+	corporationsTable.enableEditing(
+		{},
+		function() {
+			App.setURL(sector);
+			App.createDownloadLink(sector);
+		}
+	);
 	
 	corporationsTable.addRows(sector.corporations);
 	corporationsTable.sort(0);
@@ -253,6 +260,13 @@ App.displaySector = function(sector) {
 		DynTable.basicColumn('Doctrine', 'doctrine'),
 	]);
 	religionsOutput.appendChild(religionsTable.getElement());
+	religionsTable.enableEditing(
+		{},
+		function() {
+			App.setURL(sector);
+			App.createDownloadLink(sector);
+		}
+	);
 	
 	religionsTable.addRows(sector.religions);
 	religionsTable.sort(0);
@@ -265,7 +279,13 @@ App.displaySector = function(sector) {
 		DynTable.basicColumn('Leadership', 'leadership')
 	]);
 	politicalGroupsOutput.appendChild(politicalGroupsTable.getElement());
-	politicalGroupsTable.enableEditing(PoliticalGroupGenerator.template);
+	politicalGroupsTable.enableEditing(
+		PoliticalGroupGenerator.template,
+		function() {
+			App.setURL(sector);
+			App.createDownloadLink(sector);
+		}
+	);	
 	
 	politicalGroupsTable.addRows(sector.politicalGroups);
 	politicalGroupsTable.sort(0);
@@ -280,7 +300,13 @@ App.displaySector = function(sector) {
 		DynTable.basicColumn('Lenses', 'lenses'),
 		DynTable.basicColumn('Government', 'government'),
 	]);
-	aliensTable.enableEditing(AlienGenerator.template);	
+	aliensTable.enableEditing(
+		AlienGenerator.template,
+		function() {
+			App.setURL(sector);
+			App.createDownloadLink(sector);
+		}
+	);	
 	aliensOutput.appendChild(aliensTable.getElement());
 	
 	aliensTable.addRows(sector.aliens);
@@ -380,7 +406,11 @@ App.displayWorlds = function(sector) {
 	]);
 	worldTable.enableEditing(
 		WorldGenerator.planetTemplate,
-		function() { App.displayHexmap(sector); },
+		function() {
+			App.displayHexmap(sector);
+			App.setURL(sector);
+			App.createDownloadLink(sector);
+		},
 		'planet'
 	);
 	worldOutput.appendChild(worldTable.getElement());
