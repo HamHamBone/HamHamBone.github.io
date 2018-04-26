@@ -148,7 +148,6 @@ DynTable.prototype._addRowNoValidate = function(object) {
 		editElement.addEventListener('click', function(event) {
 			
 			let editObject = object;
-			console.log(editObject, self.editPath);
 			if (self.editPath && DynTable.validateHasAttribute(editObject, self.editPath)) {
 				editObject = DynTable.getAttributeByString(editObject, self.editPath);
 			}
