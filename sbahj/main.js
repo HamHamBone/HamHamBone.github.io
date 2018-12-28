@@ -17,8 +17,10 @@ let forceStart = false;
 
 canvas.addEventListener('click', function(event) {
 	//if (synth.audioCtx.state != 'running') {
-		forceStart = true;
-		synth.play();
+		if (doneLoading()) {
+			forceStart = true;
+			synth.play();
+		}
 	//}
 });
 
@@ -43,6 +45,10 @@ for (let i = 0; i < 50; i++) {
 draw();
 mainLoop();
 
+function doneLoading() {
+	return imgRoom.complete && imgLight.complete && imgOutside.complete && imgVignette.complete;
+}
+
 function makeSnowflake() {
 	let snowflake = {};
 	
@@ -59,9 +65,27 @@ function makeSnowflake() {
 }
 
 function draw() {
+	ctx.clearRect(0,0,800,600);
 	
 	if (!forceStart) {
-		ctx.clearRect(0,0,800,600);
+		
+		
+		if (!doneLoading()) {
+			ctx.save();
+				ctx.fillStyle = 'white';
+				ctx.globalAlpha = 0.25 + 0.05*Math.sin(globalTime / 10);
+				
+				ctx.font = '16px "Segoe UI"';
+				ctx.textAlign = 'center';
+				ctx.textBaseline = 'middle';
+				
+				ctx.fillText('Loading...', 400, 300);
+			ctx.restore();
+
+			canvas.style.cursor = 'default';
+			
+			return;
+		}
 		
 		ctx.save();
 			ctx.fillStyle = 'white';
