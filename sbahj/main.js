@@ -4,30 +4,35 @@ let synth = new beepbox.Synth('6n31s6k7l00e0rt8m0a7g0vjfi0r1o3210T0w8f2d1c2h0v1T
 
 console.log(synth);
 
+// -----------------------------------------------------------------------------
+
 let imgRoom = document.getElementById('imgRoom');
 let imgLight = document.getElementById('imgLight');
 let imgOutside = document.getElementById('imgOutside');
 let imgVignette = document.getElementById('imgVignette');
 
 let canvas = document.getElementById('canvas');
-
 let message = document.getElementById('message');
 
-let forceStart = false;
+// -----------------------------------------------------------------------------
 
-canvas.addEventListener('click', function(event) {
-	//if (synth.audioCtx.state != 'running') {
-		if (doneLoading()) {
-			forceStart = true;
-			synth.play();
-		}
-	//}
-});
+let forceStart = false;
 
 canvas.width = 800;
 canvas.height = 600;
 
 let ctx = canvas.getContext('2d');
+
+let gradient = ctx.createRadialGradient(400,300,0, 400,300,600);
+gradient.addColorStop(0, 'transparent');
+gradient.addColorStop(1, '#0C0B16');
+
+let imgVignetteFake = document.createElement('canvas');
+imgVignetteFake.width = 800;
+imgVignetteFake.height = 600;
+let vCtx = imgVignetteFake.getContext('2d');
+vCtx.fillStyle = gradient;
+vCtx.fillRect(0,0,800,600);
 
 let lightLevel = Math.random();
 let t = Math.random()*100;
@@ -45,8 +50,19 @@ for (let i = 0; i < 50; i++) {
 draw();
 mainLoop();
 
+// =============================================================================
+
+canvas.addEventListener('click', function(event) {
+	//if (synth.audioCtx.state != 'running') {
+		if (doneLoading()) {
+			forceStart = true;
+			synth.play();
+		}
+	//}
+});
+
 function doneLoading() {
-	return imgRoom.complete && imgLight.complete && imgOutside.complete && imgVignette.complete;
+	return imgRoom.complete && imgLight.complete && imgOutside.complete;
 }
 
 function makeSnowflake() {
@@ -139,7 +155,7 @@ function draw() {
 	
 	ctx.restore();
 	
-	ctx.drawImage(imgVignette, 0, 0);	
+	ctx.drawImage(imgVignette.complete ? imgVignette : imgVignetteFake, 0, 0);	
 }
 
 function mainLoop() {
