@@ -1,0 +1,22 @@
+html, body {
+	font-family:"Segoe UI";
+	font-size:24px;
+	
+	background-color:#070810;
+	
+	width: 100%;
+	height: 100%;
+	
+	margin:0px;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+canvas {
+	/*border: 1px solid #28683A;*/
+	margin: 0 auto
+}
