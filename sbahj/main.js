@@ -2,8 +2,6 @@
 
 let synth = new beepbox.Synth('6n31s6k7l00e0rt8m0a7g0vjfi0r1o3210T0w8f2d1c2h0v1T0w1f1d1c0h8v0T0w2f2d2c0h0v2T2w1d1v1b000000000y2c8wz288M00000x2400y8c8y30000y8c8y328wM0248gy288My2c8wz288My2c8wz288gx288wy288w0008wy288w0008wx24p25BGsX3O2FPGY0FzPlkVRZg705et7WQQZ7ttA_wnkgQ1E3m6IdcBg6weJceacz8EOcyz8OacP8EM7dEOcyz8Oa00mpN3jddCsxa1ipznuNEuXujejdTr0mPUuFEXcQP0FpcJdd4ZcDN2u9D8O1iUKSqb7rcXJUCszrKUKSqH2ftLypOpwuU1PyLXmYjehZCsnrd6zZCswBIPjdtQO5COwDQR-bOuCBdfHDVtaoZQwFzW5c-0FEYo26Adfq3A1Sc13i6DIxO0X611G3lSG0FxNl0Rp50qa0V5llmhg402C1MG192m795gaw50cAeibgawmi795gaw50cAd54qoD4q2d16wct16wzg7oE3A100');
 
-synth.play();
-
 console.log(synth);
 
 let imgRoom = document.getElementById('imgRoom');
@@ -20,9 +18,7 @@ let forceStart = false;
 canvas.addEventListener('click', function(event) {
 	//if (synth.audioCtx.state != 'running') {
 		forceStart = true;
-		synth.audioCtx.resume();
 		synth.play();
-		console.log(synth);
 	//}
 });
 
@@ -64,7 +60,7 @@ function makeSnowflake() {
 
 function draw() {
 	
-	if (!forceStart && synth.audioCtx.state != 'running') {
+	if (!forceStart) {
 		ctx.clearRect(0,0,800,600);
 		
 		ctx.save();
