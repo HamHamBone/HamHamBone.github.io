@@ -13,6 +13,8 @@ let imgVignette = document.getElementById('imgVignette');
 
 let canvas = document.getElementById('canvas');
 
+let message = document.getElementById('message');
+
 let forceStart = false;
 
 canvas.addEventListener('click', function(event) {
@@ -31,6 +33,8 @@ let ctx = canvas.getContext('2d');
 
 let lightLevel = Math.random();
 let t = Math.random()*100;
+
+let globalTime = 0;
 
 let snowflakes = [];
 
@@ -125,6 +129,15 @@ function mainLoop() {
 		lightLevel = Math.random();
 		t = 20 + Math.max(Math.random(),Math.random()) * 600;
 	}
+	
+	globalTime ++;
+	
+	let opacity = 1 - (globalTime - 300) / 300;
+	
+	if (opacity < 0) opacity = 0;
+	if (opacity > 1) opacity = 1;
+	
+	message.style.opacity = opacity;
 	
 	draw();
 	
