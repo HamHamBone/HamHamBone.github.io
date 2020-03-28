@@ -24,15 +24,23 @@ let TextLoad = (function() {
 		request.send();
 	}
 	
+	TextLoad.massLoad = function(data) {
+		for (key in data) {
+			TextLoad.load(data[key], function(result) {
+				data[key] = result;
+			});
+		}
+	}
+	
 	function onLoad(event, url, callback) {
 		let data = textToArray(event.target.responseText);
-		callback(data);
+		if (callback) { callback(data) };
 		
 		onLoadEnd();
 	}
 	
 	function onError(event, url, callback) {
-		callback([]);
+		if (callback) { callback([]) };
 		console.warn('Could not load text file: ' + url);
 		
 		onLoadEnd();

@@ -173,7 +173,7 @@ App.censorSector = function(sector) {
 	newSector.systems = App.censorObjects(sector.systems, ['pointsOfInterest', 'bodies']);
 	for (let i = 0; i < newSector.systems.length; i++) {
 		let system = newSector.systems[i];
-		system.planets = App.censorObjects(system.planets, ['tag1', 'tag2', 'terrain']);
+		system.planets = App.censorObjects(system.planets, ['privateNotes', 'tag1', 'tag2', 'terrain']);
 	}
 	
 	newSector.corporations = App.censorObjects(sector.corporations, ['markets', 'strategy', 'valuation']);
@@ -575,6 +575,13 @@ App.displaySystemInspector = function(inspectorElement, system, sector) {
 		if ('population' in planet) { appendRow(tableElem, ['Population', planet.population]); }
 		if ('techLevel' in planet) { appendRow(tableElem, ['Tech Level', planet.techLevel]); }
 		if ('terrain' in planet) { appendRow(tableElem, ['Terrain', planet.terrain]); }
+		
+		if ('notes' in planet) {
+			simpleAppend(planetBodyElement, 'p', planet.notes, 'secondary');
+		}
+		if ('privateNotes' in planet) {
+			simpleAppend(planetBodyElement, 'p', planet.privateNotes, 'secondary');
+		}
 		
 		if ('tag1' in planet) {
 			let tag = WorldGenerator.tagDictionary.get(planet.tag1);

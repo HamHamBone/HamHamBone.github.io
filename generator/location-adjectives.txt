@@ -7,7 +7,6 @@ Burning
 Elven
 Dwarven
 Gnomish
-Hobbit
 Orcish
 Deep
 Dragon
@@ -31,7 +30,6 @@ Unlikely
 Sinister
 Draconic
 Monstrous
-Goblin
 Lonely
 Twin
 Sealed
@@ -66,6 +64,7 @@ Black
 White
 Blue
 Green
+Onyx
 Red
 Orange
 Yellow
@@ -164,6 +163,7 @@ Olympic
 Raging
 Invisible
 Stony
+Starving
 Musical
 Windswept
 Vast
@@ -183,13 +183,10 @@ Elder
 Ominous
 Ghastly
 Baleful
-Extraordinary
 Dying
 Lucky
 Sunny
 Flowering
-Awesome
-Beatific
 Petrified
 Putrified
 Rejoicing

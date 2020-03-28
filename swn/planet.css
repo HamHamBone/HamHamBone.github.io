@@ -24,7 +24,7 @@
 	--hexmap-planet-name-color:#555;
 }
 
-/*
+
 :root {
 	--bg-color:#112;
 	--text-color:#BBC;
@@ -50,7 +50,7 @@
 	--hexmap-system-marker-color:#AAB;
 	--hexmap-planet-name-color:#667;
 }
-*/
+
 
 input, select, textarea {
 	background-color:var(--table-alt-color);

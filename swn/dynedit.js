@@ -20,6 +20,9 @@ DynEdit.edit = function(title, object, template=null, callback=null) {
 	
 	let tableElem = simpleAppend(parentElem, 'table');
 	
+	if (object.notes === undefined) { object.notes = ""; }
+	if (object.privateNotes === undefined) { object.privateNotes = ""; }
+	
 	for (property in object) {
 		let value = object[property];
 		
@@ -59,7 +62,12 @@ DynEdit.edit = function(title, object, template=null, callback=null) {
 		}
 		
 		if (inputElem == null) {
-			inputElem = simpleAppend(rowElem, 'input');
+			if (typeof value == 'string') {
+				inputElem = simpleAppend(rowElem, 'textarea');
+			} else {
+				inputElem = simpleAppend(rowElem, 'input');
+			}
+			
 			
 			if (typeof value == 'number') {
 				inputElem.type = 'number';

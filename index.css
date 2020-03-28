@@ -3,6 +3,8 @@ body {
 	font-size:16px;
 	color:#333;
 	background-color:rgb(230,230,230);
+	
+	margin:0px;
 }
 
 p {
@@ -25,9 +27,11 @@ input {
 }
 
 h1 {
-	font-size:24px;
+	font-size:22px;
 	margin-top:16px;
 	margin-bottom:8px;
+	font-family: "Courier New";
+	font-weight: normal;
 }
 
 h2 {
@@ -36,6 +40,7 @@ h2 {
 	text-align:center;
 	margin-top:0px;
 	margin-bottom:16px;
+	font-family: "Courier New";
 }
 
 .wrapper {
@@ -44,5 +49,50 @@ h2 {
 	background-color:rgb(250,250,250);
 	border-radius:12px;
 	
-	margin:0 auto;
+	margin:8px auto;
+}
+
+.hamdiv {
+	text-align:center;
+}
+
+.hamimage {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	vertical-align:middle;
+	display: inline;
+}
+
+.playbutton {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	vertical-align:middle;
+	display: inline;
+	cursor:pointer;
+}
+
+.portimg {
+	width:100%;
+	
+	margin-top:8px;
+	margin-bottom:8px;
+}
+
+#fullscreen {
+	position:fixed;
+	width:100%;
+	height:100%;
+	margin-top:-8px;
+	
+  display: flex;
+  justify-content: center;
+  align-items: center;
+	
+	background-color:rgba(0, 0, 0, 0.4);
+	
+	display:none;
 }

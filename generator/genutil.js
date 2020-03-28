@@ -1,80 +1,111 @@
-var GenUtil = {};
+var GenUtil = (function() {
+	GenUtil = {};
+	
+	// ***************************************************************************
+	// RANDOM DISTRIBUTIONS
+	
+	GenUtil.randInt = function(min, max) {
+		return min + Math.floor(Math.random() * (1 + max - min));
+	}
+	
+	// ***************************************************************************
+	// ARRAY FUNCTIONS
+	
+	GenUtil.pickRandom = function(array) {
+		return array[Math.floor(Math.random()*array.length)];	
+	}
 
-GenUtil.pickRandom = function(array) {
-	return array[Math.floor(Math.random()*array.length)];	
-}
-
-GenUtil.generatePattern = function(pattern, data) {
-	for (name in data) {
-		var regexp = new RegExp("{" + name + "}");
-		while (pattern.search(regexp) > -1) {
-			pattern = pattern.replace(regexp, function() { return GenUtil.pickRandom(data[name]); });
+	GenUtil.probArray = function(array) {
+		let result = [];
+		for (let entry of array) {
+			result = result.concat(new Array(entry[0]).fill(entry[1]));
 		}
+		return result;
 	}
 	
-	// pluralize tag
-	var regexp = /(\w+)~s/g; // matches any word ending with the special ~s sequence
-	pattern = pattern.replace(regexp, function(match, word) { return GenUtil.pluralize(word);  });
-	
-	// annify tag
-	var regexp = /~n ([aeiouAEIOU])/g; // matches ~n followed by a space then a vowel
-	pattern = pattern.replace(regexp, function(match, vowel) { return "n " + vowel} );
-	
-	var regexp = /~n/g; // matches ~n
-	pattern = pattern.replace(regexp, "");
-	
-	return pattern;	
-}
-
-GenUtil._textToArray = function(text) {
-	return text.split(/[\n\r]+/);	
-}
-
-GenUtil.loadTextFile = function(filename) {
-	var request = new XMLHttpRequest();
-	request.open("GET", filename, false);
-	request.overrideMimeType("text/plain");
-	
-	request.send();
-
-	return GenUtil._textToArray(request.responseText);	
-}
-
-GenUtil.loadTextFiles = function(data, onAllLoad) {
-	var keys = Object.keys(data);
-	var requestCount = keys.length;
-	var loadedData = {};
-	
-	function makeRequest(key, filename) {
-		var request = new XMLHttpRequest();
-		request.addEventListener("load", function(e) { onLoad(e, key) });
-		request.open("GET", filename);
-		request.overrideMimeType("text/plain");
-		request.send();		
-	}
-	
-	for (var i = 0; i < keys.length; i++) {
-		var key = keys[i];
-		var filename = data[key];
-		makeRequest(key, filename);
-	}
-	
-	function onLoad(e, key) {
-		loadedData[key] = GenUtil._textToArray(e.target.responseText);
+	// in place shuffle the given array
+	// fisher-yates shuffle
+	GenUtil.shuffle = function(array) {
+		for (let i = 0; i < array.length; i++) {
+			let swapIndex = GenUtil.randInt(i, array.length-1);
+			let temp = array[i];
+			array[i] = array[swapIndex];
+			array[swapIndex] = temp;
+		}
 		
-		requestCount--;
-		if (requestCount <= 0) {
-			onAllLoad(loadedData);
-		}
+		return array;
 	}
-}
+	
+	// ***************************************************************************
+	// Shuffler
+	
+	GenUtil.Shuffler = function(array) {
+		this._index = 0;
+		this._array = array.slice(array);
+	}
+
+	GenUtil.Shuffler.prototype.next = function() {
+		let array = this._array;
+		
+		if (this._index < this._array.length - 1) {
+			let swapIndex = GenUtil.randInt(this._index, this._array.length-1);
+			
+			let swap = this._array[swapIndex];
+			this._array[swapIndex] = this._array[this._index];
+			this._array[this._index] = swap;
+		}
+		
+		let result = this._array[this._index];
+		
+		this._index++;
+		
+		if (this._index >= this._array.length) {
+			this._index = 0;
+		}
+		
+		return result;
+	}	
+	
+	// ***************************************************************************
+	// PATTERNS
+	
+	GenUtil.generatePattern = function(pattern, data) {
+		for (name in data) {
+			var regexp = new RegExp("{" + name + "}");
+			while (pattern.search(regexp) > -1) {			
+				pattern = pattern.replace(regexp, function() {
+					if (typeof data[name] === 'function') {
+						return data[name]();
+					} else {
+						return GenUtil.pickRandom(data[name]);
+					}					
+				});
+			}
+		}
+		
+		// pluralize tag
+		var regexp = /(\w+)~s/g; // matches any word ending with the special ~s sequence
+		pattern = pattern.replace(regexp, function(match, word) { return GenUtil.pluralize(word);  });
+		
+		// annify tag
+		var regexp = /~n ([aeiouAEIOU])/g; // matches ~n followed by a space then a vowel
+		pattern = pattern.replace(regexp, function(match, vowel) { return "n " + vowel} );
+		
+		var regexp = /~n/g; // matches ~n
+		pattern = pattern.replace(regexp, "");
+		
+		return pattern;	
+	}	
+	
+	return GenUtil;
+}) ();
 
 GenUtil.capitalize = function(string) {
 	var name = "";
 	
 	for (var i = 0; i < string.length; i++) {
 		var prevChar = string[i-1];
-		if (i == 0 || prevChar == " " || prevChar == "'") {
+		if (i == 0 || prevChar == " ") {
 			name += string[i].toUpperCase();
 		} else {
 			name += string[i].toLowerCase();
@@ -94,20 +125,82 @@ GenUtil.pluralize = function(string) {
 		return string + "es";
 	} else if (string.slice(-1) == "y" && !GenUtil._isVowel(string.slice(-2,-2))) {
 		return string.slice(0, -1) + "ies";
-	} else if (string.slice(-2) == "lf") {
-		return string.slice(0, -2) + "lves";
-	} else if (string.slice(-2) == "rf") {
-		return string.slice(0, -2) + "rves";
+	} else if (string.slice(-3) == 'man') {
+		return string.slice(0,-3) + 'men';
+	} else if (string.slice(-4) == 'folk') {
+		return string;
 	} else {
 		return string + "s";
 	}
 }
 
+GenUtil.VOWELS = ['a', 'e', 'i', 'o', 'u'];
+GenUtil.CONSONANTS = ['b','c','ch','d','f','g','h','k','l','m','n','p','r','s','sh','t','th','v','w','x','y','z'];
+
 GenUtil.mashup = function(stringA, stringB) {
-	var fraction = 0.25 + 0.5 * Math.random();
+	var fraction = 0.33333 + 0.33333 * Math.random();
 	
-	stringA = stringA.slice(0, Math.floor(stringA.length * fraction));
-	stringB = stringB.slice(Math.floor(stringB.length * fraction));
+	stringA = stringA.slice(0, Math.round(stringA.length * fraction));
+	stringB = stringB.slice(Math.round(stringB.length * fraction));
+
+	var consA = stringA.match(/[^aeiouAEIOU]+$/);
+	if (consA != null) {
+		consA = consA[0];
+		stringA = stringA.slice(0, -1 * consA.length);
+	} else {
+		consA = '';
+	}
 	
-	return stringA + stringB;
+	var consB = stringB.match(/^[^aeiouAEIOU]+/);
+	if (consB != null) {
+		consB = consB[0];
+		stringB = stringB.slice(consB.length);
+	} else {
+		consB = '';
+	}
+	
+	var result = '';
+	if (consA.length + consB.length > 2) {
+		//console.log(stringA + '-' + consA + '-' + consB + '-' + stringB);
+		if (consA < consB) {
+			result = stringA + consA + stringB;
+		} else {
+			result = stringA + consB + stringB;
+		}
+		//console.log(result);
+	} else {
+		result = stringA + consA + consB + stringB;
+	}
+	
+	return result;
+}
+
+GenUtil.cleanup = function(string) {
+	var orig = string;
+	
+	string = string.replace(/^ck/g, 'k');
+	string = string.replace(/tth|tht/g, 'th');
+	string = string.replace(/chsh|shch/g, 'ch');
+	string = string.replace(/yu[aeio]+/g, 'yu');
+	string = string.replace(/dt|td/g, Math.random()<0.5 ? 't' : 'd')
+	string = string.replace(/gc|cg/g, Math.random()<0.5 ? 'g' : 'c');
+	string = string.replace(/q!u/g, 'qu');
+	string = string.replace(/f([aeou])c?k/g, GenUtil.pickRandom(GenUtil.CONSONANTS) + '$1' + GenUtil.pickRandom(GenUtil.CONSONANTS));
+	string = string.replace(/c[aeiou]ch/g, 'kech');
+	string = string.replace(/kic/g, 'kik');
+	string = string.replace(/xsk|skx/g, Math.random()<0.5 ? 'x' : 'sk');
+	string = string.replace(/ic([aeiou])/g, Math.random()<0.5 ? 'is$1' : 'ick$1');
+	string = string.replace(/ci/g, Math.random()<0.5 ? 'si' : 'ki');
+	string = string.replace(/vf|fv/g, Math.random()<0.5 ? 'f' : 'v');
+	string = string.replace(/bp|pb/g, Math.random()<0.5 ? 'b' : 'p');
+	
+	if (orig != string) {
+		console.log(orig, string);
+	}
+	
+	return string;
+}
+
+GenUtil.unique = function(array) {
+	return Array.from(new Set(array));
 }

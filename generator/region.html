@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Adventure Location Generator</title>
+	<link rel="stylesheet" href="generator.css">
+	<link href="../hhb-icon.png" rel="icon" type="image/png" />
+</head>
+
+<body>
+	<div class="wrapper">
+		<h1>Adventure Location Generator</h1>
+		<p id="output">...loading data...</p>
+		<button id="button-reroll">Generate more!</button>
+		<p class="attrib">
+			Generator and wordlists derived from 
+			<a href="https://github.com/anonymousAwesome/Randomly-generated-Magic-Items">
+				anonymousAwesome's Python script
+			</a>
+		</p>
+	</div>
+</body>
+
+<script type="text/javascript" src="textload.js"></script>
+<script type="text/javascript" src="genutil.js"></script>
+<script type="text/javascript" src="region.js"></script>
+
+<script type="text/javascript">
+	let outputElement = document.getElementById("output");
+	
+	document.getElementById("button-reroll").addEventListener("click", generate);
+	
+	TextLoad.onAllLoad(generate);
+	
+	function generate() {
+		outputElement.innerHTML = RegionGenerator.generate();
+	}
+
+</script>
+
+</html>

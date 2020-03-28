@@ -22,6 +22,7 @@
 </body>
 
 <script type="text/javascript" src="genutil.js"></script>
+<script type="text/javascript" src="name-generator.js"></script>
 
 <script type="text/javascript">
 
@@ -33,6 +34,8 @@
 	function generate() {
 		outputElement.innerHTML = "";
 		
+		let name = GenUtil.capitalize(NameGenerator.generate() + ' ' + NameGenerator.generate());
+		
 		var race = GenUtil.pickRandom(races);
 		var charClass = GenUtil.pickRandom(classes);
 		var background = GenUtil.pickRandom(backgrounds);
@@ -41,10 +44,15 @@
 		var age = GenUtil.pickRandom(ages);
 		var physicalTrait = GenUtil.pickRandom(physicalTraits);
 		var mentalTrait = GenUtil.pickRandom(mentalTraits);
+		var mentalTrait2 = GenUtil.pickRandom(mentalTraits);
 		var noun = GenUtil.pickRandom(nouns);
 		var noun2 = GenUtil.pickRandom(nouns);
 		
-		outputElement.innerHTML += "<b>Race:</b> " + GenUtil.capitalize(physicalTrait) + " and " + GenUtil.capitalize(mentalTrait) + ' ' + race + ' ' + charClass + ' of ' + GenUtil.capitalize(noun) + ' and ' + GenUtil.capitalize(noun2);
+		outputElement.innerHTML += name;
+		
+		outputElement.innerHTML += "<br>";
+		
+		outputElement.innerHTML += GenUtil.capitalize(physicalTrait) + ', ' + GenUtil.capitalize(mentalTrait) + ", and " + GenUtil.capitalize(mentalTrait2) + ' ' + race + ' ' + charClass + ' of ' + GenUtil.capitalize(noun) + ' and ' + GenUtil.capitalize(noun2);
 	}
 	
 	var races = [
