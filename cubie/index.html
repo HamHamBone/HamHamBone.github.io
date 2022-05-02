@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>GeneriMart CubieChat</title>
+		<link rel='stylesheet' href='cubie.css'>
+	</head>
+	
+	<body>
+		<div id='container'>
+			<h>CubieChat</h>
+			<textarea id='input' placeholder="Enter your message here."></textarea>
+			<div id='error-message'>
+				<img src='media/cubie.png'></img>
+				<p id='em-text'><i>Cubie Says:</i><br>It seems like you are trying to send a message with restricted words! Remember the three keys of GeneriMart Communication! Courtesy, Cheerfulness, and Clarity!</p>
+			</div>
+			<div id='ok-message'>
+				✔️ All good!
+			</div>
+			<button id='check-button'>Send Message!</button>
+		</div>
+
+	</body>
+
+	<script type='text/javascript' src='test.js'></script>
+
+	<script type='text/javascript'>
+		let okMessage = document.getElementById('ok-message');
+		let errorMessage = document.getElementById('error-message');
+		let checkButton = document.getElementById('check-button');
+		let input = document.getElementById('input');
+
+		checkButton.addEventListener('click', function(e) {
+			if (!check(input.value)) {
+				errorMessage.style.display = 'flex';
+				checkButton.style.display = 'none';
+			} else {
+				okMessage.style.display = 'block';
+				checkButton.style.display = 'none';
+			}
+		});
+		input.addEventListener('input', function(e) {
+			console.log('write!');
+			okMessage.style.display = 'none';
+			errorMessage.style.display = 'none';
+			checkButton.style.display = 'inline-block';
+		});
+	</script
+
+</html>

@@ -1,0 +1,124 @@
+body {
+	font-family:'Source Serif Pro';
+	background-color:#514A72;
+}
+
+textarea {
+	background-color:#2C2C56;
+	border:0px;
+	border-radius: 15px;
+	padding:15px;
+	box-shadow: 0px 0px 10px black;
+	font-family: 'Courier New', monospace;
+	color: white;
+	font-weight: bold;
+	font-size: 20px;
+	
+	height:300px;
+	
+	margin-bottom:5px;
+}
+
+#error-message {
+	display:none;
+	
+	animation: cubiegrow 0.50s;
+	
+	width: 100%;
+	flex-direction: column;
+	align-items: center;
+}
+
+@keyframes cubiegrow {
+	from {
+		transform: scale(0);
+	}
+	
+	80% {
+		transform: scale(1.1);
+	}
+	
+	to {
+		transform: scale(1);
+	}
+}
+
+#em-text {
+	background-color:#CEC0A1;
+	box-shadow: 0px 0px 10px black;
+	border-radius: 8px;
+	padding:8px;
+	max-width:300px;
+}
+
+#ok-message {
+	font-family: 'Courier New', monospace;
+	color: white;
+	font-weight: bold;
+	font-size: 16px;
+	
+	display:none;
+	
+	animation: cubiegrow 0.50s;
+}
+
+button {
+font-family: 'Courier New', monospace;
+	color: white;
+	font-weight: bold;
+	font-size: 12px;
+	
+	border: none;
+	background-color: #6D5F89;
+	
+	border-radius: 5px;
+	
+	animation: cubiegrow 0.50s;
+}
+
+button:hover {
+	background-color: #38A83B;
+}
+
+h {
+	font-family: 'Courier New', monospace;
+	color: #38A83B;
+	font-weight: bold;
+	font-size: 48px;
+	
+	-webkit-text-stroke-width: 1.5px;
+	-webkit-text-stroke-color: black;
+}
+
+p {
+	font-size:12pt;
+	margin-top:5px;
+	margin-bottom:5px;
+}
+
+h3 {
+	font-size:24pt;
+}
+
+#map-section {
+	display:flex;
+}
+
+#container {
+	width: 100%;
+	display:flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+#selected-data {
+	width: 300px;
+}
+
+#data {
+	max-width: 656px;
+}
+
+summary {
+	cursor: pointer;
+}
