@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>Sprofit Loading Screen</title>
+		<link rel='stylesheet' href='wwn.css'>
+	</head>
+	
+	<body>
+		<div id='container'>
+			<div id='map-section'>
+				<canvas id="canvas" width="800px" height="600px">Canvas Not Supported</canvas>
+			</div>
+			<div id='data'></div>
+		</div>
+	</body>
+
+	<script type="text/javascript">
+		'use strict';
+	
+		// LOAD ALL CLOUD IMAGES AND AUDIO
+		
+		let cloudImages = [];
+		
+		for (let i = 0; i < 67; i++) {
+			let img = new Image();
+			img.src = 'cloud/'+i+'.gif';
+			cloudImages.push(img);
+		}
+		
+		let logoImage = new Image();
+		logoImage.src = 'logo.png';
+		
+		let audio = new Audio('sprofits-rising.mp3');
+		
+		// DONE LOADING
+		
+		document.addEventListener('click', start);
+		
+		let canvas = document.getElementById('canvas');
+		canvas.style.backgroundColor = 'white'
+		let ctx = canvas.getContext('2d');
+		let segAngle = 2*Math.PI/3;
+		let radius = 100;
+		
+		let startTime = new Date().getTime();
+		let prevTime = new Date().getTime();
+		
+		let nextTime = startTime + 1500;
+		let lastTime = startTime;
+		
+		let rotationSpeed = 1;
+		let d1 = 0;
+		let d2 = 0;
+		let d3 = 0;
+		let d4 = 0;
+		
+		let dPrev1 = 0;
+		let dPrev2 = 0;
+		let dPrev3 = 0;
+		let dPrev4 = 0;
+		
+		let dNext1 = 0;
+		let dNext2 = 0;
+		let dNext3 = 0;
+		let dNext4 = 0;
+		
+		let baseAngle = 0;
+		
+		let cloudT = 0;
+			
+		let nonsense = 'loading...';
+		
+		let started = false;
+		let finished = false;
+		
+		ctx.save();
+			ctx.translate(400, 300);
+					 
+			ctx.strokeStyle = '#56FF3B';
+			ctx.globalAlpha = 0.15;
+			ctx.lineWidth = 8;
+			drawSpiro();
+					
+			ctx.strokeStyle = '#06FF1B';
+			ctx.globalAlpha = 1.0;
+			ctx.lineWidth = 2;
+			drawSpiro();
+		ctx.restore();		
+		
+		function start() {
+			if (!started) {
+				audio.play();
+				
+				startTime = new Date().getTime();
+				prevTime = new Date().getTime();
+				
+				nextTime = startTime + 3000;
+				lastTime = startTime;
+				
+				step();
+				started = true;
+			}
+		}
+		
+		function draw(t) {
+			let curTime = new Date().getTime();
+			let deltaT = curTime-prevTime;
+		
+			ctx.save();
+				if (!finished && t > 35000) {
+					
+					
+					nextTime = 500+Math.random()*500 + curTime;
+					lastTime = curTime;
+					
+					rotationSpeed = 1.0;
+					
+					dPrev1 = d1;
+					dPrev2 = d2;
+					dPrev3 = d3;
+					dPrev4 = d4;
+					
+					dNext1 = -0.285;
+					dNext2 = 0.285;
+					dNext3 = 0;
+					dNext4 = 0;
+					
+					nonsense = 'Done!'
+					
+					finished = true;
+				}
+			
+				if (!finished && curTime >= nextTime) {
+					nextTime = 500+Math.random()*500 + curTime;
+					lastTime = curTime;
+					
+					rotationSpeed = 0.5+Math.random()*2.0;
+					if (Math.random() < 0.5) {
+						rotationSpeed *= -1;
+					}
+
+					console.log('animate!', rotationSpeed);
+					
+					dPrev1 = d1;
+					dPrev2 = d2;
+					dPrev3 = d3;
+					dPrev4 = d4;
+					
+					if (Math.random() < 0.5) {
+						dNext1 = randomDVal();
+						dNext2 = randomDVal();
+					}
+					
+					if (Math.random() < 0.5) {
+						dNext3 = randomDVal();
+						dNext4 = randomDVal();
+					}
+					
+					console.log(cloudT);
+					cloudT += Math.floor(50*20*(Math.random()-0.5));
+					console.log(cloudT);
+				}
+				
+				let animTime = (curTime-lastTime) / 300;
+				if (animTime > 1.0) {animTime = 1.0;}
+				d1 = animTime*dNext1 + (1-animTime)*dPrev1;
+				d2 = animTime*dNext2 + (1-animTime)*dPrev2;
+				d3 = animTime*dNext3 + (1-animTime)*dPrev3;
+				d4 = animTime*dNext4 + (1-animTime)*dPrev4;
+				
+				ctx.clearRect(0,0,800,600);
+				
+				ctx.strokeStyle = '#06FF1B';
+				ctx.lineWidth = 2;
+				ctx.lineCap = 'round';
+				ctx.lineJoin = 'round';
+				
+				ctx.translate(400, 300);
+				
+				cloudT += deltaT;
+				let cImg = cloudImages[(Math.floor(cloudT/50))%67]
+				ctx.save()
+					let cloudFade = t / 3000;
+					if (cloudFade > 1.0) {cloudFade = 1.0;}
+				
+					ctx.globalAlpha = cloudFade;
+				
+					ctx.scale(2.5,2.5);
+					ctx.drawImage(cImg, 0, 0);
+					ctx.scale(-1,1)
+					ctx.drawImage(cImg, 0, 0);
+					ctx.scale(1,-1)
+					ctx.drawImage(cImg, 0, 0);
+					ctx.scale(-1,1)
+					ctx.drawImage(cImg, 0, 0);
+				ctx.restore();
+				
+				if (!finished && t > 3000 && Math.random() < 1/30) {
+					let verb = verbs[Math.floor(Math.random()*verbs.length)];
+					let adjective = adjectives[Math.floor(Math.random()*adjectives.length)];
+					let noun = nouns[Math.floor(Math.random()*nouns.length)];
+					
+					nonsense = verb + ' ' + (Math.random() < 0.35 ? adjective+' ' : '') + noun + '...'
+				}
+				
+				baseAngle += rotationSpeed * deltaT/1000;
+				ctx.rotate(baseAngle);
+				 
+				ctx.strokeStyle = '#56FF3B';
+				ctx.globalAlpha = 0.15;
+				ctx.lineWidth = 8;
+				drawSpiro();
+				
+				ctx.strokeStyle = '#06FF1B';
+				ctx.globalAlpha = 1.0;
+				ctx.lineWidth = 2;
+				drawSpiro();
+			ctx.restore();
+			
+			ctx.save();
+				ctx.textAlign = 'center';
+				ctx.font = '24px monospace'
+				ctx.translate(400,575);
+				ctx.fillText(nonsense,0,0);
+			ctx.restore();
+			
+			if (finished) {
+				let blackFade = (curTime-lastTime) / 5000;
+				if (blackFade > 1.0) {
+					blackFade = 1.0;
+				}
+				
+				ctx.save();
+					ctx.globalAlpha=blackFade*blackFade;
+					ctx.fillStyle = 'black';
+					ctx.fillRect(0,0,800,600);
+				ctx.restore();
+			}
+			
+			if (finished) {
+				let animFade = (curTime-(lastTime+5000)) / 1000
+				let logoWiggle = animFade;
+				if (animFade < 0.0) {animFade = 0.0}
+				if (animFade > 1.0) {animFade = 1.0}
+				
+				ctx.save();
+					ctx.globalAlpha=animFade;
+					ctx.fillStyle = 'black';
+					ctx.drawImage(logoImage, 400-logoImage.width/2,300-logoImage.height/2+Math.sin(logoWiggle*3)*10);
+				ctx.restore();				
+				
+			}
+			
+			prevTime = curTime;
+		}
+		
+		function drawSpiro() {
+			for (let i = 0; i < 3; i++) {
+				let angle = i*segAngle;
+				let p1 = toXY(angle, radius);
+				let p2 = toXY(angle+segAngle, radius);
+				
+				//drawDiamondPoints(p1, p2, -0.2, -0.6);
+				
+				let dPoints = getDiamondPoints(p1, p2, d1, d2);
+				
+				let dp1 = dPoints.r1;
+				let dp2 = dPoints.r2;
+				
+				drawDiamondPoints(p1, dp1, d3, d4);
+				drawDiamondPoints(dp1, p2, d3, d4);
+				drawDiamondPoints(p1, dp2, d3, d4);
+				drawDiamondPoints(dp2, p2, d3, d4);
+			}		
+		}
+		
+		function randomDVal() {
+			if (Math.random() < 0.5) {
+				return -0.4 * Math.random();
+			} else {
+				return 1.0 * Math.random();
+			}
+		}
+		
+		function drawDiamondPoints(p1, p2, d1, d2) {
+			let dPoints = getDiamondPoints(p1, p2, d1,d2);
+
+			let dp1 = dPoints.r1;
+			let dp2 = dPoints.r2;
+			
+			ctx.beginPath();
+			ctx.moveTo(p1.x, p1.y);
+			ctx.lineTo(dp1.x, dp1.y);
+			ctx.lineTo(p2.x, p2.y);
+			ctx.lineTo(dp2.x, dp2.y);
+			ctx.lineTo(p1.x, p1.y);
+			ctx.stroke();			
+		}
+		 
+		function getDiamondPoints(p1, p2, d1, d2) {
+			let vX = p2.x - p1.x;
+			let vY = p2.y - p1.y;
+			
+			let cX = (p1.x + p2.x) / 2;
+			let cY = (p1.y + p2.y) / 2;
+			
+			return {
+				r1:{x:cX+vY*d1, y:cY-vX*d1},
+				r2:{x:cX+vY*d2, y:cY-vX*d2},
+			}
+		}
+		 
+		function toXY(angle, distance) {
+			return {x:Math.cos(angle)*distance, y:Math.sin(angle)*distance}
+		}
+		 
+		function step() {
+			let t = new Date().getTime() - startTime;
+			draw(t);
+			window.requestAnimationFrame(step);
+		}
+		
+		let verbs = [
+			'Maximizing',
+			'Synergizing',
+			'Reaching out to',
+			'Learning',
+			'Punting',
+			'Leveraging',
+			'Empowering',
+			'Drilling Down',
+			'Gaining',
+			'Bringing',
+			'Circling Back',
+			'Reinventing',
+			'Tabling',
+			'Reticulating',
+			'Xeroxing',
+			'Connecting',
+			'Disrupting',
+			'Evolving',
+			'Executing',
+			'Growing',
+			'Incentivizing',
+			'Optimizing',
+			'Shifting',
+			'Penciling In',
+			'Scheduling',
+			'Pushing',
+			'Rationalizing',
+			'Resonating',
+			'Collaborating',
+			'Unpacking'
+		];
+		
+		let adjectives = [
+			'Robust',
+			'110%',
+			'Best',
+			'Bleeding-Edge',
+			'Core',
+			'Mission-Critical',
+			'Out of pocket',
+			'Critical',
+			'Action',
+			'Corporate',
+			'Managerial',
+			'Brick and Mortor',
+			'Epic',
+			'Frictionless',
+			'Granular',
+			'Unique',
+			'Holistic',
+			'Human',
+			'Innovative',
+			'Key',
+			'Outside of the Box',
+			'Proactive',
+			'Seamless',
+			'Value-Added',
+			'Viral',
+			'World-Class',
+			'Zero-Sum'
+		];
+		
+		let nouns = [
+			'Impact',
+			'Prices and Values',
+			'Practices',
+			'Values',
+			'Competency',
+			'Mission-Statement',
+			'Balance',
+			'Tiger Team',
+			'Game Changers',
+			'Traction',
+			'Bandwidth',
+			'Salary',
+			'Paradigms',
+			'Splines',
+			'Wages',
+			'Management',
+			'Circular File',
+			'Culture',
+			'Deliverables',
+			'Industry',
+			'Ecosystem',
+			'Functionality',
+			'Buy-In',
+			'Guesstimate',
+			'Capital',
+			'Ideas',
+			'Innovations',
+			'Takeaways',
+			'Gurus',
+			'Methodology',
+			'Meeting',
+			'Boardroom',
+			'Price Point',
+			'Envelope',
+			'Partners',
+			'Golf',
+			'Rock-Star',
+			'Secret Sauce',
+			'Solutions',
+			'Product',
+			'Service'
+		];
+	</script>
+	
+</html>
