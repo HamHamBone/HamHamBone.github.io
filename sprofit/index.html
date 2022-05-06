@@ -35,9 +35,9 @@
 		
 		let audio = new Audio('sprofits-rising.mp3');
 		
-		// DONE LOADING
 		
-		document.addEventListener('click', start);
+		
+		// END OF MEDIA LOADS
 		
 		let canvas = document.getElementById('canvas');
 		canvas.style.backgroundColor = 'white'
@@ -76,19 +76,23 @@
 		let started = false;
 		let finished = false;
 		
-		ctx.save();
-			ctx.translate(400, 300);
-					 
-			ctx.strokeStyle = '#56FF3B';
-			ctx.globalAlpha = 0.15;
-			ctx.lineWidth = 8;
-			drawSpiro();
-					
-			ctx.strokeStyle = '#06FF1B';
-			ctx.globalAlpha = 1.0;
-			ctx.lineWidth = 2;
-			drawSpiro();
-		ctx.restore();		
+		audio.addEventListener('canplay', function(e) {
+			canvas.addEventListener('click', start);
+			
+			ctx.save();
+				ctx.translate(400, 300);
+						 
+				ctx.strokeStyle = '#56FF3B';
+				ctx.globalAlpha = 0.15;
+				ctx.lineWidth = 8;
+				drawSpiro();
+						
+				ctx.strokeStyle = '#06FF1B';
+				ctx.globalAlpha = 1.0;
+				ctx.lineWidth = 2;
+				drawSpiro();
+			ctx.restore();
+		});
 		
 		function start() {
 			if (!started) {
