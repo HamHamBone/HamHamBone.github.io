@@ -79,7 +79,10 @@
 		let baseAngle = 0;
 		
 		let cloudT = 0;
-		let cloudImage = null;
+		let cloudImage = document.createElement('canvas');
+		cloudImage.width = 160;
+		cloudImage.height = 120;
+		let cloudCtx = cloudImage.getContext('2d');
 		let cloudIndex = 0;
 			
 		let nonsense = 'loading...';
@@ -222,18 +225,15 @@
 				
 				cloudT += deltaT;
 				let cI = (Math.floor(cloudT/50))%67;
-				if (cloudImage == null || cI != cloudIndex) {
+				if (cI != cloudIndex) {
 					cloudIndex = cI;
 					let cImg = cloudImages[cloudIndex]
-					cloudImage = document.createElement('canvas');
-					cloudImage.width = cImg.width;
-					cloudImage.height = cImg.height;
-					let cloudCtx = cloudImage.getContext('2d');
-					cloudCtx.drawImage(cImg,0,0);
-					cloudCtx.globalCompositeOperation = 'hue';
-					cloudCtx.fillStyle = 'rgb('+bColor.r+','+bColor.g+','+bColor.b+')';
-					cloudCtx.fillRect(0,0,cImg.width,cImg.height);
-					console.log('ahhhh');
+					cloudCtx.save();
+						cloudCtx.drawImage(cImg,0,0);
+						cloudCtx.globalCompositeOperation = 'hue';
+						cloudCtx.fillStyle = 'rgb('+bColor.r+','+bColor.g+','+bColor.b+')';
+						cloudCtx.fillRect(0,0,cImg.width,cImg.height);
+					cloudCtx.restore();
 				}
 				ctx.save()
 					let cloudFade = t / 3000;
