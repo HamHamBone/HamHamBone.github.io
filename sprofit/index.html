@@ -29,7 +29,8 @@
 		for (let i = 0; i < 67; i++) {
 			let img = new Image();
 			img.src = 'cloud/'+i+'.gif';
-			img.addEvent('load', tryStart)
+			img.addEventListener('load', tryStart);
+			img.addEventListener('error', tryStart);
 			cloudImages.push(img);
 		}
 		
