@@ -24,9 +24,12 @@
 		
 		let cloudImages = [];
 		
+		let loadCount = 68;
+		
 		for (let i = 0; i < 67; i++) {
 			let img = new Image();
 			img.src = 'cloud/'+i+'.gif';
+			img.addEvent('load', tryStart)
 			cloudImages.push(img);
 		}
 		
@@ -90,7 +93,15 @@
 		let started = false;
 		let finished = false;
 		
-		audio.addEventListener('canplay', function(e) {
+		audio.addEventListener('canplay', tryStart);
+
+		function tryStart() {
+			loadCount--;
+		
+			if (loadCount > 0) {
+				return;
+			}
+		
 			canvas.addEventListener('click', start);
 			
 			ctx.save();
@@ -106,7 +117,7 @@
 				ctx.lineWidth = 2;
 				drawSpiro();
 			ctx.restore();
-		});
+		}
 		
 		function start() {
 			if (!started) {
