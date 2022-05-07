@@ -242,9 +242,9 @@
 					let cImg = cloudImages[cloudIndex]
 					cloudCtx.save();
 						cloudCtx.drawImage(cImg,0,0);
-						cloudCtx.globalCompositeOperation = 'hue';
-						cloudCtx.fillStyle = 'rgb('+bColor.r+','+bColor.g+','+bColor.b+')';
-						cloudCtx.fillRect(0,0,cImg.width,cImg.height);
+						//cloudCtx.globalCompositeOperation = 'hue';
+						//cloudCtx.fillStyle = 'rgb('+bColor.r+','+bColor.g+','+bColor.b+')';
+						//cloudCtx.fillRect(0,0,cImg.width,cImg.height);
 					cloudCtx.restore();
 				}
 				ctx.save()
