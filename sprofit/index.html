@@ -92,7 +92,7 @@
 		let cloudIndex = 32;
 		let cloudSpeed = 1;
 			
-		let nonsense = 'loading...';
+		let nonsense = 'Loading...';
 		
 		let started = false;
 		let finished = false;
@@ -307,8 +307,16 @@
 			
 			ctx.save();
 				ctx.textAlign = 'center';
-				ctx.font = '24px monospace'
+				ctx.font = 'bold 24px serif'
+				ctx.fillStyle = 'black';
+				ctx.strokeStyle = 'white';
+				ctx.lineWidth = 5.0;
+				ctx.lineCap = 'round';
+				ctx.lineJoin = 'round';
 				ctx.translate(400,575);
+				ctx.globalAlpha = 0.5;
+				ctx.strokeText(nonsense,0,0);
+				ctx.globalAlpha = 1.0;
 				ctx.fillText(nonsense,0,0);
 			ctx.restore();
 			
