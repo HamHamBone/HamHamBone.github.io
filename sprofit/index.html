@@ -61,7 +61,7 @@
 		let colorPrev = color;
 		let colorNext = color;
 		
-		let bColor = {r:52, g:84, b:124};
+		let bColor = {r:255, g:255, b:255};
 		let bColorPrev = bColor;
 		let bColorNext = bColor;
 		
@@ -164,7 +164,7 @@
 					colorNext = {r:6, g:255, b:27};
 					
 					bColorPrev = bColor;
-					bColorNext = {r:52, g:84, b:124};
+					bColorNext = {r:255, g:255, b:255};
 					
 					finished = true;
 				}
@@ -259,7 +259,7 @@
 					cloudCtx.save();
 						cloudCtx.clearRect(0,0,cloudImage.width,cloudImage.height);
 						cloudCtx.drawImage(cImg,0,0);
-						cloudCtx.globalCompositeOperation = 'hue';
+						cloudCtx.globalCompositeOperation = 'multiply';
 						cloudCtx.fillStyle = 'rgb('+bColor.r+','+bColor.g+','+bColor.b+')';
 						cloudCtx.fillRect(0,0,cImg.width,cImg.height);
 					cloudCtx.restore();
