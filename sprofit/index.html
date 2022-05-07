@@ -35,23 +35,32 @@
 		
 		let audio = new Audio('sprofits-rising.mp3');
 		
-		
-		
 		// END OF MEDIA LOADS
 		
 		let canvas = document.getElementById('canvas');
 		canvas.style.backgroundColor = 'white'
 		let ctx = canvas.getContext('2d');
 		let segAngle = 2*Math.PI/3;
-		let radius = 100;
 		
 		let startTime = new Date().getTime();
 		let prevTime = new Date().getTime();
 		
 		let nextTime = startTime + 1500;
 		let lastTime = startTime;
+		let animLength = 300;
 		
 		let rotationSpeed = 1;
+		
+		let radius = 100;
+		
+		let color = {r:6, g:255, b:27};
+		let colorPrev = color;
+		let colorNext = color;
+		
+		let bColor = {r:52, g:84, b:124};
+		let bColorPrev = bColor;
+		let bColorNext = bColor;
+		
 		let d1 = 0;
 		let d2 = 0;
 		let d3 = 0;
@@ -70,6 +79,8 @@
 		let baseAngle = 0;
 		
 		let cloudT = 0;
+		let cloudImage = null;
+		let cloudIndex = 0;
 			
 		let nonsense = 'loading...';
 		
@@ -116,9 +127,9 @@
 			ctx.save();
 				if (!finished && t > 35000) {
 					
-					
 					nextTime = 500+Math.random()*500 + curTime;
 					lastTime = curTime;
+					animLength = 300;
 					
 					rotationSpeed = 1.0;
 					
@@ -134,19 +145,31 @@
 					
 					nonsense = 'Done!'
 					
+					colorPrev = color;
+					colorNext = {r:6, g:255, b:27};
+					
+					bColorPrev = bColor;
+					bColorNext = {r:52, g:84, b:124};
+					
 					finished = true;
 				}
 			
 				if (!finished && curTime >= nextTime) {
 					nextTime = 500+Math.random()*500 + curTime;
 					lastTime = curTime;
+					if (Math.random() < 0.5) {
+						animLength = 300-Math.random()*100;
+					} else {
+						animLength = 300+Math.random()*900;
+					}
 					
 					rotationSpeed = 0.5+Math.random()*2.0;
 					if (Math.random() < 0.5) {
 						rotationSpeed *= -1;
 					}
-
-					console.log('animate!', rotationSpeed);
+					if (Math.random() < 0.20) {
+						rotationSpeed *= 3+Math.random()*3;
+					}
 					
 					dPrev1 = d1;
 					dPrev2 = d2;
@@ -163,21 +186,34 @@
 						dNext4 = randomDVal();
 					}
 					
-					console.log(cloudT);
 					cloudT += Math.floor(50*20*(Math.random()-0.5));
-					console.log(cloudT);
+					
+					if (Math.random() < 0.25) {
+						colorPrev = color;
+						colorNext = HSVtoRGB(Math.random(), 0.89, 0.88);
+					}
+					
+					if (Math.random() < 0.25) {
+						bColorPrev = bColor;
+						bColorNext = HSVtoRGB(Math.random(), 0.89, 0.88);
+					}
 				}
 				
-				let animTime = (curTime-lastTime) / 300;
+				let animTime = (curTime-lastTime) / animLength;
 				if (animTime > 1.0) {animTime = 1.0;}
 				d1 = animTime*dNext1 + (1-animTime)*dPrev1;
 				d2 = animTime*dNext2 + (1-animTime)*dPrev2;
 				d3 = animTime*dNext3 + (1-animTime)*dPrev3;
 				d4 = animTime*dNext4 + (1-animTime)*dPrev4;
+				color.r = animTime*colorNext.r + (1-animTime)*colorPrev.r;
+				color.g = animTime*colorNext.g + (1-animTime)*colorPrev.g;
+				color.b = animTime*colorNext.b + (1-animTime)*colorPrev.b;
+				bColor.r = animTime*bColorNext.r + (1-animTime)*bColorPrev.r;
+				bColor.g = animTime*bColorNext.g + (1-animTime)*bColorPrev.g;
+				bColor.b = animTime*bColorNext.b + (1-animTime)*bColorPrev.b;
 				
 				ctx.clearRect(0,0,800,600);
 				
-				ctx.strokeStyle = '#06FF1B';
 				ctx.lineWidth = 2;
 				ctx.lineCap = 'round';
 				ctx.lineJoin = 'round';
@@ -185,7 +221,20 @@
 				ctx.translate(400, 300);
 				
 				cloudT += deltaT;
-				let cImg = cloudImages[(Math.floor(cloudT/50))%67]
+				let cI = (Math.floor(cloudT/50))%67;
+				if (cloudImage == null || cI != cloudIndex) {
+					cloudIndex = cI;
+					let cImg = cloudImages[cloudIndex]
+					cloudImage = document.createElement('canvas');
+					cloudImage.width = cImg.width;
+					cloudImage.height = cImg.height;
+					let cloudCtx = cloudImage.getContext('2d');
+					cloudCtx.drawImage(cImg,0,0);
+					cloudCtx.globalCompositeOperation = 'hue';
+					cloudCtx.fillStyle = 'rgb('+bColor.r+','+bColor.g+','+bColor.b+')';
+					cloudCtx.fillRect(0,0,cImg.width,cImg.height);
+					console.log('ahhhh');
+				}
 				ctx.save()
 					let cloudFade = t / 3000;
 					if (cloudFade > 1.0) {cloudFade = 1.0;}
@@ -193,13 +242,13 @@
 					ctx.globalAlpha = cloudFade;
 				
 					ctx.scale(2.5,2.5);
-					ctx.drawImage(cImg, 0, 0);
+					ctx.drawImage(cloudImage, 0, 0);
 					ctx.scale(-1,1)
-					ctx.drawImage(cImg, 0, 0);
+					ctx.drawImage(cloudImage, 0, 0);
 					ctx.scale(1,-1)
-					ctx.drawImage(cImg, 0, 0);
+					ctx.drawImage(cloudImage, 0, 0);
 					ctx.scale(-1,1)
-					ctx.drawImage(cImg, 0, 0);
+					ctx.drawImage(cloudImage, 0, 0);
 				ctx.restore();
 				
 				if (!finished && t > 3000 && Math.random() < 1/30) {
@@ -213,12 +262,12 @@
 				baseAngle += rotationSpeed * deltaT/1000;
 				ctx.rotate(baseAngle);
 				 
-				ctx.strokeStyle = '#56FF3B';
+				ctx.strokeStyle = '#FFF';
 				ctx.globalAlpha = 0.15;
 				ctx.lineWidth = 8;
 				drawSpiro();
 				
-				ctx.strokeStyle = '#06FF1B';
+				ctx.strokeStyle = 'rgb('+color.r+','+color.g+','+color.b+')';
 				ctx.globalAlpha = 1.0;
 				ctx.lineWidth = 2;
 				drawSpiro();
@@ -232,7 +281,7 @@
 			ctx.restore();
 			
 			if (finished) {
-				let blackFade = (curTime-lastTime) / 5000;
+				let blackFade = (curTime-lastTime) / 3500;
 				if (blackFade > 1.0) {
 					blackFade = 1.0;
 				}
@@ -245,7 +294,7 @@
 			}
 			
 			if (finished) {
-				let animFade = (curTime-(lastTime+5000)) / 1000
+				let animFade = (curTime-(lastTime+3500)) / 1000
 				let logoWiggle = animFade;
 				if (animFade < 0.0) {animFade = 0.0}
 				if (animFade > 1.0) {animFade = 1.0}
@@ -320,7 +369,30 @@
 		function toXY(angle, distance) {
 			return {x:Math.cos(angle)*distance, y:Math.sin(angle)*distance}
 		}
-		 
+
+		//fuck it: https://stackoverflow.com/questions/17242144/javascript-convert-hsb-hsv-color-to-rgb-accurate
+		function HSVtoRGB(h, s, v) {
+			let r, g, b, i, f, p, q, t;
+			i = Math.floor(h * 6);
+			f = h * 6 - i;
+			p = v * (1 - s);
+			q = v * (1 - f * s);
+			t = v * (1 - (1 - f) * s);
+			switch (i % 6) {
+				case 0: r = v, g = t, b = p; break;
+				case 1: r = q, g = v, b = p; break;
+				case 2: r = p, g = v, b = t; break;
+				case 3: r = p, g = q, b = v; break;
+				case 4: r = t, g = p, b = v; break;
+				case 5: r = v, g = p, b = q; break;
+			}
+			return {
+				r: Math.round(r * 255),
+				g: Math.round(g * 255),
+				b: Math.round(b * 255)
+			};
+		}
+
 		function step() {
 			let t = new Date().getTime() - startTime;
 			draw(t);
