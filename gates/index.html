@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>Upward Toward the Gates</title>
+		<link rel='stylesheet' href='wwn.css'>
+	</head>
+	
+	<body>
+		<div id='container'>
+			<div id='map-section'>
+				<canvas id="canvas" width="800px" height="600px">Canvas Not Supported</canvas>
+			</div>
+			<div id='data'></div>
+		</div>
+	</body>
+
+	<script type="text/javascript">
+		'use strict';
+
+		// LOAD ALL IMAGES AND AUDIO
+		
+		let imgMart = new Image();
+		imgMart.src = 'mart.png';
+		let imgSkaia = new Image();
+		imgSkaia.src = 'skaia.png';
+		let imgGlow = new Image();
+		imgGlow.src = 'glow.png';
+		let imgSprite = new Image();
+		imgSprite.src = 'sprite.png';
+		let imgSpriteGlow = new Image();
+		imgSpriteGlow.src = 'sprite-glow.png';
+		let imgPlayer = new Image();
+		imgPlayer.src = 'player.png';
+		
+		// END OF MEDIA LOADS
+		
+		let canvas = document.getElementById('canvas');
+		canvas.style.backgroundColor = '#111'
+		let ctx = canvas.getContext('2d');
+		let segAngle = 2*Math.PI/3;
+		
+		let startTime = new Date().getTime();
+		let prevTime = new Date().getTime();
+		
+		let nextTime = startTime + 1500;
+		let lastTime = startTime;
+		let animLength = 300;
+		
+		let rotationSpeed = 0.5;
+		
+		let radius = 12;
+		
+		let color = {r:255, g:255, b:27};
+		
+		let d1 = randomDVal();
+		let d2 = randomDVal();
+		let d3 = randomDVal();
+		let d4 = randomDVal();
+		
+		let dPrev1 = d1;
+		let dPrev2 = d2;
+		let dPrev3 = d3;
+		let dPrev4 = d4;
+		
+		let dNext1 = d1;
+		let dNext2 = d2;
+		let dNext3 = d3;
+		let dNext4 = d4;
+		
+		let baseAngle = 0;
+		
+		let alpha = Math.random()*0.25;
+		
+		let started = false;
+
+		canvas.addEventListener('click', start);
+		
+		function start() {
+			if (!started) {
+				
+				startTime = new Date().getTime();
+				prevTime = new Date().getTime();
+				
+				nextTime = startTime + 3000;
+				lastTime = startTime;
+				
+				step();
+				started = true;
+			}
+		}
+		
+		function draw(t) {
+			let curTime = new Date().getTime();
+			let deltaT = curTime-prevTime;
+		
+			ctx.save();
+				if (curTime >= nextTime) {
+					nextTime = 500+Math.random()*500 + curTime;
+					lastTime = curTime;
+					animLength = 300;
+					
+					dPrev1 = d1;
+					dPrev2 = d2;
+					dPrev3 = d3;
+					dPrev4 = d4;
+					
+					if (Math.random() < 0.5) {
+						dNext1 = randomDVal();
+						dNext2 = randomDVal();
+					}
+					
+					if (Math.random() < 0.5) {
+						dNext3 = randomDVal();
+						dNext4 = randomDVal();
+					}
+				}
+				
+				let animTime = (curTime-lastTime) / animLength;
+				if (animTime > 1.0) {animTime = 1.0;}
+				d1 = animTime*dNext1 + (1-animTime)*dPrev1;
+				d2 = animTime*dNext2 + (1-animTime)*dPrev2;
+				d3 = animTime*dNext3 + (1-animTime)*dPrev3;
+				d4 = animTime*dNext4 + (1-animTime)*dPrev4;
+				
+				ctx.clearRect(0,0,800,600);
+				
+				ctx.lineCap = 'round';
+				ctx.lineJoin = 'round';
+				
+				ctx.save();
+					ctx.translate(427, 44);
+					ctx.drawImage(imgSkaia,0,0);
+					
+					alpha = 0.3+(0.5+0.5*Math.sin(40*t/1000))*0.1;
+					ctx.globalAlpha = alpha;
+					ctx.drawImage(imgGlow,0,0);
+				ctx.restore();
+				
+				ctx.save();
+					ctx.translate(0,350);
+					ctx.drawImage(imgMart,0,0);
+				ctx.restore();
+				
+				ctx.save();
+					ctx.translate(0, 0);
+					ctx.drawImage(imgSprite,0,0);
+					
+					//alpha = 0.3+(0.5+0.5*Math.sin(40*t/1000))*0.1;
+					ctx.globalAlpha = alpha*0.3;
+					ctx.drawImage(imgSpriteGlow,0,0);
+				ctx.restore();
+				
+				ctx.save();
+					ctx.translate(400, 100);
+					ctx.drawImage(imgPlayer,0,0);
+				ctx.restore();
+				
+				ctx.save();
+					ctx.translate(450, 50);
+					baseAngle += rotationSpeed * deltaT/1000;
+				
+					ctx.rotate(1.85);
+				
+					for (let i = 0; i < 7; i++) {
+						ctx.save();
+							let factor = 1/(i+1);
+							
+							ctx.translate(300.0*factor, 0);
+							ctx.scale(factor, factor);
+							
+							ctx.scale(0.85, 1.0);
+							ctx.rotate(baseAngle);
+						
+							ctx.strokeStyle = '#FFF';
+							ctx.globalAlpha = 0.15;
+							ctx.lineWidth = 3;
+							drawSpiro();
+							
+							ctx.strokeStyle = 'rgb('+color.r+','+color.g+','+color.b+')';
+							ctx.globalAlpha = 1.0;
+							ctx.lineWidth = 1;
+							drawSpiro();
+						ctx.restore();
+					}
+				
+				ctx.restore();
+				
+			ctx.restore();
+			
+			prevTime = curTime;
+		}
+		
+		function drawSpiro() {
+			for (let i = 0; i < 3; i++) {
+				let angle = i*segAngle;
+				let p1 = toXY(angle, radius);
+				let p2 = toXY(angle+segAngle, radius);
+				
+				//drawDiamondPoints(p1, p2, -0.2, -0.6);
+				
+				let dPoints = getDiamondPoints(p1, p2, d1, d2);
+				
+				let dp1 = dPoints.r1;
+				let dp2 = dPoints.r2;
+				
+				drawDiamondPoints(p1, dp1, d3, d4);
+				drawDiamondPoints(dp1, p2, d3, d4);
+				drawDiamondPoints(p1, dp2, d3, d4);
+				drawDiamondPoints(dp2, p2, d3, d4);
+			}		
+		}
+		
+		function randomDVal() {
+			if (Math.random() < 0.5) {
+				return -0.4 * Math.random();
+			} else {
+				return 1.0 * Math.random();
+			}
+		}
+		
+		function drawDiamondPoints(p1, p2, d1, d2) {
+			let dPoints = getDiamondPoints(p1, p2, d1,d2);
+
+			let dp1 = dPoints.r1;
+			let dp2 = dPoints.r2;
+			
+			ctx.beginPath();
+			ctx.moveTo(p1.x, p1.y);
+			ctx.lineTo(dp1.x, dp1.y);
+			ctx.lineTo(p2.x, p2.y);
+			ctx.lineTo(dp2.x, dp2.y);
+			ctx.lineTo(p1.x, p1.y);
+			ctx.stroke();			
+		}
+		 
+		function getDiamondPoints(p1, p2, d1, d2) {
+			let vX = p2.x - p1.x;
+			let vY = p2.y - p1.y;
+			
+			let cX = (p1.x + p2.x) / 2;
+			let cY = (p1.y + p2.y) / 2;
+			
+			return {
+				r1:{x:cX+vY*d1, y:cY-vX*d1},
+				r2:{x:cX+vY*d2, y:cY-vX*d2},
+			}
+		}
+		 
+		function toXY(angle, distance) {
+			return {x:Math.cos(angle)*distance, y:Math.sin(angle)*distance}
+		}
+
+		//fuck it: https://stackoverflow.com/questions/17242144/javascript-convert-hsb-hsv-color-to-rgb-accurate
+		function HSVtoRGB(h, s, v) {
+			let r, g, b, i, f, p, q, t;
+			i = Math.floor(h * 6);
+			f = h * 6 - i;
+			p = v * (1 - s);
+			q = v * (1 - f * s);
+			t = v * (1 - (1 - f) * s);
+			switch (i % 6) {
+				case 0: r = v, g = t, b = p; break;
+				case 1: r = q, g = v, b = p; break;
+				case 2: r = p, g = v, b = t; break;
+				case 3: r = p, g = q, b = v; break;
+				case 4: r = t, g = p, b = v; break;
+				case 5: r = v, g = p, b = q; break;
+			}
+			return {
+				r: Math.round(r * 255),
+				g: Math.round(g * 255),
+				b: Math.round(b * 255)
+			};
+		}
+
+		function step() {
+			let t = new Date().getTime() - startTime;
+			draw(t);
+			window.requestAnimationFrame(step);
+		}
+		
+	</script>
+	
+</html>
