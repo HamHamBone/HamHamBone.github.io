@@ -235,19 +235,6 @@
 				
 				ctx.translate(400, 300);
 				
-				cloudT += deltaT;
-				let cI = (Math.floor(cloudT/50))%67;
-				if (cI != cloudIndex) {
-					cloudIndex = cI;
-					let cImg = cloudImages[cloudIndex]
-					cloudCtx.save();
-						cloudCtx.clearRect(0,0,cloudImage.width,cloudImage.height);
-						cloudCtx.drawImage(cImg,0,0);
-						cloudCtx.globalCompositeOperation = 'hue';
-						cloudCtx.fillStyle = 'rgb('+bColor.r+','+bColor.g+','+bColor.b+')';
-						cloudCtx.fillRect(0,0,cImg.width,cImg.height);
-					cloudCtx.restore();
-				}
 				ctx.save()
 					let cloudFade = t / 3000;
 					if (cloudFade > 1.0) {cloudFade = 1.0;}
@@ -263,6 +250,20 @@
 					ctx.scale(-1,1)
 					ctx.drawImage(cloudImage, 0, 0);
 				ctx.restore();
+				
+				cloudT += deltaT;
+				let cI = (Math.floor(cloudT/50))%67;
+				if (cI != cloudIndex) {
+					cloudIndex = cI;
+					let cImg = cloudImages[cloudIndex]
+					cloudCtx.save();
+						cloudCtx.clearRect(0,0,cloudImage.width,cloudImage.height);
+						cloudCtx.drawImage(cImg,0,0);
+						cloudCtx.globalCompositeOperation = 'hue';
+						cloudCtx.fillStyle = 'rgb('+bColor.r+','+bColor.g+','+bColor.b+')';
+						cloudCtx.fillRect(0,0,cImg.width,cImg.height);
+					cloudCtx.restore();
+				}
 				
 				if (!finished && t > 3000 && Math.random() < 1/30) {
 					let verb = verbs[Math.floor(Math.random()*verbs.length)];
