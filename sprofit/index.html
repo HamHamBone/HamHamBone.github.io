@@ -20,6 +20,8 @@
 	<script type="text/javascript">
 		'use strict';
 	
+		let onMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) || /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.platform);
+	
 		// LOAD ALL CLOUD IMAGES AND AUDIO
 		
 		let cloudImages = [];
@@ -88,6 +90,7 @@
 		cloudImage.height = 120;
 		let cloudCtx = cloudImage.getContext('2d');
 		let cloudIndex = 32;
+		let cloudSpeed = 1;
 			
 		let nonsense = 'loading...';
 		
@@ -147,6 +150,7 @@
 					animLength = 300;
 					
 					rotationSpeed = 1.0;
+					cloudSpeed = 1;
 					
 					dPrev1 = d1;
 					dPrev2 = d2;
@@ -201,6 +205,13 @@
 						dNext4 = randomDVal();
 					}
 					
+					//if (Math.random() < 0.75) {
+						cloudSpeed = 0.75 + 5.0 * Math.pow(Math.random(), 4);
+						if (Math.random() < 0.5) {
+							cloudSpeed *= -1;
+						}
+					//}
+					
 					//cloudT += Math.floor(50*20*(Math.random()-0.5));
 					
 					if (Math.random() < 0.25) {
@@ -210,7 +221,7 @@
 					
 					if (Math.random() < 0.25) {
 						bColorPrev = bColor;
-						bColorNext = HSVtoRGB(Math.random(), 0.89, 0.88);
+						bColorNext = HSVtoRGB(Math.random(), 0.25+0.75*Math.random(), 0.5+0.5*Math.random());
 					}
 				}
 				
@@ -251,17 +262,27 @@
 					ctx.drawImage(cloudImage, 0, 0);
 				ctx.restore();
 				
-				cloudT += deltaT;
-				let cI = (Math.floor(cloudT/50))%67;
+				cloudT += deltaT * cloudSpeed;
+				let cI = Math.abs((Math.floor(cloudT/50))%(67-5));
 				if (cI != cloudIndex) {
 					cloudIndex = cI;
 					let cImg = cloudImages[cloudIndex]
 					cloudCtx.save();
 						cloudCtx.clearRect(0,0,cloudImage.width,cloudImage.height);
 						cloudCtx.drawImage(cImg,0,0);
-						cloudCtx.globalCompositeOperation = 'multiply';
-						cloudCtx.fillStyle = 'rgb('+bColor.r+','+bColor.g+','+bColor.b+')';
-						cloudCtx.fillRect(0,0,cImg.width,cImg.height);
+						if (cI < 5) {
+							let cI2 = 67-5+cI;
+							let alpha = (5-cI)/5;
+							cloudCtx.save();
+								cloudCtx.globalAlpha = alpha;
+								cloudCtx.drawImage(cloudImages[cI2],0,0);
+							cloudCtx.restore();
+						}
+						if (!onMobile) {
+							cloudCtx.globalCompositeOperation = 'multiply';
+							cloudCtx.fillStyle = 'rgb('+bColor.r+','+bColor.g+','+bColor.b+')';
+							cloudCtx.fillRect(0,0,cImg.width,cImg.height);
+						}
 					cloudCtx.restore();
 				}
 				
