@@ -51,7 +51,7 @@
 		
 		let rotationSpeed = 0.5;
 		
-		let radius = 12;
+		let radius = 15;
 		
 		let color = {r:255, g:255, b:27};
 		
@@ -162,25 +162,27 @@
 					ctx.translate(450, 50);
 					baseAngle += rotationSpeed * deltaT/1000;
 				
-					ctx.rotate(1.85);
+					ctx.rotate(1.85+Math.PI);
 				
 					for (let i = 0; i < 7; i++) {
 						ctx.save();
-							let factor = 1/(i+1);
+							let factor = 1/(i+1.5);
 							
-							ctx.translate(300.0*factor, 0);
+							ctx.translate(300.0*i*factor-300, 0);
 							ctx.scale(factor, factor);
 							
 							ctx.scale(0.85, 1.0);
 							ctx.rotate(baseAngle);
-						
+							
+							let fade = (1/10) * (10 - (i+1.5));
+							
 							ctx.strokeStyle = '#FFF';
-							ctx.globalAlpha = 0.15;
+							ctx.globalAlpha = 0.15*fade;
 							ctx.lineWidth = 3;
 							drawSpiro();
 							
 							ctx.strokeStyle = 'rgb('+color.r+','+color.g+','+color.b+')';
-							ctx.globalAlpha = 1.0;
+							ctx.globalAlpha = 1.0*fade;
 							ctx.lineWidth = 1;
 							drawSpiro();
 						ctx.restore();

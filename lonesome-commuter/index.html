@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>Lonesome Commuter</title>
+		<link rel='stylesheet' href='wwn.css'>
+	</head>
+	
+	<body>
+		<div id='container'>
+			<h>
+				Years in the future, but not many...
+			</h>
+			<p id='link-con'><a id='start-link' href='#'>-=&#62;</a></p>
+			<div id='cont-con'>
+				<p>
+					<img src='lc1.png'></image>
+				</p>
+				<p>
+					A LONESOME COMMUTER boards scheduled conveyance in a neon-drenched metropolis.
+				</p>
+				<p>
+					<canvas id="canvas" width="800px" height="529px">Something Went wrong</canvas>
+				</p>
+				<p>
+					<img src='lc2.png'></image>
+				</p>
+			</div>
+		</div>
+	</body>
+
+	<script type="text/javascript">
+		'use strict';
+
+		// LOAD ALL IMAGES AND AUDIO
+		
+		let imgBG = new Image();
+		imgBG.src = 'bg.png';
+		let imgFG = new Image();
+		imgFG.src = 'fg.png';
+		let imgF1 = new Image();
+		imgF1.src = 'f1.png';
+		let imgF2 = new Image();
+		imgF2.src = 'f2.png';
+		
+		// END OF MEDIA LOADS
+		
+		let canvas = document.getElementById('canvas');
+		canvas.style.backgroundColor = '#111'
+		let ctx = canvas.getContext('2d');
+		let segAngle = 2*Math.PI/3;
+		
+		let startTime = new Date().getTime();
+		let prevTime = new Date().getTime();
+
+		let started = false;
+		
+		let xF1 = -800;
+		let xF2 = -800;
+
+		let stepIndex = 0;
+
+		let linkCon = document.getElementById('link-con');
+		let startLink = document.getElementById('start-link');
+		let contCon = document.getElementById('cont-con');
+
+		contCon.style.display = 'none';
+
+		startLink.addEventListener('click', start);
+		
+		function start() {
+			if (!started) {
+				
+				contCon.style.display = 'block';
+				linkCon.style.display = 'none';
+				
+				startTime = new Date().getTime();
+				prevTime = new Date().getTime();
+				
+				step();
+				started = true;
+			}
+		}
+		
+		function draw(t) {
+			let curTime = new Date().getTime();
+			let deltaT = curTime-prevTime;
+			
+			stepIndex++;
+						
+			if (stepIndex % (60*1.5) == 0) {
+				xF1 = 800;
+				console.log('oh');
+			}
+			if (stepIndex % (60*1.5) == 20) {
+				xF2 = 800;
+				console.log('yeah!');
+			}
+			
+			xF1 -= deltaT * 8.0;
+			xF2 -= deltaT * 8.0;
+			
+			ctx.save();
+				ctx.save();
+					ctx.translate(0,0);
+					ctx.drawImage(imgBG,0,0);
+				ctx.restore();
+				
+				ctx.save();
+					ctx.translate(xF1, 0);
+					ctx.drawImage(imgF1,0,0);
+				ctx.restore();
+				
+				ctx.save();
+					ctx.translate(xF2, 0);
+					ctx.drawImage(imgF2,0,0);
+				ctx.restore();
+				
+				ctx.save();
+					ctx.translate(0, 0);
+					ctx.drawImage(imgFG,0,0);
+				ctx.restore();
+				
+
+			ctx.restore();
+			
+			prevTime = curTime;
+		}
+
+		function step() {
+			let t = new Date().getTime() - startTime;
+			draw(t);
+			window.requestAnimationFrame(step);
+		}
+		
+	</script>
+	
+</html>

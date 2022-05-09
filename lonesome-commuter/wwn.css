@@ -1,0 +1,44 @@
+body {
+	font-family: monospace;
+	background-color: #bbb;
+}
+
+p {
+	text-align: center;
+	font-size:12pt;
+	margin-top:5px;
+	margin-bottom:5px;
+}
+
+h {
+	font-size:24pt;
+	font-weight:bold;
+}
+
+a {
+	font-size:48pt;
+	font-weight:bold;
+}
+
+#map-section {
+	display:flex;
+}
+
+#container {
+	width: 100%;
+	display:flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+#selected-data {
+	width: 300px;
+}
+
+#data {
+	max-width: 656px;
+}
+
+summary {
+	cursor: pointer;
+}
