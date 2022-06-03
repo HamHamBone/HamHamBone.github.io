@@ -11,9 +11,10 @@ body {
 	margin:0px;
 }
 
-p {
+p, figure {
 	margin-top:16px;
 	margin-bottom:16px;
+	margin-left:0px;
 	padding-left: 20px;
 }
 
