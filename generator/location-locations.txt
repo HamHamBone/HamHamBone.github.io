@@ -30,7 +30,6 @@ Citadel
 City
 City
 Cliff
-Cliffs
 Cove
 Crossroad
 Crypt

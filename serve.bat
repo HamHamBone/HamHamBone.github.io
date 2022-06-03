@@ -1,1 +1,1 @@
-C:\Users\Jacob\AppData\Local\Programs\Python\Python37-32\python -m http.server
+start cmd /k "python -m http.server"

@@ -25,7 +25,7 @@
 				<option value="100">×100</option>
 			</select>
 		<p class="attrib">
-			Generator and wordlists derived from 
+			Wordlists partially derived from 
 			<a href="https://github.com/anonymousAwesome/Randomly-generated-Magic-Items">
 				anonymousAwesome's Python script
 			</a>
@@ -34,19 +34,21 @@
 </body>
 
 <script type="text/javascript" src="genutil.js"></script>
+<script type="text/javascript" src="textload.js"></script>
 
 <script type="text/javascript">
+	'use strict';
 
-	var outputElement = document.getElementById("output");
-	var selectCountElement = document.getElementById("select-count");
+	let outputElement = document.getElementById("output");
+	let selectCountElement = document.getElementById("select-count");
 
-	var data = {};
+	let data = {};
 	data.items = "artifact-items.txt"
 	data.nouns = "artifact-nouns.txt"
 	data.adjectives = "artifact-adjectives.txt"
 	data.titles = "artifact-titles.txt"
 
-	var patterns = [
+	let patterns = [
 		"The {items} of the {titles}",
 		"The {titles}'s {items}",
 		"The {adjectives} {items}",
@@ -54,24 +56,22 @@
 		"The {adjectives} {items} of {nouns}",
 		"The {adjectives} {items} of the {titles}"
 	];
-	
-	GenUtil.loadTextFiles(data, onLoad);
 
-	function onLoad(loadedData) {
-		data = loadedData;
-	
+	TextLoad.massLoad(data);
+	TextLoad.onAllLoad(onLoad)
+
+	function onLoad() {
 		generate();
-
 		document.getElementById("button-reroll")
 			.addEventListener("click", generate);
 	}
 
 	function generate() {
 		outputElement.innerHTML = "";
-		var count = selectCountElement.value;
-		for (var i = 0; i < count; i++) {
-			var pattern = GenUtil.pickRandom(patterns);
-			var result = GenUtil.generatePattern(pattern, data);
+		let count = selectCountElement.value;
+		for (let i = 0; i < count; i++) {
+			let pattern = GenUtil.pickRandom(patterns);
+			let result = GenUtil.generatePattern(pattern, data);
 			outputElement.innerHTML += "" + result + "<br>";
 		}
 	}

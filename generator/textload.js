@@ -26,11 +26,8 @@ let TextLoad = (function() {
 	
 	TextLoad.massLoad = function(data) {
 		for (key in data) {
-			console.log(key);
-			
 			(function(key) {
 				TextLoad.load(data[key], function(result) {
-					console.log(key, result);
 					data[key] = result;
 				});
 			}) (key)

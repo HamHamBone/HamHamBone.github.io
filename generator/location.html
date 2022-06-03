@@ -25,10 +25,10 @@
 			<option value="100">×100</option>
 		</select>
 		<form id="location-type">
-			<input type="radio" name="location-type" value="dungeons" selected>Dungeons and Landmarks</input><br><input type="radio" name="location-type" value="regions">Regions</input>
+			<input type="radio" name="location-type" value="dungeons" checked>Dungeons and Landmarks</input><br><input type="radio" name="location-type" value="regions">Regions</input>
 		</form>
 		<p class="attrib">
-			Generator and wordlists derived from 
+			Wordlists partially derived from 
 			<a href="https://github.com/anonymousAwesome/Randomly-generated-Magic-Items">
 				anonymousAwesome's Python script
 			</a>
@@ -37,6 +37,7 @@
 </body>
 
 <script type="text/javascript" src="genutil.js"></script>
+<script type="text/javascript" src="textload.js"></script>
 
 <script type="text/javascript">
 	var outputElement = document.getElementById("output");
@@ -52,24 +53,25 @@
 	
 	let patterns = [
 		"The {nouns} {locations}",
-		"The {locations} of {nouns} and {nouns}",
-		"The {adjectives} {nouns} {locations}",
 		"The {titles}'s {locations}",
-		"The {locations} of {titles}~s",
 		"The {adjectives} {locations}",
-		"The {locations} of {nouns}",
-		"The {adjectives} {locations} of {nouns}",
-		"The {adjectives} {locations} of the {titles}",
-		"The {locations} of {adjectives} {nouns}",
-		"The {locations} of the {adjectives} {titles}",
+		"The {adjectives} {nouns} {locations}",	
+		"The {locations} of {the} {nountitle}",
+		"The {adjectives} {locations} of {the} {nountitle}",
+		"The {locations} of {the} {adjectives} {nountitle}"
 	];
 	
-	GenUtil.loadTextFiles(data, onLoad);
+	TextLoad.massLoad(data);
+	TextLoad.onAllLoad(onLoad)
 	
-	function onLoad(loadedData) {
-		data = loadedData;
-		
+	function onLoad() {
 		data.dungeonsAndRegions = data.regions.concat(data.dungeons);
+		
+		data.nountitleSingle = 
+		data.nountitlePlural = [
+			"{nouns}~s",
+			"{titles}~s"
+		];
 		
 		generate();
 
@@ -86,6 +88,14 @@
 			data.locations = data.dungeons;
 		} else if (locationType == 'regions') {
 			data.locations = data.regions;
+		}
+		
+		if (Math.random() < 0.5) {
+			data.nountitle=['{nouns}','{titles}'];
+			data.the =['the'];
+		} else {
+			data.nountitle=['{nouns}~s','{titles}~s'];
+			data.the =[''];
 		}
 	
 		outputElement.innerHTML = "";

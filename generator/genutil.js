@@ -1,5 +1,7 @@
-var GenUtil = (function() {
-	GenUtil = {};
+'use strict';
+
+let GenUtil = (function() {
+	let GenUtil = {};
 	
 	// ***************************************************************************
 	// RANDOM DISTRIBUTIONS
@@ -70,28 +72,33 @@ var GenUtil = (function() {
 	// PATTERNS
 	
 	GenUtil.generatePattern = function(pattern, data) {
-		for (name in data) {
-			var regexp = new RegExp("{" + name + "}");
-			while (pattern.search(regexp) > -1) {			
-				pattern = pattern.replace(regexp, function() {
-					if (typeof data[name] === 'function') {
-						return data[name]();
-					} else {
-						return GenUtil.pickRandom(data[name]);
-					}					
-				});
+		let done = false;
+		while (!done) {
+			done = true;
+			for (name in data) {
+				let regexp = new RegExp("{" + name + "}");
+				while (pattern.search(regexp) > -1) {
+					done = false;
+					pattern = pattern.replace(regexp, function() {
+						if (typeof data[name] === 'function') {
+							return data[name]();
+						} else {
+							return GenUtil.pickRandom(data[name]);
+						}					
+					});
+				}
 			}
 		}
 		
 		// pluralize tag
-		var regexp = /(\w+)~s/g; // matches any word ending with the special ~s sequence
+		let regexp = /(\w+)~s/g; // matches any word ending with the special ~s sequence
 		pattern = pattern.replace(regexp, function(match, word) { return GenUtil.pluralize(word);  });
 		
 		// annify tag
-		var regexp = /~n ([aeiouAEIOU])/g; // matches ~n followed by a space then a vowel
+		regexp = /~n ([aeiouAEIOU])/g; // matches ~n followed by a space then a vowel
 		pattern = pattern.replace(regexp, function(match, vowel) { return "n " + vowel} );
 		
-		var regexp = /~n/g; // matches ~n
+		regexp = /~n/g; // matches ~n
 		pattern = pattern.replace(regexp, "");
 		
 		return pattern;	
@@ -101,10 +108,10 @@ var GenUtil = (function() {
 }) ();
 
 GenUtil.capitalize = function(string) {
-	var name = "";
+	let name = "";
 	
-	for (var i = 0; i < string.length; i++) {
-		var prevChar = string[i-1];
+	for (let i = 0; i < string.length; i++) {
+		let prevChar = string[i-1];
 		if (i == 0 || prevChar == " ") {
 			name += string[i].toUpperCase();
 		} else {
@@ -138,12 +145,12 @@ GenUtil.VOWELS = ['a', 'e', 'i', 'o', 'u'];
 GenUtil.CONSONANTS = ['b','c','ch','d','f','g','h','k','l','m','n','p','r','s','sh','t','th','v','w','x','y','z'];
 
 GenUtil.mashup = function(stringA, stringB) {
-	var fraction = 0.33333 + 0.33333 * Math.random();
+	let fraction = 0.33333 + 0.33333 * Math.random();
 	
 	stringA = stringA.slice(0, Math.round(stringA.length * fraction));
 	stringB = stringB.slice(Math.round(stringB.length * fraction));
 
-	var consA = stringA.match(/[^aeiouAEIOU]+$/);
+	let consA = stringA.match(/[^aeiouAEIOU]+$/);
 	if (consA != null) {
 		consA = consA[0];
 		stringA = stringA.slice(0, -1 * consA.length);
@@ -151,7 +158,7 @@ GenUtil.mashup = function(stringA, stringB) {
 		consA = '';
 	}
 	
-	var consB = stringB.match(/^[^aeiouAEIOU]+/);
+	let consB = stringB.match(/^[^aeiouAEIOU]+/);
 	if (consB != null) {
 		consB = consB[0];
 		stringB = stringB.slice(consB.length);
@@ -159,7 +166,7 @@ GenUtil.mashup = function(stringA, stringB) {
 		consB = '';
 	}
 	
-	var result = '';
+	let result = '';
 	if (consA.length + consB.length > 2) {
 		//console.log(stringA + '-' + consA + '-' + consB + '-' + stringB);
 		if (consA < consB) {
@@ -176,7 +183,7 @@ GenUtil.mashup = function(stringA, stringB) {
 }
 
 GenUtil.cleanup = function(string) {
-	var orig = string;
+	let orig = string;
 	
 	string = string.replace(/^ck/g, 'k');
 	string = string.replace(/tth|tht/g, 'th');
