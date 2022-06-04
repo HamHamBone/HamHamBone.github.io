@@ -154,22 +154,20 @@ let Graphics = (function() {
 	let prevTouchX = null;
 	let prevTouchY = null;
 	function onTouchMove(event) {
-		console.log(event);
+		
 		if (prevTouchX != null) {
 			deltaX = prevTouchX - event.touches[0].clientX;
 			deltaY = prevTouchY - event.touches[0].clientY;
 			
-			if ((!player.externalMode)) {
-				let distanceModifier = player.lookDistance/100;
-				distanceModifier = Math.min(1, distanceModifier);
-				distanceModifier = Math.max(0.25, distanceModifier);
+			let distanceModifier = player.lookDistance/100;
+			distanceModifier = Math.min(1, distanceModifier);
+			distanceModifier = Math.max(0.25, distanceModifier);
 				
-				player.targetAngle += -4 * distanceModifier * deltaX / WIDTH;
-				player.targetElevation += 4 * distanceModifier * deltaY / HEIGHT * (player.externalMode ? 1 : -1);
+			player.targetAngle += 4 * distanceModifier * deltaX / WIDTH;
+			player.targetElevation += -4 * distanceModifier * deltaY / HEIGHT * (player.externalMode ? 1 : -1);
 				
-				player.targetElevation = Math.min(player.targetElevation, Math.PI / 2 - 0.001);
-				player.targetElevation = Math.max(player.targetElevation, -Math.PI / 2 + 0.001);
-			}		
+			player.targetElevation = Math.min(player.targetElevation, Math.PI / 2 - 0.001);
+			player.targetElevation = Math.max(player.targetElevation, -Math.PI / 2 + 0.001);
 		}
 		
 		prevTouchX = event.touches[0].clientX;
