@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>HEXGRID</title>
+		<link rel='stylesheet' href='hex.css'>
+		<link href="../hhb-icon.png" rel="icon" type="image/png" />
+	</head>
+	
+	<body>
+		<div id='container'>
+			<div id='controls-section'>
+				<h1>HEXGRID</h1>
+				<p>A hex grid generator by HamHamBone</p>
+				<fieldset>
+					<legend>Hexes</legend>
+					<div>
+						<label>
+							Size:
+							<input id='hex-size' type='number' min=1 value=70></input>
+							<select id='hex-size-type'>
+								<option value='edge'>Edge to Edge</option>
+								<option value='corner'>Corner to Corner</option>
+							</select>
+						</label>
+					</div>
+					<div>
+						<label>Orientation: <select id='hex-orientation'>
+							<option value='flat'>Flat-Top</option>
+							<option value='pointy'>Pointy-Top</option>
+						</select></label>
+						<label>Margin: <input id='hex-margin' type='number' min=0 value=0></input></label>
+					</div>
+				</fieldset>
+				<fieldset>
+					<legend>Map</legend>
+					<div>
+						<label>Shape: <select id='map-shape'>
+							<option value='square'>Square</option>
+							<option value='hexagon'>Hexagon</option>
+						</select></label>
+						<label id='label-map-handedness'>Handedness: <select id='map-handedness'>
+							<option value='even'>Even</option>
+							<option value='odd'>Odd</option>
+						</select></label>
+					</div>
+					<div>
+						<label>Width: <input id='map-width' type='number' min=1 step=1 value=8></input></label>
+						<label>Height: <input id='map-height' type='number' min=1 step=1 value=10></input></label>
+					</div>
+				</fieldset>
+				<fieldset>
+					<legend>Lines</legend>
+					<div>
+						<label>Show: <input id='line-show' type='checkbox' checked></input></label>
+					</div>
+					<div>
+						<label>Width: <input id='hex-line-width' type='number' min=0 value=1></input></label>
+						<label>Style: <select id='hex-line-dash'>
+							<option value='solid'>Solid</option>
+							<option value='dashed'>Dashed</option>
+							<option value='dotted'>Dotted</option>
+						</select></label>						
+					</div>
+					<div>
+						<label>Color: <input id='hex-line-color' type='color' value='#000000'></input></label>
+						<label>Transparency: <input id='hex-line-alpha' type='range' min=0 max=1 step=0.05 value=1></input></label>
+					</div>
+				</fieldset>
+				<fieldset>
+					<legend>Coordinates</legend>
+					<div>
+						<label>Show: <input id='coords-show' type='checkbox' checked></input></label>
+					</div>
+					<div>
+						<label>Style: <select id='coords-style'>
+							<option value='xy'>X and Y</option>
+							<option value='index'>Index</option>
+						</select></label>
+					</div>
+					<div>
+						<label>Position: <select id='coords-position'>
+							<option value='top'>Top</option>
+							<option value='middle'>Middle</option>
+							<option value='bottom'>Bottom</option>
+						</select></label>
+						<label>Offset: <input id='coords-offset' type='number' value=3></input></label>
+					</div>
+					<div>
+						<datalist id='fonts'>
+							<option value='serif'>
+							<option value='sans-serif'>
+							<option value='monospace'>
+						</datalist>
+						<label>Font: <input id='coords-font' type='search' list='fonts' value='monospace'></input></label>
+						<label>Size: <input id='coords-size' type='number' min=1 value=12></input></label>
+					</div>
+					<div>
+						<label>Bold <input id='coords-bold' type='checkbox'></input></label>
+						<label>Italic <input id='coords-italic' type='checkbox'></input></label>
+					</div>
+					<div>
+						<label>Color: <input id='coords-color' type='color' value='#000000'></input></label>
+						<label>Transparency: <input id='coords-alpha' type='range' min=0 max=1 step=0.05 value=1></input></label>
+					</div>
+					<div>
+						<label>Prefix: <input id='coords-prefix' type='text' value=''></input></label>
+					</div>
+					<fieldset>
+						<legend>X-Coordinate</legend>					
+						<div>
+							<label>Type: <select id='coords-x-type'>
+								<option value='number'>Number</option>
+								<option value='letter-upper-case'>Letter (Upper Case)</option>
+								<option value='letter-lower-case'>Letter (Lower Case)</option>
+							</select></label>
+						</div>
+						<div>
+							<label>Start At: <input id='coords-x-start' type='number' value='1'></input></label>
+							<label>Padding: <input id='coords-x-padding' type='text' value='00'></input></label>
+						</div>
+					</fieldset>
+					<div>
+						<label>Delimiter: <input id='coords-delimiter' type='text' value=''></input></label>
+					</div>
+					<fieldset id='coords-y'>
+						<legend>Y-Coordinate</legend>					
+						<div>
+							<label>Type: <select id='coords-y-type'>
+								<option value='number'>Number</option>
+								<option value='letter-upper-case'>Letter (Upper Case)</option>
+								<option value='letter-lower-case'>Letter (Lower Case)</option>
+							</select></label>
+						</div>
+						<div>
+							<label>Start At: <input id='coords-y-start' type='number' value='1'></input></label>
+							<label>Padding: <input id='coords-y-padding' type='text' value='00'></input></label>
+						</div>
+					</fieldset>
+				</fieldset>
+			</div>
+			<div id='map-section'>
+				<canvas id="codon-canvas" width="500px" height="500px"></canvas>
+			</div>
+			<div id='data'></div>
+		</div>
+	</body>
+
+	<script type="text/javascript">
+		'use strict';
+	
+		var HEX_X = Math.cos(Math.PI * (1.0 / 3.0));
+		var HEX_Y = Math.sin(Math.PI * (1.0 / 3.0));
+		
+		let canvas = document.getElementById("codon-canvas");
+		let lineCanvas = document.createElement('canvas');
+		
+		let elemMapHandedness = document.getElementById('map-handedness');
+		let elemMapHeight = document.getElementById('map-height');
+		let elemCoordsY = document.getElementById('coords-y');
+		let elemCoordsDelimiter = document.getElementById('coords-delimiter');
+	
+		// ======================================================= //
+	
+		let INPUT = {};
+		
+		prepInput('hexSize', 'hex-size');
+		prepInput('hexSizeType', 'hex-size-type');
+		
+		prepInput('hexOrientation', 'hex-orientation');
+		prepInput('hexMargin', 'hex-margin');
+		
+		prepInput('lineShow', 'line-show');
+		prepInput('hexLineWidth', 'hex-line-width');
+		prepInput('hexLineDash', 'hex-line-dash');
+		prepInput('hexLineColor', 'hex-line-color');
+		prepInput('hexLineAlpha', 'hex-line-alpha');
+		
+		prepInput('mapShape', 'map-shape');
+		prepInput('mapHandedness', 'map-handedness');
+		prepInput('mapWidth', 'map-width');
+		prepInput('mapHeight', 'map-height');
+		
+		prepInput('coordsShow', 'coords-show');
+		prepInput('coordsStyle', 'coords-style');
+		
+		prepInput('coordsPosition', 'coords-position');
+		prepInput('coordsOffset', 'coords-offset');
+		
+		prepInput('coordsFont', 'coords-font');
+		prepInput('coordsSize', 'coords-size');
+		prepInput('coordsBold', 'coords-bold');
+		prepInput('coordsItalic', 'coords-italic');
+		
+		prepInput('coordsColor', 'coords-color');
+		prepInput('coordsAlpha', 'coords-alpha');
+		
+		prepInput('coordsPrefix', 'coords-prefix');
+		
+		prepInput('coordsXType', 'coords-x-type');
+		prepInput('coordsXStart', 'coords-x-start');
+		prepInput('coordsXPadding', 'coords-x-padding');
+		
+		prepInput('coordsDelimiter', 'coords-delimiter');
+		
+		prepInput('coordsYType', 'coords-y-type');
+		prepInput('coordsYStart', 'coords-y-start');
+		prepInput('coordsYPadding', 'coords-y-padding');
+
+		onChange();
+		
+		// ======================================================= //
+		
+		function drawHexes() {
+			let ctx = canvas.getContext("2d");
+			let lineCTX = lineCanvas.getContext('2d');
+			
+			function getPointyDimension(u) { return getHexRadius() * (u+0.5) * HEX_X*3 + INPUT.hexLineWidth; }
+			function getFlatDimension(u) { return getHexRadius() * (u+0.65) * HEX_Y*2 + INPUT.hexLineWidth; }
+			
+			if (INPUT.hexOrientation == 'flat') {
+				canvas.width = getPointyDimension(getMapWidth());
+				canvas.height = getFlatDimension(getMapHeight());
+			} else if (INPUT.hexOrientation == 'pointy') {
+				canvas.width = getFlatDimension(getMapWidth());
+				canvas.height = getPointyDimension(getMapHeight());
+			}
+			
+			lineCanvas.width = canvas.width;
+			lineCanvas.height = canvas.height;
+			
+			ctx.clearRect(0,0,canvas.width, canvas.height);
+			lineCTX.clearRect(0,0,canvas.width, canvas.height);
+			
+			if (INPUT.lineShow) {
+				drawLines(lineCTX);
+			}
+			ctx.save();
+				ctx.globalAlpha = INPUT.hexLineAlpha;
+				ctx.drawImage(lineCanvas,0,0);
+			ctx.restore();
+			
+			if (INPUT.coordsShow) {
+				drawCoordinates(ctx);
+			}
+		}
+		
+		function drawLines(ctx) {
+			ctx.save();
+
+				ctx.strokeStyle = INPUT.hexLineColor;
+				ctx.lineWidth = INPUT.hexLineWidth;
+				if (INPUT.hexLineDash == 'dashed') {
+					ctx.setLineDash([5+2*INPUT.hexLineWidth,6+2*INPUT.hexLineWidth]);
+				} else if (INPUT.hexLineDash == 'dotted') {
+					ctx.setLineDash([INPUT.hexLineWidth,7+INPUT.hexLineWidth]);
+				}
+			
+				for (var x = 0; x < getMapWidth(); x++) {	
+					for (var y = 0; y < getMapHeight(); y++) {
+						ctx.save();						
+							let coords = getHexCenter(x,y);
+							ctx.translate(coords.x, coords.y);
+							
+							if (hexExists({x:x,y:y})) {
+								if (INPUT.lineShow) {
+									ctx.beginPath();
+										if (INPUT.hexMargin != 0) {
+											drawHex(ctx, getHexRadius() - INPUT.hexMargin/2, x, y);
+										} else {
+										
+											drawPartialHex(ctx, getHexRadius(), x, y);
+											drawHexBorder(ctx,getHexRadius(), x, y);
+										}
+									ctx.stroke();
+								}
+							}
+								
+						ctx.restore();
+					}
+				}
+			
+			ctx.restore();
+		}
+		
+		function drawCoordinates(ctx) {
+			ctx.save();
+
+				ctx.textAlign = "center";
+				let textY = 0
+				if (INPUT.coordsPosition == 'top') {
+					ctx.textBaseline = "top";
+					textY = getBaseTextY();
+				} else if (INPUT.coordsPosition == 'middle') {
+					ctx.textBaseline = 'middle'
+					textY = 0;
+				} else if (INPUT.coordsPosition == 'bottom') {
+					ctx.textBaseline = "alphabetic";
+					textY = -getBaseTextY();
+				}
+				let fontFamily = INPUT.coordsFont;
+				if (!(fontFamily == 'serif' || fontFamily == 'sans-serif' || fontFamily == 'monospace')) {
+					fontFamily = '"'+fontFamily+'"';
+				}
+				ctx.font = (INPUT.coordsBold?'bold ':'') + (INPUT.coordsItalic?'italic ':'') + INPUT.coordsSize + 'px' + ' ' + fontFamily;
+				ctx.fillStyle = INPUT.coordsColor;
+				ctx.globalAlpha = INPUT.coordsAlpha;
+			
+				for (var x = 0; x < getMapWidth(); x++) {	
+					for (var y = 0; y < getMapHeight(); y++) {
+						ctx.save();
+							let coords = getHexCenter(x,y);
+							ctx.translate(coords.x, coords.y);
+							
+							if (hexExists({x:x,y:y})) {
+								let hexString = '';
+								if (INPUT.coordsStyle=='xy') {
+									hexString = INPUT.coordsPrefix + processXCoord(x) + INPUT.coordsDelimiter + processYCoord(y);
+								} else if (INPUT.coordsStyle=='index') {
+									if (INPUT.mapShape=='square') {
+										let index = y*INPUT.mapWidth + x;
+										hexString = INPUT.coordsPrefix + processXCoord(index);
+									}else if (INPUT.mapShape=='hexagon') {
+										let ri = hexagonRankIndex(x,y);
+										hexString = INPUT.coordsPrefix + processXCoord(ri.index);
+									}							
+								}
+								ctx.fillText(hexString, 0, textY);
+							}
+								
+						ctx.restore();
+					}
+				}
+			
+			ctx.restore();
+		}
+		
+		function drawHex(ctx, r) {
+			var hx = HEX_X * r;
+			var hy = HEX_Y * r;
+		
+			ctx.save()
+				if (INPUT.hexOrientation == 'pointy') {
+					ctx.rotate(Math.PI*0.5);
+				}
+			
+				ctx.moveTo(0,-hy);
+				ctx.lineTo(-hx, -hy);
+				ctx.lineTo(-r,0);
+				ctx.lineTo(-hx, hy);
+				ctx.lineTo(hx, hy);
+				ctx.lineTo(r, 0);
+				ctx.lineTo(hx, -hy);
+				ctx.lineTo(0,-hy);
+			ctx.restore();
+		}
+		
+		function drawPartialHex(ctx,r,x,y) {
+			var hx = HEX_X * r;
+			var hy = HEX_Y * r;
+	
+			ctx.save();
+			
+				if (INPUT.hexOrientation == 'pointy') {
+					ctx.rotate(-Math.PI/2);
+					ctx.scale(-1,1);
+				}
+				
+				if (hexExists(getNeighbor(x,y,0))) {
+					ctx.moveTo(r,0);
+					ctx.lineTo(hx,-hy);
+				}
+				if (hexExists(getNeighbor(x,y,1))) {
+					ctx.moveTo(hx,-hy);
+					ctx.lineTo(-hx,-hy);
+				}
+				if (hexExists(getNeighbor(x,y,2))) {
+					ctx.moveTo(-hx,-hy);
+					ctx.lineTo(-r,0);
+				}
+			
+			ctx.restore();
+		}
+		
+		function drawHexBorder(ctx,r,x,y) {
+			var hx = HEX_X * r;
+			var hy = HEX_Y * r;
+			
+			let hx2 = (hx+r) / 2;
+			let hy2 = hy / 2;
+			
+			let neighbors = [];
+			for (let i=0; i<6; i++) {
+				neighbors.push(!hexExists(getNeighbor(x,y,i)));
+			}
+			
+			let coords = [ [r,0],[hx2,-hy2],[hx,-hy],[0,-hy],[-hx,-hy],[-hx2,-hy2],[-r,0],[-hx2,hy2],[-hx,hy],[0,hy],[hx,hy],[hx2,hy2] ];
+			
+			let prev = false;
+			ctx.save()
+				for (let i = 0; i < 6; i++) {
+					let c1 = coords[(i*2+1)%12];
+					let c2 = coords[(i*2+2)%12];
+					let c3 = coords[(i*2+3)%12];
+					
+					let n1 = neighbors[i];
+					let n2 = neighbors[(i+1)%6];
+					
+					ctx.save();
+					
+						if (INPUT.hexOrientation == 'pointy') {
+							ctx.rotate(-Math.PI/2);
+							ctx.scale(-1,1);
+						}
+
+						if (n1 && n2) {
+							if (!prev) { ctx.moveTo(c1[0],c1[1]); }
+							ctx.lineTo(c2[0],c2[1]);
+							ctx.lineTo(c3[0],c3[1]);
+							prev = true;
+						} else if (n1 && !n2) {
+							if (!prev) { ctx.moveTo(c1[0],c1[1]); }
+							ctx.lineTo(c2[0],c2[1]);				
+							prev = false;
+						} else if (!n1 && n2) {
+							if (!prev) { ctx.moveTo(c2[0],c2[1]); }
+							ctx.lineTo(c3[0],c3[1]);
+							prev = true;
+						} else {
+							prev = false;
+						}
+						
+					ctx.restore();
+				}
+			ctx.restore();
+		}
+		
+		//   1
+		//   _
+		// 2/ \0
+		// 3\_/5
+		//   4
+		function getNeighbor(x,y,i) {
+			if (INPUT.hexOrientation == 'pointy') {
+				let temp = x;
+				x=y;
+				y=temp;
+			}
+			
+			let oddhand = x%2==0;
+			if (getMapHandedness() == 'odd') {
+				oddhand = !oddhand;
+			}
+			
+			let result = {x:0,y:0};
+			if (i==0) { result = {x:x+1, y:(oddhand?y-1:y)}; }
+			else if (i==1) { result = {x:x,y:y-1}; }
+			else if (i==2) { result = {x:x-1, y:(oddhand?y-1:y)}; }
+			else if (i==3) { result = {x:x-1, y:(oddhand?y:y+1)}; }
+			else if (i==4) { result = {x:x,y:y+1}; }
+			else if (i==5) { result = {x:x+1, y:(oddhand?y:y+1)}; }
+			
+			if (INPUT.hexOrientation == 'pointy') {
+				let temp = result.x;
+				result.x=result.y;
+				result.y=temp;
+			}			
+			
+			return result;
+		}
+		
+		function hexExists(c) {
+			let x = c.x;
+			let y = c.y;
+			
+			if (INPUT.mapShape == 'hexagon') {
+				return isInHexagon(x,y);
+			} else {
+				return x>=0 & x<getMapWidth() & y>=0 & y<getMapHeight();
+			}
+		}
+		
+		function getHexCenter(cx, cy) {			
+			if (INPUT.hexOrientation == 'pointy') {
+				let temp=cx;
+				cx=cy;
+				cy=temp;
+			}
+						
+			var x = cx * HEX_X * getHexRadius() * 3;
+			
+			if (getMapHandedness() == 'odd') {
+				cx++;
+			}
+			
+			var y = (cy + 0.5 * (cx%2)) * HEX_Y * getHexRadius() * 2
+			
+			x += 0.75 * HEX_X * getHexRadius() * 3 + INPUT.hexLineWidth/2;
+			y += 0.57 * HEX_Y * getHexRadius() * 2 + INPUT.hexLineWidth/2;
+			
+			if (INPUT.hexOrientation == 'pointy') {
+				let temp=x;
+				x=y;
+				y=temp;
+			}			
+			
+			return {x:x, y:y};
+		}
+
+		function hexagonRankIndex(x,y) {
+			if (INPUT.hexOrientation=='pointy') {
+				let temp = x;
+				x=y;
+				y=temp;
+			}
+		
+			let cx=(getMapWidth()-1)/2;
+			let cy=cx;
+			
+			let odd = cx%2==1;
+			
+			let dx = x-cx;
+			let adx = Math.abs(dx);
+			let dy = y-cy;
+			
+			if (INPUT.hexOrientation=='pointy') {
+				dx=-dx;
+			}
+			
+			let minY = -Math.floor((adx+(odd?0:1))/2);
+			let maxY = Math.floor((adx+(odd?1:0))/2);
+		
+			let index = 0;
+		
+			let rank = 0;
+			if (dy>=minY && dy<=maxY) {
+				rank = adx;
+				
+				if (dx < 0) {
+					index = 4*rank+(rank-dy+minY);
+				} else {
+					index = 1*rank+(rank-maxY+dy);
+				}
+			} else if (dy < minY) {
+				rank = adx + minY-dy;
+				
+				if (dx < 0) {
+					index = 5*rank+(rank+dx);
+				} else {
+					index = 0*rank+(dx);
+				}				
+			} else {
+				rank = adx + dy-maxY;
+				
+				if (dx < 0) {
+					index = 3*rank+(-dx);
+				} else {
+					index = 2*rank+(rank-dx);
+				}	
+			}
+			
+			if (rank == 0) {
+				index = 0;
+			} else {
+				index += 1+6*(rank*(rank-1))/2;
+			}
+			
+			return {rank:rank, index:index};
+		}
+
+		function isInHexagon(x,y) {
+			let maxRank = (getMapWidth()-1)/2;
+			
+			let ri = hexagonRankIndex(x,y);
+			
+			return ri.rank <= maxRank;
+		}
+
+		function getBaseTextY() {
+			return -getHexRadius() * HEX_Y + INPUT.hexMargin/2 + INPUT.hexLineWidth/2 + INPUT.coordsOffset;
+		}
+		
+		function prepInput(dataId, elementId, defaultValue=1) {
+			let elem = document.getElementById(elementId);
+			takeValue();
+			
+			elem.addEventListener('input', function() {
+				takeValue();
+				onChange();
+			});
+			
+			function takeValue() {
+				let v = elem.value;
+				
+				if (elem.type=='number') {
+					v = parseFloat(v);
+					if (isNaN(v)) {v=defaultValue;}
+				} else if (elem.type=='range') {
+					v = parseFloat(v);
+					if (isNaN(v)) {v=defaultValue;}
+				} else if (elem.type=='checkbox') {
+					v = elem.checked;
+				}
+			
+				INPUT[dataId] = v				
+			}
+		}
+		
+		function onChange() {
+			console.log(INPUT);
+			
+			if (INPUT.mapShape == 'hexagon') {
+				elemMapHandedness.disabled = true;
+				elemMapHeight.disabled=true;
+			} else {
+				elemMapHandedness.disabled = false;
+				elemMapHeight.disabled = false;
+			}
+			
+			if (INPUT.coordsStyle == 'index') {
+				elemCoordsY.disabled = true;
+				elemCoordsDelimiter.disabled = true;
+			} else {
+				elemCoordsY.disabled = false;
+				elemCoordsDelimiter.disabled = false;
+			}
+			
+			drawHexes();
+		}
+		
+		function getHexRadius() {
+			if (INPUT.hexSizeType=='edge') {
+				return 0.5*INPUT.hexSize/HEX_Y;
+			} else {
+				return 0.5*INPUT.hexSize;
+			}
+		}
+		
+		function getMapHandedness() {
+			return INPUT.mapShape=='hexagon'?'even':INPUT.mapHandedness
+		}
+		
+		function getMapWidth() {
+			let res = INPUT.mapWidth;
+			if (INPUT.mapShape=='hexagon' && res%2==0) { res--; }
+			return res;
+		}
+		
+		function getMapHeight() {
+			if (INPUT.mapShape=='hexagon') {
+				return getMapWidth();
+			}
+			return INPUT.mapHeight;
+		}
+		
+		function letterize(i) {
+			let res = '';
+			
+			if (i==0) { return 'A'; }
+			
+			while (i > 0) {
+				res = String.fromCharCode(i%26+65) + res;
+				i = Math.floor(i/26);
+			}
+			
+			return res;
+		}
+		
+		function processXCoord(x) {
+			let res = '';
+			
+			x += INPUT.coordsXStart;
+			
+			if (INPUT.coordsXType=='number') {
+				res = x.toString()
+			} else if (INPUT.coordsXType=='letter-upper-case') {
+				res = letterize(x);
+			}  else if (INPUT.coordsXType=='letter-lower-case') {
+				res = letterize(x).toLowerCase();
+			}
+			
+			res = res.padStart(INPUT.coordsXPadding.length, INPUT.coordsXPadding);
+			
+			return res;
+		}
+		
+		function processYCoord(y) {
+			let res = '';
+			
+			y += INPUT.coordsYStart;
+			
+			if (INPUT.coordsYType=='number') {
+				res = y.toString()
+			} else if (INPUT.coordsYType=='letter-upper-case') {
+				res = letterize(y);
+			}  else if (INPUT.coordsYType=='letter-lower-case') {
+				res = letterize(y).toLowerCase();
+			}
+			
+			res = res.padStart(INPUT.coordsYPadding.length, INPUT.coordsYPadding);
+			
+			return res;
+		}
+	</script>
+	
+</html>
