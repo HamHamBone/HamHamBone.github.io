@@ -119,6 +119,8 @@ let Graphics = (function() {
 		document.body.addEventListener('mousemove', onMouseMove);
 		document.body.addEventListener('keydown', onKeyDown);
 		document.body.addEventListener('keyup', onKeyUp);
+		document.body.addEventListener('touchmove',onTouchMove);
+		document.body.addEventListener('touchend',onTouchEnd);
 		
 		window.addEventListener( 'resize', onWindowResize, false );
 		
@@ -147,6 +149,36 @@ let Graphics = (function() {
 		}
 		
 		//console.log(Math.floor(player.lookDistance));
+	}
+	
+	let prevTouchX = null;
+	let prevTouchY = null;
+	function onTouchMove(event) {
+		console.log(event);
+		if (prevTouchX != null) {
+			deltaX = prevTouchX - event.touches[0].clientX;
+			deltaY = prevTouchY - event.touches[0].clientY;
+			
+			if ((!player.externalMode)) {
+				let distanceModifier = player.lookDistance/100;
+				distanceModifier = Math.min(1, distanceModifier);
+				distanceModifier = Math.max(0.25, distanceModifier);
+				
+				player.targetAngle += -4 * distanceModifier * deltaX / WIDTH;
+				player.targetElevation += 4 * distanceModifier * deltaY / HEIGHT * (player.externalMode ? 1 : -1);
+				
+				player.targetElevation = Math.min(player.targetElevation, Math.PI / 2 - 0.001);
+				player.targetElevation = Math.max(player.targetElevation, -Math.PI / 2 + 0.001);
+			}		
+		}
+		
+		prevTouchX = event.touches[0].clientX;
+		prevTouchY = event.touches[0].clientY;	
+	}
+	
+	function onTouchEnd(event) {
+		prevTouchX = null;
+		prevTouchY = null;		
 	}
 	
 	function onMouseMove(event) {
