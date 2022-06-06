@@ -140,11 +140,19 @@
 						</div>
 					</fieldset>
 				</fieldset>
+				<fieldset>
+					<legend>Export</legend>
+					<div>
+						<a href='' id='save-button'>Save Hexmap as PNG</a>
+					</div>
+					<div>
+						<label>Filename: <input id='export-filename' class='filename' type='text' value='hexmap.png'></input></label>
+					</div>
+				</fieldset>
 			</div>
 			<div id='map-section'>
 				<canvas id="codon-canvas" width="500px" height="500px"></canvas>
 			</div>
-			<div id='data'></div>
 		</div>
 	</body>
 
@@ -210,6 +218,13 @@
 		prepInput('coordsYPadding', 'coords-y-padding');
 
 		onChange();
+		
+		// ======================================================= //
+		
+		let elemSaveButton = document.getElementById('save-button');
+		elemSaveButton.addEventListener('click', saveImage);
+		
+		let elemExportFilename = document.getElementById('export-filename');
 		
 		// ======================================================= //
 		
@@ -702,6 +717,17 @@
 			res = res.padStart(INPUT.coordsYPadding.length, INPUT.coordsYPadding);
 			
 			return res;
+		}
+		
+		function saveImage() { 
+			elemSaveButton.href = canvas.toDataURL('image/png', 1.0);
+			
+			let filename = elemExportFilename.value;
+			if (filename == '') {
+				filename='hexmap.png';
+			}
+			
+			elemSaveButton.download = filename;
 		}
 	</script>
 	
