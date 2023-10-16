@@ -29,6 +29,7 @@ url: "https://hamhambone.github.io" # the base hostname & protocol for your site
 
 # Build settings
 destination: ..\blog
+permalink: /:title:output_ext
 theme: minima
 plugins:
   - jekyll-feed
