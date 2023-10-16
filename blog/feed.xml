@@ -1,5 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="https://hamhambone.github.io/blog/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hamhambone.github.io/blog/" rel="alternate" type="text/html" /><updated>2023-10-16T14:58:33-05:00</updated><id>https://hamhambone.github.io/blog/feed.xml</id><title type="html">HamHambone’s Blog</title><subtitle>tabletop roleplaying game miscellanea.</subtitle><entry><title type="html">Bottom-Up Generation 1: Drawing The Map</title><link href="https://hamhambone.github.io/blog/bottom-up-generation-1.html" rel="alternate" type="text/html" title="Bottom-Up Generation 1: Drawing The Map" /><published>2023-10-16T00:00:00-05:00</published><updated>2023-10-16T00:00:00-05:00</updated><id>https://hamhambone.github.io/blog/bottom-up-generation-1</id><content type="html" xml:base="https://hamhambone.github.io/blog/bottom-up-generation-1.html"><![CDATA[<p>Hello this is the first post in my blog!!</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="https://hamhambone.github.io/blog/feed.xml" rel="self" type="application/atom+xml" /><link href="https://hamhambone.github.io/blog/" rel="alternate" type="text/html" /><updated>2023-10-16T16:05:07-05:00</updated><id>https://hamhambone.github.io/blog/feed.xml</id><title type="html">HamHamBone’s Blog</title><subtitle>tabletop roleplaying game miscellanea.</subtitle><entry><title type="html">Bottom-Up Generation - Part 1: Introduction</title><link href="https://hamhambone.github.io/blog/bottom-up-generation-1.html" rel="alternate" type="text/html" title="Bottom-Up Generation - Part 1: Introduction" /><published>2023-10-16T00:00:00-05:00</published><updated>2023-10-16T00:00:00-05:00</updated><id>https://hamhambone.github.io/blog/bottom-up-generation-1</id><content type="html" xml:base="https://hamhambone.github.io/blog/bottom-up-generation-1.html"><![CDATA[<p>I’m a big fan of how the game <a href="https://preview.drivethrurpg.com/en/product/230009/Stars-Without-Number-Revised-Edition-Free-Version">Stars Without Number</a> does procedural setting generation from the bottom-up. If you are not familiar with SWN. In that game, in order to build an interstellar sector to set the campaign in, the GM is asked to first randomly locate worlds on the sector map, then to roll on some tables to generate those worlds. So at hex 0305, there might be a burning industrial hell world inhabited by surly robots, while at neighboring hex 0306, you might find an airless casino-world secretly ruled by a eugenics cult (and etc).</p>
 
-<blockquote>
-  <p>how <strong>cool!</strong></p>
-</blockquote>]]></content><author><name></name></author><category term="rpg" /><category term="tools" /><summary type="html"><![CDATA[Hello this is the first post in my blog!!]]></summary></entry></feed>
+<p>Notably, the overall shape and setting of the sector is determined by the ways that the small generated bits of game content (the worlds, in this games case.) relate to each other. Perhaps I imagine that the foolish prince of the New Earth Hegemony has recently, against all odds, won the entire industrial robot planet in a huge bet against the cult-casino, and now all sorts of trouble is resulting. The random tables create a reasonably sized field of random goodies to forge connections and narrative out of.</p>
+
+<p><a href="https://mausritter.com/">Mausritter’s</a> setting generation procedures are similar, generating a three layer hexflower’s worth of interesting tidbits to weave together.</p>
+
+<p>Contrast this to the world-building procedures of the game <a href="https://preview.drivethrurpg.com/en/product/348809/worlds-without-number-free-edition">Worlds Without Number</a>. WWN asks the GM to work from the top down, starting from defining the basic facts of the fantasy world, to defining the various nations and geography of a region in that world, to finally defining the individual setting components that the players will interact with within the scope of a single nation or zone within that nation.</p>
+
+<p>Whenever I try to use the setting generation tools in WWN, I tend to bounce off. There isn’t much support for the “top” of the top-down approach, no tables to roll on to help define the world-level setting details. Without a strong central concept, the settings that I’ve attempted to make using WWN have felt mushy and uninspiring (not that this is everyone’s experience, I just don’t mesh will with the tools provided).</p>
+
+<p>The process for setting generation in WWN and SWN are notably different. In WWN, it is assumed that the GM will be several “setting layers” deep before generating the actual “content” of places, people, things in the campaign, while in SWN that is happening immediately.</p>
+
+<p>So, what might a bottom-up approach similar to SWN’s for generating a fantasy world look like?</p>
+
+<ul>
+  <li>
+    <p>As soon as we can in the process, we should generate the low-level setting components.</p>
+  </li>
+  <li>
+    <p>These components shouldn’t number more than about 20, preferably closer to a dozen. (SWN has the GM generate 20 to 30 worlds per sector, which in my experience is a little too many – to much detail can sometimes leave things feeling muddled, each component being washed out by the tide of detail.)</p>
+  </li>
+  <li>
+    <p>The procedure for generating for the components should be evocative, balanced between under and over definition.</p>
+  </li>
+  <li>
+    <p>The setting-builder should be encouraged and given the tools to build the setting by addition and weaving together the results from the various different setting components.</p>
+  </li>
+</ul>
+
+<p>In the following blog posts, I will be showing off a procedure that I have devised to generate a fantasy setting, starting with a procedure for generating the overall geography and location of the components of the setting.</p>]]></content><author><name></name></author><category term="rpg" /><category term="tools" /><summary type="html"><![CDATA[I’m a big fan of how the game Stars Without Number does procedural setting generation from the bottom-up. If you are not familiar with SWN. In that game, in order to build an interstellar sector to set the campaign in, the GM is asked to first randomly locate worlds on the sector map, then to roll on some tables to generate those worlds. So at hex 0305, there might be a burning industrial hell world inhabited by surly robots, while at neighboring hex 0306, you might find an airless casino-world secretly ruled by a eugenics cult (and etc).]]></summary></entry></feed>
