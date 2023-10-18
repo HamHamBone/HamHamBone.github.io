@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Bottom-Up Generation - Part 2: Geography"
-date:   2023-10-17
+date:   2023-10-18
 categories: rpg tools
 ---
 
