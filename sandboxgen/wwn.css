@@ -1,0 +1,45 @@
+body {
+	font-family:'Source Serif Pro';
+	margin:0px;
+	background-color:#AD9351
+}
+
+p {
+	font-size:12pt;
+	margin-top:5px;
+	margin-bottom:5px;
+}
+
+h3 {
+	font-size:28pt;
+}
+
+canvas, #selected-data {
+	border: thick double #3E160A;
+}
+
+#map-section {
+	display:flex;
+}
+
+#container {
+	width: 100%;
+	display:flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+#selected-data {
+	width: 300px;
+	background-color: #E2D0A1;
+	padding: 5px;
+	margin-left: 5px;
+}
+
+#data {
+	max-width: 656px;
+}
+
+summary {
+	cursor: pointer;
+}

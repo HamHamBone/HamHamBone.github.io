@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>HamHamBone's SandBoxGen</title>
+		<link rel='stylesheet' href='wwn.css'>
+	</head>
+	
+	<body>
+		<div id='container'>
+			<div id='map-section'>
+				<canvas id="codon-canvas" width="500px" height="500px">Canvas Not Supported</canvas>
+				<div id='selected-data'><p>Click on a hex to inspect it!</p></div>
+			</div>
+			<div id='data'></div>
+		</div>
+	</body>
+
+	<script type='text/javascript' src='media.js'></script>
+	<script type='text/javascript' src='genutil.js'></script>
+	
+	<script type='text/javascript' src='nation.js'></script>
+	<script type='text/javascript' src='encounters.js'></script>
+	<script type='text/javascript' src='flavor.js'></script>
+	<script type='text/javascript' src='terrain.js'></script>
+	<script type='text/javascript' src='tags.js'></script>
+
+	<script type="text/javascript">
+		'use strict';
+	
+		function pickRandom(list) {
+			return list[Math.floor(Math.random() * list.length)];
+		}
+		
+		var HEX_X = Math.cos(Math.PI * (1.0 / 3.0));
+		var HEX_Y = Math.sin(Math.PI * (1.0 / 3.0));
+		
+		var HEX_RADIUS = 35;
+		
+		var MAP_WIDTH = 12;
+		var MAP_HEIGHT = 8;
+		
+		// -------------------------------------------------
+		
+		let TAGS = [
+			'Treasure Hoard',
+			'Great Barrier',
+			'Shapeshifters',
+			'The Cycle',
+			'World-Crux',
+			'Overgrown',
+			'Godhead',
+			'Skybound',
+			'Secret Cult',
+			'Impending Doom',
+			'Cursed Populace',
+			'Bathhouse',
+			'Gears and Metal',
+			'Undeath',
+			'Exacting Tradition',
+			'Dangerous Terrain',
+			'Ancient Seal',
+			'Nomads',
+			'Avowed Order',
+			'Battleground',
+			'Plagued',
+			'Bloody Feud',
+			'Unusual Art',
+			'Natural Wonder',
+			'Empty Throne',
+			'Planar Rift',
+			'Mirror World',
+			'Subaquatic',
+			'Scrupulous Seclusion',
+			'Megastructure',
+			'Dragon',
+			'Mind Over Matter',
+			'Grand Contest',
+			'Terror in the Night',
+			'Leviathan',
+			'Great Work'
+		];
+		
+		let DETAILS = [
+			'Scales',
+			'Twin',
+			'Teeth',
+			'Compass',
+			'Rune',
+			'Angel',
+			'Shadow',
+			'Bridge',
+			'Soul',
+			'Waste',
+			'Spark',
+			'Ring',
+			'Wave',
+			'Orb',
+			'Rat',
+			'Filth',
+			'Colors',
+			'Rain',
+			'Reflect',
+			'Horn',
+			'Witch',
+			'Sun',
+			'Ice',
+			'Spear',
+			'Gold',
+			'Ink',
+			'Helm',
+			'Lantern',
+			'Coin',
+			'Earth',
+			'Chain',
+			'Ooze',
+			'Blood',
+			'Bone',
+			'Mask',
+			'Lady',
+			'Cloak',
+			'Chaos',
+			'Stone',
+			'Silk',
+			'Steed',
+			'Deep',
+			'Vision',
+			'Silence',
+			'Tree',
+			'Spiral',
+			'Feather',
+			'Eye',
+			'Demon',
+			'Wind',
+			'Daggers',
+			'Seed',
+			'Iron',
+			'Trickster',
+			'Rice',
+			'Gloom',
+			'Hunger',
+			'Blast',
+			'Gem',
+			'Color',
+			'Mist',
+			'Ethereal',
+			'Wheels',
+			'Forge',
+			'Judge',
+			'Fairy',
+			'Spire',
+			'Titan',
+			'Cinder',
+			'Jester',
+			'Glass',
+			'Worm'
+		];
+		
+		let WEIRDS = [
+			'Geography',
+			'Magical Component',
+			'Strange Merchant',
+			'Strange Tutor',
+			'Strange Ally',
+			'Animal Behaviour',
+			'Clue to Nearby Hex',
+			'Historical Location',
+			'Treasure'
+		];
+		
+		let MONSTERS = [
+			'Acolyte',
+			'Bandit',
+			'Beetle, Fire',
+			'Dwarf',
+			'Gnome',
+			'Goblin',
+			'Green Slime',
+			'Halfling',
+			'Killer Bee',
+			'Kobold',
+			'Lizard, Gecko',
+			'Orc',
+			'Shrew, Giant',
+			'Skeleton',
+			'Snake, Cobra',
+			'Spider, Crab',
+			'Sprite',
+			'Stirge',
+			'Trader',
+			'Wolf',
+			'Beetle, Oil',
+			'Berserker',
+			'Cat, Mountain Lion',
+			'Elf',
+			'Ghoul',
+			'Gnoll',
+			'Grey Ooze',
+			'Hobgoblin',
+			'Lizard, Draco',
+			'Lizard Man',
+			'Neanderthal',
+			'Noble',
+			'Pixie',
+			'Robber Fly',
+			'Rock Baboon',
+			'Snake, Pit Viper',
+			'Spider, Black Widow',
+			'Troglodyte',
+			'Veteran',
+			'Zombie',
+			'Ape, White',
+			'Basic Adventures',
+			'Beetle, Tiger',
+			'Bugbear',
+			'Carcass Crawler',
+			'Doppelgänger',
+			'Driver Ant',
+			'Gargoyle',
+			'Gelatinous Cube',
+			'Harpy',
+			'Living Statue, Crystal',
+			'Lycanthrope, Wererat',
+			'Medium',
+			'Medusa',
+			'Ochre Jelly',
+			'Ogre',
+			'Shadow',
+			'Spider, Tarantella',
+			'Thoul',
+			'Wight',
+			'Bear, Cave',
+			'Blink Dog',
+			'Caecilia',
+			'Cockatrice',
+			'Doppelgänger',
+			'Expert Adventurer',
+			'Grey Ooze',
+			'Hellhound',
+			'Lizard, Tuatara',
+			'Lycanthrope, Wereboar',
+			'Lycanthrope, Werewolf',
+			'Minotaur',
+			'Ochre Jelly',
+			'Owl Bear',
+			'Rhagodessa',
+			'Rust Monster',
+			'Spectre',
+			'Troll',
+			'Weasel, Giant',
+			'Wraith',
+			'Basilisk',
+			'Black Pudding',
+			'Caecilia',
+			'Dragon, White',
+			'Expert Adventurer',
+			'Gorgon',
+			'Hellhound',
+			'Hydra (1-4 heads)',
+			'Lycanthrope, Weretiger',
+			'Minotaur',
+			'Mummy',
+			'Ochre Jelly',
+			'Owl Bear',
+			'Rust Monster',
+			'Salamander, Flame',
+			'Scorpion, Giant',
+			'Spectre',
+			'Troll',
+			'Warp Beast',
+			'Black Pudding',
+			'Chimera',
+			'Dragon, Black',
+			'Dragon, Blue',
+			'Dragon, Gold',
+			'Dragon, Green',
+			'Dragon, Red',
+			'Expert Adventurer',
+			'Giant, Hill',
+			'Giant, Stone',
+			'Golem, Amber',
+			'Golem, Bone',
+			'Hydra (5-10 heads)',
+			'Lycanthrope, Devil Swine',
+			'Lycanthrope, Werebear',
+			'Manticore',
+			'Purple Worm',
+			'Salamander, Flame',
+			'Salamander, Frost',
+			'Vampire'
+		];
+	
+		// -------------------------------------------------
+		
+		let map = []
+		for (let x = 0; x < MAP_WIDTH; x++) {
+			map[x] = [];
+			
+			for (let y = 0; y < MAP_HEIGHT; y++) {
+				let quad = null;
+			
+				let type = Terrain.NONE;
+				
+				map[x][y] = {}
+				
+				map[x][y].x = x;
+				map[x][y].y = y;
+				map[x][y].type = type;
+				
+				map[x][y].zone = null;
+				
+				map[x][y].other = null;
+				map[x][y].label = "";
+				map[x][y].html = '';
+				map[x][y].nation = null;
+				map[x][y].zoneIndex = -1;
+				
+				map[x][y].coastRand = [];
+				for (let i = 0; i < 6; i++) {
+					map[x][y].coastRand[i] = Math.floor(Math.random()*3);
+				}
+				
+				map[x][y].tileRand = Math.random();
+			}
+		}
+		
+		// ---------------------------------------------
+		
+		let oceanNorth = false;
+		let oceanSouth = false;
+		let oceanWest = false;
+		let oceanEast = false;
+		
+		let oceanZone = {};
+		oceanZone.hexes = [];
+		let oceanSize = 10 + Math.floor(Math.random()*10);
+		
+		if (Math.random() < 0.5) {
+			oceanNorth = true;
+			for (let x = 0; x < MAP_WIDTH; x++) {
+				if (Math.random() < 0.5) {
+					giveZoneHex(oceanZone, map[x][0]);
+				}
+			}
+		}
+		
+		if (Math.random() < 0.5) {
+			oceanSouth = true;
+			for (let x = 0; x < MAP_WIDTH; x++) {
+				if (Math.random() < 0.5) {
+					giveZoneHex(oceanZone, map[x][MAP_HEIGHT-1]);
+				}
+			}
+		}
+		
+		if (Math.random() < 0.5) {
+			oceanWest = true;
+			for (let y = 0; y < MAP_HEIGHT; y++) {
+				if (Math.random() < 0.5) {
+					giveZoneHex(oceanZone, map[0][y]);
+				}
+			}
+		}
+		
+		if (Math.random() < 0.5) {
+			oceanEast = true;
+			for (let y = 0; y < MAP_HEIGHT; y++) {
+				if (Math.random() < 0.5) {
+					giveZoneHex(oceanZone, map[MAP_WIDTH-1][y]);
+				}
+			}
+		}
+		
+		for (let i = 0; i < oceanSize; i++) {
+			growZone(oceanZone);
+		}
+		
+		for (let hex of oceanZone.hexes) {
+			hex.type = Terrain.WATER;
+		}
+		
+		// ---------------------------------------------
+		
+		const ZONE_COUNT = 16;
+		
+		let zones = [];
+		
+		let hindex = Math.floor(Math.random()*1000) + 100;
+				
+		for (let i = 0; i < ZONE_COUNT; i++) {
+			let zone = {};
+			
+			zone.hexes = []
+			
+			zone.combineIndex = Math.random();
+			
+			if (Math.random() < 0.6) {
+				zone.type = GenUtil.pickRandom(Terrain.MAJOR_TERRAINS);
+			} else {
+				zone.type = Terrain.GRASSLAND;
+			}
+			
+			zone.maxSize = 6 + Math.floor(Math.random() * 12);
+	
+			let x, y;
+			let ok = false;
+			while (!ok) {
+				x = Math.floor(GenUtil.halton(hindex, 2)*MAP_WIDTH);
+				y = Math.floor(GenUtil.halton(hindex, 3)*MAP_HEIGHT);
+				
+				if (map[x][y].zone == null) {
+					ok = true;
+					giveZoneHex(zone, map[x][y]);
+				}
+				
+				hindex++;
+			}
+			
+			zones.push(zone);
+		}
+		
+		for (let i = 0; i < 200; i++) {
+			for (let zone of zones) {
+				if (zone.maxSize > i) {
+					growZone(zone);
+				}
+			}
+		}
+		
+		for (let i = 0; i < 200; i++) {
+			for (let zone of zones) {
+				growZone(zone);
+			}
+		}
+		
+		for (let i = 0; i < ZONE_COUNT; i++) {
+			let zone = zones[i];
+			
+			for (let hex of zone.hexes) {
+				hex.type = zone.type;
+			}
+		}
+		
+		// --------------------------------------------
+		
+		for (let x = 0; x < MAP_WIDTH; x++) {
+			for (let y = 0; y < MAP_HEIGHT; y++) {
+				let hex = map[x][y];
+				if (hex.type == Terrain.NONE) {
+					hex.type = GenUtil.pickRandom(Terrain.EASY_TERRAINS);
+				}
+			}
+		}
+		
+		// ---------------------------------------------
+		
+		for (let x = 0; x < MAP_WIDTH; x++) {
+			for (let y = 0; y < MAP_HEIGHT; y++) {
+				map[x][y].zone = null;
+			}
+		}
+		
+		// ---------------------------------------------
+		
+		for (let x = 0; x < MAP_WIDTH; x++) {
+			for (let y = 0; y < MAP_HEIGHT; y++) {
+				let hex = map[x][y];
+				
+				hex.html = '<p>'+x.toString().padStart(2,'0')+y.toString().padStart(2,'0')+' - '+hex.type.name+'</p>';
+				
+				if (hex.type == Terrain.WATER) { continue; }
+				
+				let typeRoll = GenUtil.die(6);
+				
+				if (typeRoll == 4) {
+					let sizeRoll = GenUtil.die(6);
+					
+					let title = 'settlement';
+					let population = 0;
+					let special = GenUtil.pickRandom(['Relationship to nearby hex', 'Relationship to nearby hex', 'Relationship to nearby hex', 'Hostile', 'Boon or Ally', 'Weird']);
+					if (special == 'Weird') { special = 'Weird - ' + GenUtil.pickRandom(WEIRDS); }
+					let tags = [];
+					let details = [];
+					
+					if (sizeRoll <= 4) {
+						hex.other = 'imgTileVillage';
+						
+						title = 'Village of ____';
+						population = GenUtil.die(100);
+						tags = [];
+						details = GenUtil.pickList(DETAILS, 1);
+						
+					} else if (sizeRoll == 5) {
+						hex.other = 'imgTileTown';
+						
+						title = 'Town of ____';
+						population = 100 * GenUtil.die(6) + GenUtil.die(100);
+						tags = GenUtil.pickList(TAGS, 2);
+						details = GenUtil.pickList(DETAILS, 2);
+					} else if (sizeRoll == 6) {
+						hex.other = 'imgTileFort';
+						
+						title = 'Fort of ____';
+						population = 10 * (GenUtil.die(6) + GenUtil.die(6) + GenUtil.die(6)) + GenUtil.die(10);
+						tags = GenUtil.pickList(TAGS, 1);
+						details = GenUtil.pickList(DETAILS, 1);
+					}
+					
+					hex.html += '<p><b>'+title+'</b></p>';
+					hex.html += '<p>population: '+population+'<p>'
+					hex.html += '<p>special: '+special+'</tp>';
+					if (tags.length > 0) { hex.html += '<p>tags: '+tags.join(' & ')+'</tp>'; }
+					hex.html += '<p>details: '+details.join(' & ')+'</tp>';
+				} else if (typeRoll == 5) {
+					hex.other = 'imgTileLair';
+					
+					let monster = GenUtil.pickRandom(MONSTERS);
+					let details = GenUtil.pickList(DETAILS, GenUtil.die(2));
+					
+					hex.html += '<p><b>'+'MONSTER LAIR'+'</b></p>';
+					hex.html += '<p>monster: '+monster+'<p>'
+					hex.html += '<p>details: '+details.join(' & ')+'</tp>';			
+				} else if (typeRoll == 6) {
+					hex.other = 'imgTileWeird';
+					
+					let weirdness = GenUtil.pickRandom(WEIRDS);
+					let details = GenUtil.pickList(DETAILS, GenUtil.die(2));
+					
+					hex.html += '<p><b>'+'Weird ____'+'</b></p>';
+					hex.html += '<p>weirdness: '+weirdness+'<p>'
+					hex.html += '<p>details: '+details.join(' & ')+'</tp>';
+				}
+			}
+		}
+		
+		// ---------------------------------------------
+		
+		/*const CITY_COUNT = 5 + Math.floor(Math.random()*2);
+		
+		let nations = [];
+		let colors = ["red", "yellow", "green", "blue", "purple", "orange"];
+		
+		for (let i = 0; i < CITY_COUNT; i++) {
+			let x, y;
+			let ok = false;
+			while (!ok) {
+				x = Math.floor((0.1 + 0.8*GenUtil.halton(hindex, 2))*MAP_WIDTH);
+				y = Math.floor((0.1 + 0.8*GenUtil.halton(hindex, 3))*MAP_HEIGHT);
+				
+				let habCheck = ((1+map[x][y].type.habitabilty)/6) > Math.random();
+				
+				console.log(habCheck);
+				
+				if (okForCity(map[x][y]) && habCheck) {
+					ok = true;
+				}
+				
+				hindex++;
+			}
+			
+			map[x][y].other = 'imgTileCity';
+			
+			let nation = {};
+			
+			nation.color = colors[i];
+			console.log(Media);
+			nation.flagIndex = i;
+			
+			console.log(nation.flagImage);
+			
+			nations.push(nation);
+			
+			map[x][y].nation = nation;
+			
+			let neighbors = getHexNeighbors(map, x, y);
+			for (let neighbor of neighbors) {
+				neighbor.nation=nation;
+			}
+			
+			let villageCount = 1 + Math.floor(Math.random()*5)+Math.floor(Math.random()*3)
+			
+			for (let j = 0; j < villageCount; j++) {
+				let ok = false;
+				let villageHex = null;
+				let tryCount = 0;
+				while (!ok && tryCount < 100) {
+					villageHex = cityExplore(map[x][y], 10);
+					
+					let habCheck = ((1+villageHex.type.habitabilty)/6) > Math.random();
+					
+					if (okForVillage(villageHex,nation) && habCheck) {
+						ok = true;
+					}
+					tryCount++;
+				}
+
+				villageHex.other = 'imgTileCity';
+				villageHex.nation = nation;
+				let neighbors = getHexNeighbors(map, villageHex.x, villageHex.y);
+				for (let neighbor of neighbors) {
+						neighbor.nation=nation;
+				}
+			}
+		}*/
+		
+		function cityExplore(hex, steps) {
+			while (steps > 0) {
+				let neighbors = getHexNeighbors(map, hex.x,hex.y)
+				
+				hex = GenUtil.pickRandom(neighbors);
+				
+				steps--;
+			}
+			
+			return hex;
+		}
+		
+		function cityScore(hex) {
+			let score = hex.terrain.habitabilty;
+		
+			if (hex.x == 0 || hex.y == 0 || hex.x == MAP_WIDTH-1 || hex.y == MAP_HEIGHT) {
+				score -= 2;
+			}
+			
+			return score;
+		}
+		
+		function okForVillage(hex,nation) {
+			if (hex.type == Terrain.WATER) { return false; }
+			if (hex.other != null) { return false; }
+
+			let neighbors = getHexNeighbors(map, hex.x,hex.y);
+			for (let neighbor of neighbors) {
+				if (neighbor.other != null && neighbor.nation != nation) { return false; }
+			}
+
+			return true;
+		}
+		
+		function okForCity(hex) {
+			if (hex.type == Terrain.WATER) { return false; }
+			if (hex.other != null) { return false; }
+			
+			let neighbors = evaluateNeighbors(map, function(hex) {return hex.other!=null;}, hex.x,hex.y);
+			let adj = false;
+			for (let neighbor of neighbors) {
+				if (neighbor) { adj = true; }
+			}
+			
+			if (adj) {
+				return false;
+			}
+			
+			return true;
+		}
+		
+		/*const VILLAGE_COUNT = 5 + Math.floor(Math.random()*3);
+		
+		for (let i = 0; i < VILLAGE_COUNT; i++) {
+		
+			let x, y;
+			let ok = false;
+			while (!ok) {
+				x = Math.floor((0.1 + 0.8*GenUtil.halton(hindex, 2))*MAP_WIDTH);
+				y = Math.floor((0.1 + 0.8*GenUtil.halton(hindex, 3))*MAP_HEIGHT);
+				
+				if (map[x][y].type != Terrain.WATER && map[x][y].other == null) {
+					ok = true;
+				}
+				
+				hindex++;
+			}
+
+			map[x][y].other = 'imgTileVillage';
+		}*/
+		
+		// =============================================
+
+		function growZone(zone) {
+			let hexes = GenUtil.pickList(zone.hexes);
+			
+			for (let hex of hexes) {
+				let finished = false;
+				let neighbors = getHexNeighbors(map, hex.x, hex.y);
+				neighbors = GenUtil.pickList(neighbors);
+				
+				for (let neighbor of neighbors) {
+					if (neighbor.zone == null) {
+						giveZoneHex(zone, neighbor);
+						finished = true;
+						break;
+					}
+				}
+				
+				if (finished) { break; }
+			}
+		}
+
+		function giveZoneHex(zone, hex) {
+			if (hex.zone == zone) { return; }
+			
+			zone.hexes.push(hex);
+			
+			if (hex.zone != null) {
+				let index = hex.zone.hexes.indexOf(hex);
+				hex.zone.hexes = hex.zone.hexes.splice(index, 1);
+			}
+			
+			hex.zone = zone;
+		}
+		
+		// ===========================================
+		
+		function onClick(e) {
+			let mx = e.offsetX;
+			let my = e.offsetY;
+
+			let coords = pickHex(mx, my);
+			
+			if (coords.x >= 0 && coords.x < MAP_WIDTH && coords.y >= 0 && coords.y < MAP_HEIGHT) {
+				document.getElementById('selected-data').innerHTML = map[coords.x][coords.y].html;
+			}
+		}
+		
+		// ===========================================
+		
+		function setHex(hexes, x, y, data) {
+			hexes.set("x"+x+"y"+y, {x:x, y:y, data:data});
+		}
+		
+		function getHex(hexes, x, y) {
+			hexes.get("x"+mouseHex.x+"y"+mouseHex.y);
+		}
+		
+		function main() {
+			var canvas = document.getElementById("codon-canvas");
+			canvas.addEventListener('click', onClick);
+			
+			var drawCanvas = document.createElement('canvas');
+			
+			var context = drawCanvas.getContext("2d");
+			context.imageSmoothingEnabled = false;
+			
+			drawCanvas.width = HEX_RADIUS * (MAP_WIDTH+0.5) * HEX_X*3;
+			drawCanvas.height = HEX_RADIUS * (MAP_HEIGHT+0.65) * HEX_Y*2;
+			
+			canvas.width = HEX_RADIUS * (MAP_WIDTH+0.5) * HEX_X*3;
+			canvas.height = HEX_RADIUS * (MAP_HEIGHT+0.65) * HEX_Y*2;
+			
+			let windowContext = canvas.getContext('2d');
+			
+			context.lineWidth = 0;
+			
+			context.clearRect(0,0,canvas.width, canvas.height);
+			context.fillStyle = '#E2D0A1';
+			context.fillRect(0,0,canvas.width, canvas.height);
+			
+			drawHexes(context);
+			
+			for (let x = 0; x < drawCanvas.width; x += Media.imgClouds.width) {
+				for (let y = 0; y < drawCanvas.height; y += Media.imgClouds.height) {
+					context.save();
+						context.globalAlpha = 0.75;
+						context.drawImage(Media.imgClouds,x,y);
+					context.restore();
+				}
+			}
+			
+			draw();
+			
+			function draw() {
+				windowContext.clearRect(0,0,canvas.width,canvas.height);
+				
+				windowContext.drawImage(drawCanvas, 0, 0);
+				
+				requestAnimationFrame(draw);
+			}
+		}
+
+		function toColorCode(r, g, b) {
+			return "rgb("+Math.floor(r*255)+","+Math.floor(g*255)+","+Math.floor(b*255)+")"
+		}
+		
+		function getHexCenter(coords) {
+			var x = coords.x * HEX_X * HEX_RADIUS * 3;
+			var y = (coords.y + 0.5 * (coords.x%2)) * HEX_Y * HEX_RADIUS * 2
+			return {x:x, y:y};
+		}
+		
+		function drawHexes(context) {
+			for (var x = 0; x < MAP_WIDTH; x++) {
+				var yMin = 0;
+				var yMax = MAP_HEIGHT;
+				
+				for (var y = yMin; y < yMax; y++) {
+					
+					let tile = map[x][y];
+					
+					context.save();
+						context.strokeStyle = "#000";
+						context.lineWidth = 1;
+						
+						let coords = getHexCenter({x:x+0.75, y:y+0.2});
+						context.translate(coords.x, coords.y);
+						
+						context.textAlign = "center";
+						context.textBaseline = "hanging";
+						context.font = 'bold 14px "Source Serif Pro"';
+						context.fillStyle = 'black';
+						context.lineWidth = 1;
+						context.globalAlpha = 0.5;
+						
+						var gridX = x + 1;
+						gridX = gridX.toString().padStart(2, '0');
+						var gridY = y + 1;
+						gridY = gridY.toString().padStart(2, '0');
+						
+						var hexString = gridX + '' + gridY;
+						
+						//context.fillText(hexString, 0, -HEX_RADIUS * HEX_Y + 4);
+
+						context.beginPath();
+							drawHex(context, HEX_RADIUS);
+							
+							context.globalAlpha = 0.25;
+							//context.stroke();
+						
+							if (tile.nation != null) {
+								context.fillStyle = tile.nation.color;
+								context.fill();
+							}
+						
+						/*
+						context.save();
+							//if (tile.type != Terrain.WATER && tile.type != Terrain.ISLANDS) {
+								context.lineWidth = 3;
+								context.globalAlpha = 1.0;
+								context.lineCap = 'round';
+								context.setLineDash([5,5]);
+							
+								let borderNeighbors = evaluateNeighbors(map, function(hex) { return tile.zone != hex.zone; }, x, y, true);
+								console.log(tile.zone);
+								console.log(borderNeighbors);
+								drawBorderHex(context, HEX_RADIUS, HEX_RADIUS, borderNeighbors);
+							//}								
+						context.restore();
+						*/
+						
+						
+						context.save()
+							if (tile.nation != null && tile.type != Terrain.WATER) {
+								context.lineWidth = 4;
+								context.globalAlpha = 0.5;
+								context.lineCap = 'round';
+								context.strokeStyle = tile.nation.color;
+							
+								let borderNeighbors = evaluateNeighbors(map, function(hex) { return hex.nation != tile.nation || hex.type == Terrain.WATER; }, x, y);
+								drawBorderHex(context, HEX_RADIUS, HEX_RADIUS-4.0, borderNeighbors);
+								
+								context.lineWidth = 2;
+								context.setLineDash([5,5]);
+								context.globalAlpha = 1.0;
+								context.lineCap = 'round';
+								context.strokeStyle = '#4C0C18';
+								
+								drawBorderHex(context, HEX_RADIUS, HEX_RADIUS-2.0, borderNeighbors);
+							}
+						context.restore();
+						
+						
+					context.restore();
+					
+					context.save();
+						context.globalAlpha = 1.0;
+						coords = getHexCenter({x:x+0.75, y:y+0.2});
+						context.translate(Math.round(coords.x), Math.round(coords.y));
+						context.translate(-35, -30);
+					
+						context.drawImage(Media[tile.type.img[Math.floor(tile.tileRand*tile.type.img.length)]],0,0);
+					
+						if (tile.other) {
+							context.globalAlpha = 1;
+							
+							/*if (tile.other == 'imgTileCity' || tile.other == 'imgTileVillage') {
+								if (tile.nation != null) {
+									context.drawImage(Media.flagImages[tile.nation.flagIndex],0,0);
+								}
+							}*/
+							
+							context.drawImage(Media[tile.other],0,0);
+							
+							context.textAlign = "center";
+							context.textBaseline = "hanging";
+							context.font = '12px "Source Serif Pro Black"';
+							context.fillStyle = 'black';
+							context.lineWidth = 1;
+							
+							context.fillText(tile.label.toString(), -10+35, 10+30);
+						}
+					context.restore();
+				}
+			}
+			
+			for (var x = -1; x < MAP_WIDTH+1; x++) {	
+				for (var y = -1; y < MAP_HEIGHT+1; y++) {
+					context.save();
+						context.globalAlpha = 1.0;
+						let coords = getHexCenter({x:x+0.75, y:y+0.2});
+						context.translate(Math.round(coords.x), Math.round(coords.y));
+						context.translate(-35, -30);
+						
+						let neighbors = oceanNeighbors(map, x, y);
+						
+						let type = Terrain.WATER;
+						let coastRand = [(x+y)%3, (x+y)%3, (x+y)%3, (x+y)%3, (x+y)%3, (x+y)%3];
+						coastRand = [0, 0 ,0, 0, 0, 0];
+						
+						if (x < 0) { type = (oceanWest ? Terrain.WATER : Terrain.GRASSLAND); }
+						else if (x >= MAP_WIDTH) { type = (oceanEast ? Terrain.WATER : Terrain.GRASSLAND); }
+						else if (y < 0) { type = (oceanNorth ? Terrain.WATER : Terrain.GRASSLAND); }
+						else if (y >= MAP_HEIGHT) { type = (oceanSouth ? Terrain.WATER : Terrain.GRASSLAND); }
+						else { type = map[x][y].type; coastRand=map[x][y].coastRand; }
+						
+						if (type==Terrain.WATER) { neighbors = neighbors.map((v) => !v); }
+						
+						if (neighbors[0] && neighbors[1]) { context.drawImage(Media['imgCoastNW'+coastRand[0]],0,0); }
+						if (neighbors[1] && neighbors[2]) { context.drawImage(Media['imgCoastW'+coastRand[1]],0,0); }
+						if (neighbors[2] && neighbors[3]) { context.drawImage(Media['imgCoastSW'+coastRand[2]],0,0); }
+						if (neighbors[3] && neighbors[4]) { context.drawImage(Media['imgCoastSE'+coastRand[3]],0,0); }
+						if (neighbors[4] && neighbors[5]) { context.drawImage(Media['imgCoastE'+coastRand[4]],0,0); }
+						if (neighbors[5] && neighbors[0]) { context.drawImage(Media['imgCoastNE'+coastRand[5]],0,0); }
+						
+					context.restore();					
+				}
+			}
+		}
+		
+		function drawHex(context, r) {
+			var hx = HEX_X * r;
+			var hy = HEX_Y * r;
+		
+			context.moveTo(r,0);
+			context.lineTo(hx, -hy);
+			context.lineTo(-hx, -hy);
+			context.lineTo(-r,0);
+			context.lineTo(-hx, hy);
+			context.lineTo(hx, hy);
+			context.lineTo(r, 0);
+		}
+		
+		function drawBorderHex(context, r, r2, neighbors) {
+			let hx = HEX_X * r;
+			let hy = HEX_Y * r;
+			let hx2 = HEX_X * r2;
+			let hy2 = HEX_Y * r2;
+			
+			let hxLong = hx2+2*(hx-hx2);
+
+			for (let i = 0; i < 6; i++) {
+				let iLeft = i + 1;
+				if (iLeft >= 6) { iLeft -= 6; }
+				let iRight = i - 1;
+				if (iRight < 0) { iRight += 6; }
+				
+				let left = neighbors[iLeft];
+				let right = neighbors[iRight];
+			
+				context.save();
+					context.rotate(-i*Math.PI*2/6);
+					
+					if (neighbors[i]) {
+					
+						context.beginPath();
+
+							context.moveTo(right ? hx2 : hxLong, -hy2);
+							context.lineTo(left ? -hx2 : -hxLong, -hy2);
+						
+						context.stroke();
+					}
+				
+				context.restore();
+			}
+		}
+		
+		function pickHex(mx, my) {
+		
+			var hx = Math.floor(((mx-5) / (HEX_X * HEX_RADIUS * 3)));
+			var hy = Math.floor(((my+0) / (HEX_Y * HEX_RADIUS * 2)) - 0.5 * (hx%2));
+			
+			return {x:hx, y:hy};
+		}
+		
+		function getHexNeighbors(hexes, x,y) {
+			let list = [];
+			
+			let p = x%2
+			
+			addIfOK(x,y-1);
+			addIfOK(x,y+1);
+			addIfOK(x-1,y+p);
+			addIfOK(x-1,y-1+p);
+			addIfOK(x+1,y+p);
+			addIfOK(x+1,y-1+p);
+			
+			return list;
+
+			function addIfOK(x,y) {
+				if (x >=0 && y >= 0 && x < MAP_WIDTH && y < MAP_HEIGHT) {
+					list.push(hexes[x][y]);
+				}
+			}
+		}
+		
+		function evaluateNeighbors(hexes, func, x,y, outsideOK = false) {
+			let list = [];
+			
+			let p = x%2
+			
+			addIfOK(x,y-1);
+			addIfOK(x-1,y-1+p);
+			addIfOK(x-1,y+p);
+			addIfOK(x,y+1);
+			addIfOK(x+1,y+p);
+			addIfOK(x+1,y-1+p);
+			
+			return list;
+
+			function addIfOK(x,y) {
+				if (x >=0 && y >= 0 && x < MAP_WIDTH && y < MAP_HEIGHT) {
+					list.push(func(hexes[x][y]));
+				} else {
+					list.push(!outsideOK);
+				}
+			}
+		}
+		
+		function oceanNeighbors(hexes, x, y) {
+			let list = [];
+			
+			let p = x%2;
+			
+			if (x==-1) {
+				p = 0;
+			}
+			
+			addIfOcean(x,y-1);
+			addIfOcean(x-1,y-1+p);
+			addIfOcean(x-1,y+p);
+			addIfOcean(x,y+1);
+			addIfOcean(x+1,y+p);
+			addIfOcean(x+1,y-1+p);			
+			
+			return list;
+			
+			function addIfOcean(x, y) {
+				list.push(isOcean(x,y));
+			}
+		
+			function isOcean(x, y) {
+				if (x < 0) { return oceanWest; }
+				if (x >= MAP_WIDTH) { return oceanEast; }
+				if (y < 0) { return oceanNorth; }
+				if (y >= MAP_HEIGHT) { return oceanSouth; }
+				
+				return hexes[x][y].type == Terrain.WATER;
+			}
+		}
+
+		function labelLetter(i) {
+			return String.fromCharCode(i+64);
+		}
+
+		function rainbow(numOfSteps, step) {
+			let colors = ['#cc004d', '#f37020', '#fcb811', '#0db14b', '#0188d1', '#6460aa'];
+			step = step % 6;
+			return colors[step];
+		}
+		
+		let terrainDescriptors = [
+			'Crystalline',
+			'Magnetic',
+			'Barren',
+			'Lush',
+			'Dry',
+			'Vivid',
+			'Murky',
+			'Cold',
+			'Windy',
+			'Dismal',
+			'Neon',
+			'Sweet',
+			'Red',
+			'Bright',
+			'Dusty',
+			'Scorched',
+			'Rocky',
+			'Broken',
+			'Cratered'
+		];
+
+		Media.onLoad(main);
+	</script>
+	
+</html>
