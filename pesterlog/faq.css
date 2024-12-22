@@ -1,0 +1,63 @@
+body {
+	background-color: #C3C3C3;
+	font-family: "Courier Prime","Courier New",monospace;
+	font-size: 14px;
+	line-height:1.75;
+}
+#chat {
+	box-sizing: border-box;
+	background-color: #FFFFFF;
+	max-width: 640px;
+	padding: 30px;
+	margin:auto;
+}
+img {
+	display:block;
+	margin:auto;
+	width:100%;
+	max-width: 640px;
+}
+.next {
+	text-align: center;
+	font-size: 28px;
+}
+.title {
+	text-align: center;
+	font-size: 28px;
+}
+
+@media (orientation: portrait) {
+  #chat {
+	width: 100%;
+	max-width:none;
+  }
+  img {
+	width: 100%;
+	max-width:none;
+  }
+}
+
+.spoiler {
+	background-color: #EFEFEF;
+}
+.summary {
+	cursor:pointer;
+	user-select: none;
+}
+.inside {
+	font-size: 12px;
+	font-weight: bold;
+}
+.closed .inside {
+	display:none;
+}
+
+.mw {
+	color: #B482B4;
+}
+.ae {
+	color: #A89745;
+}
+.az {
+	color: #D83900;
+}
