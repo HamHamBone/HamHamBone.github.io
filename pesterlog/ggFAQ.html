@@ -7,11 +7,14 @@
 			body {
 				background-color: #C3C3C3;
 				font-family: "Courier Prime","Courier New",monospace;
-				font-size: 16px;
+				font-size: 14px;
+				line-height:1.75;
+				text-size-adjust: none;
 			}
 			#chat {
+				box-sizing: border-box;
 				background-color: #FFFFFF;
-				max-width: 550px;
+				max-width: 560px;
 				padding: 30px;
 				margin:auto;
 			}
@@ -19,9 +22,9 @@
 				display:block;
 				margin:auto;
 				width:100%;
-				max-width: 610px;
+				max-width: 560px;
 			}
-			@media screen and (max-device-width: 610px) {
+			@media (orientation: portrait) {
 			  #chat {
 				width: 100%;
 				max-width:none;
@@ -31,20 +34,19 @@
 				max-width:none;
 			  }
 			}
-			details {
-				display:inline;
-				vertical-align:top;
+			.spoiler {
+				background-color: #EFEFEF;
 			}
-			details[open] {
-				display:block;
-			}
-			summary {
+			.summary {
 				cursor:pointer;
+				user-select: none;
 			}
 			.inside {
-				display:inline;
 				font-size: 12px;
 				font-weight: bold;
+			}
+			.closed .inside {
+				display:none;
 			}
 			.mw {
 				color: #B482B4;
@@ -59,32 +61,59 @@
 	</head>
 	<body>
 		<img src="ggFAQ_header.png"></img>
-		<div id="chat" class="pesterlogger" tabindex="0" style="outline: none" contenteditable="false
-		">========<br>
-[21.7.0] LAND of GLYPHS and MIRAGE | FLOATING HEAD of [?]<br>
-========
-<br><br>
-OBDURYX is the last vulturling you need to convince, but an avian Verge Exile, DOVE [ORDERLY, CONTROLLING, GUILTY EX-SCOUT][WHEELER LIKE], cautions him not to reveal their hidden SHIMMER SIETCH. The headbird passionately believes in the Herald of Hope overcoming SIMURGH, and dismisses anyone else against all evidence. Funny Hope gag. The glyphs say the Herald has wings, and if you've lost yours, such as by faltering in the face of destiny when the idol distracts you*, you can't convince him. &lt"Some carry truth, but your dreams are only dreams"&gt. If you've translated and traded enough glyphemes† to maintain persistant mirages and you're patient despite everything so far, he eventually tells you about the [FLOATING] [HEAD] of [?], where his ancient grandmother long ago sought visions of the Herald. <details><summary>🗨</summary><span class='inside'><span class='ae'>aE: WHAT IS GRxNDMxTHER b^?</span><br>
-<span class='mw'>mW: The one who bore the one who birthed you.</span><br>
-<span class='mw'>mW: Like I told you about my nainai.</span><br>
-<span class='mw'>mW: For an XM Herald of Hope it might be his ... A2 ;?</span><br>
-<span class='ae'>aE: NxPE</span></span></details>
-<br><br>
-The Head is a roaming aerolith, a cube pouring sand from grates, that you can see once you learn most of its glyphemes. I don't know the last glyph yet: my hypothesis is a personal name - but I was able to access it with a Linked dune elemental without a mirage dissolve. I brought my non-Honored muse Azræl <details><summary>🗨</summary><span class='inside'><span class='az'>aZ: Hey, thanks.</span><br>
-<span class='mw'>mW: It just means "no card".</span></span></details> to mazeskip with ;), his magic divination deck item, plus Charcoal and Fog  to protect him. My collaborator in the other session joined over Rosetta chat. <details><summary>🗨</summary><span class='inside'><span class='ae'>aE: RZ INTERTWxNED</span></span></details>
-<br><br>
-----------------------------------<br>
-Dungeon size: Medium<br>
-Areas: at least 12<br>
-Themes: protection, illusion, [?]<br>
-----------------------------------
-<br><br>
-The wall + floor + ceiling murals indicate a goatling guild built this place to pour water in oases, jestling illusionists concealed‡ and fortified it later, and in the vultureling Dire Fading its waters turned to sand. Expect water temple sand flow manipulation, false walls and secret doors, and rotating cube faces. (Expect vertigo from surprise orientation shifts, and don't get buried!)
-<br><br>
-Make your way to the central sandbox hub, warding for phantom beaks. Tools like divination cards will help avoid false leads that go nowhere. You'll be on the right path when you see the [GLYPHSOME SANDS] outside the oasis through an exterior grille, where your ex used nodes in ways you'd never imagined. With the right aerial view, you should just now be realizing that the perpetual sandstreams she glitched into existance are surely an artistic response to the dustlike crystal Spray that killed her home, and the six-legged sandshapes rising-prancing dissolving in them aren't bullshit fantasy monsters but destriers, the animals she loved and feared and are forever gone. Try considering the depths of her interiority completely apart from your pasty self that you never knew and never will. This will hurt you because you are evil.<details><summary>🗨</summary><span class='inside'><span class='az'>aZ: Do you want me to transcribe that in the FAQ, or.</span></span></details>
-<br><br>
-* I am still Never Salty.<br>
-† See 21.6.1 for Herald of Hope LoGaM translation guide.<br>
-‡ From the chromatics, seemingly. the lore deepens! ;0 </div>
+		<div id="chat" class="pesterlogger" tabindex="0" style="outline: none" contenteditable="false">
+			========<br>
+			[21.7.0] LAND of GLYPHS and MIRAGE | FLOATING HEAD of [?]<br>
+			========<br>
+			<br>
+			OBDURYX is the last vulturling you need to convince, but an avian Verge Exile, DOVE [ORDERLY, CONTROLLING, GUILTY EX-SCOUT][WHEELER LIKE], cautions him not to reveal their hidden SHIMMER SIETCH. The headbird passionately believes in the Herald of Hope overcoming SIMURGH, and dismisses anyone else against all evidence. Funny Hope gag. The glyphs say the Herald has wings, and if you've lost yours, such as by faltering in the face of destiny when the idol distracts you*, you can't convince him. &lt"Some carry truth, but your dreams are only dreams"&gt. If you've translated and traded enough glyphemes† to maintain persistant mirages and you're patient despite everything so far, he eventually tells you about the [FLOATING] [HEAD] of [?], where his ancient grandmother
+			<span class='spoiler closed' onclick='this.classList.toggle("closed")'>
+				<span class='summary'>🗨</span>
+				<span class='inside'>
+					<span class='ae'>aE: WHAT IS GRxNDMxTHER b^?</span> |
+					<span class='mw'>mW: The one who bore the one who birthed you.</span> |
+					<span class='mw'>mW: Like I told you about my nainai.</span> |
+					<span class='mw'>mW: For an XM Herald of Hope it might be his ... A2 ;?</span> |
+					<span class='ae'>aE: NxPE</span>
+				</span>
+			</span>
+			long ago sought visions of the Herald.<br>
+			<br>
+			The Head is a roaming aerolith, a cube pouring sand from grates, that you can see once you learn most of its glyphemes. I don't know the last glyph yet: my hypothesis is a personal name - but I was able to access it with a Linked dune elemental without a mirage dissolve. I brought my non-Honored muse Azræl
+			<span class='spoiler closed' onclick='this.classList.toggle("closed")'>
+				<span class='summary'>🗨</span>
+				<span class='inside'>
+					<span class='az'>aZ: Hey, thanks.</span> |
+					<span class='mw'>mW: It just means "no card".</span>
+				</span>
+			</span>
+			to mazeskip with ;), his magic divination deck item, plus Charcoal and Fog to protect him. My collaborator in the other session joined over Rosetta chat.
+			<span class='spoiler closed' onclick='this.classList.toggle("closed")'>
+				<span class='summary'>🗨</span>
+				<span class='inside'>
+					<span class='ae'>aE: RZ INTERTWxND</span>
+				</span>
+			</span><br>
+			<br>
+			----------------------------------<br>
+			Dungeon size: Medium<br>
+			Areas: at least 12<br>
+			Themes: protection, illusion, [?]<br>
+			----------------------------------
+			<br><br>
+			The wall + floor + ceiling murals indicate a goatling guild built this place to pour water in oases, jestling illusionists concealed‡ and fortified it later, and in the vultureling Dire Fading its waters turned to sand. Expect water temple sand flow manipulation, false walls and secret doors, and rotating cube faces. (Expect vertigo from surprise orientation shifts, and don't get buried!)
+			<br><br>
+			Make your way to the central sandbox hub, warding for phantom beaks. Tools like divination cards will help avoid false leads that go nowhere. You'll be on the right path when you see the [GLYPHSOME SANDS] outside the oasis through an exterior grille, where your ex used nodes in ways you'd never imagined. With the right aerial view, you should just now be realizing that the perpetual sandstreams she glitched into existance are surely an artistic response to the dustlike crystal Spray that killed her home, and the six-legged sandshapes rising-prancing dissolving in them aren't bullshit fantasy monsters but destriers, the animals she loved and feared and are forever gone. Try considering the depths of her interiority completely apart from your pasty self that you never knew and never will. This will hurt you because you are evil.
+			<span class='spoiler closed' onclick='this.classList.toggle("closed")'>
+				<span class='summary'>🗨</span>
+				<span class='inside'>
+					<span class='az'>aZ: Do you want me to transcribe that in the FAQ, or.</span>
+				</span>
+			</span><br>
+			<br>
+			* I am still Never Salty.<br>
+			† See 21.6.1 for Herald of Hope LoGaM translation guide.<br>
+			‡ From the chromatics, seemingly. the lore deepens! ;0
+		</div>
 	</body>
 </html>
