@@ -3,8 +3,6 @@ body {
 	font-family: "Courier Prime","Courier New",monospace;
 	font-size: 14px;
 	line-height:1.75;
-	
-	text-size-adjust: none;
 }
 .chat, .faqtext {
 	box-sizing: border-box;
