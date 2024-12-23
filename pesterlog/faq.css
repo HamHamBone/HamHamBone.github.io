@@ -4,18 +4,17 @@ body {
 	font-size: 14px;
 	line-height:1.75;
 	
-	text-size-adjust: 200%
+	text-size-adjust: none;
 }
 .chat, .faqtext {
 	box-sizing: border-box;
 	max-width: 640px;
 	padding: 30px;
 	margin:auto;
-	
-	background-color: #EFEFEF
 }
 .chat {
 	font-weight: bold;
+	background-color: #EFEFEF
 }
 .faqtext {
 	background-color: #FFFFFF;
@@ -31,11 +30,11 @@ img.panel {
 }
 .next {
 	text-align: center;
-	font-size: 40px;
+	font-size: 3.5em;
 }
 .title {
 	text-align: center;
-	font-size: 40px;
+	font-size: 3.5em;
 	margin-bottom:30px;
 }
 .narration {
@@ -54,6 +53,8 @@ img.panel {
   }
 }
 
+/* ------------------------ */
+
 .spoiler {
 	
 }
@@ -64,12 +65,14 @@ img.panel {
 }
 .inside {
 	background-color: #EFEFEF;
-	font-size: 12px;
+	font-size: 0.85em;
 	font-weight: bold;
 }
 .closed .inside {
 	display:none;
 }
+
+/* ------------------------ */
 
 .kb {
 	color: black;
