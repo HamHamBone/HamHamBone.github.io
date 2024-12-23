@@ -4,26 +4,41 @@ body {
 	font-size: 14px;
 	line-height:1.75;
 }
-#chat {
+.chat, .faqtext {
 	box-sizing: border-box;
-	background-color: #FFFFFF;
 	max-width: 640px;
 	padding: 30px;
 	margin:auto;
+	
+	background-color: #EFEFEF
 }
-img {
+.chat {
+	font-weight: bold;
+}
+.faqtext {
+	background-color: #FFFFFF;
+}
+img.panel, img.faqheader {
 	display:block;
 	margin:auto;
 	width:100%;
 	max-width: 640px;
 }
+img.panel {
+	margin-bottom:30px;
+}
 .next {
 	text-align: center;
-	font-size: 28px;
+	font-size: 40px;
 }
 .title {
 	text-align: center;
-	font-size: 28px;
+	font-size: 40px;
+	margin-bottom:30px;
+}
+.narration {
+	text-align: center;
+	margin-bottom:30px;
 }
 
 @media (orientation: portrait) {
@@ -38,13 +53,15 @@ img {
 }
 
 .spoiler {
-	background-color: #EFEFEF;
+	
 }
 .summary {
+	font-weight:normal;
 	cursor:pointer;
 	user-select: none;
 }
 .inside {
+	background-color: #EFEFEF;
 	font-size: 12px;
 	font-weight: bold;
 }
@@ -52,6 +69,9 @@ img {
 	display:none;
 }
 
+.kb {
+	color: black;
+}
 .mw {
 	color: #B482B4;
 }
@@ -60,4 +80,7 @@ img {
 }
 .az {
 	color: #D83900;
+}
+.ip {
+	color: #10008E;
 }
