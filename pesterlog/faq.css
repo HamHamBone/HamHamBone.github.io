@@ -42,11 +42,11 @@ img.panel {
 }
 
 @media (orientation: portrait) {
-  #chat {
+  .chat, .faqtext {
 	width: 100%;
 	max-width:none;
   }
-  img {
+  img.panel, img.faqheader {
 	width: 100%;
 	max-width:none;
   }
