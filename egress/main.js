@@ -142,8 +142,14 @@ let Main = (function() {
 			ctx.stroke();
 		ctx.restore();
 		
+		let clickFlag = false;
 		let musicFlag = false;
 		canvas.addEventListener('click', function() {
+			if (clickFlag) {
+				return;
+			}
+			clickFlag = true;
+			
 			music = new Howl({
 				src: ['under_c.mp3']
 			});
