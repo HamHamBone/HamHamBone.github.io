@@ -13,16 +13,12 @@ let Main = (function() {
 		let img = new Image();
 		img.src = 'waves/frame ('+i+').gif';
 		loadCount++;
-		console.log(loadCount, img.src);
 		img.addEventListener('load', imageLoadReady());
-		//img.addEventListener('error', imageLoadReady());
 		waveImages.push(img);
 	}
-	console.log(loadCount);
 	
 	function imageLoadReady() {
 		loadCount--;
-		console.log(loadCount);
 	}
 	
 	// ============================================================== //
@@ -227,11 +223,10 @@ let Main = (function() {
 			fadeEnd = 80*8*7.65;
 			if (t > fadeStart && t < fadeEnd) {
 				logoAlpha = (t-fadeStart) / (fadeEnd - fadeStart)
-				logoAlpha *= 1 - 0.333 * (0.5+0.5*Math.sin(0.5*t))*(Math.pow(Math.sin(Math.PI * 2 * t / 640), 4));
+				logoAlpha *= 1 - 0.333 * (0.5+0.5*Math.sin(0.5*t))*(Math.pow(0.5+0.5*Math.sin(Math.PI * 2 * t / 640), 6));
 			} else if (t > fadeEnd) {
 				logoAlpha = 1;
-				logoAlpha *= 1 - 0.333 * (0.5+0.5*Math.sin(0.5*t))*(Math.pow(Math.sin(Math.PI * 2 * t / 640), 4));
-
+				logoAlpha *= 1 - 0.333 * (0.5+0.5*Math.sin(0.5*t)) * Math.pow( 0.5+0.5*Math.sin(Math.PI * 2 * t / 320) , 10);
 			}
 			
 			fadeEnd = 80*4;
@@ -243,7 +238,7 @@ let Main = (function() {
 			
 			ctx.fillRect(0,0,canvas.width,canvas.height);
 			draw(ctx, t);
-			sigma += 1 * ((Math.min(a,b))/lcm(a,b)) * Math.PI / 40;
+			sigma += 1 * (a/lcm(a,b)) * Math.PI / 40;
 			window.requestAnimationFrame(step);
 		}
 	}
@@ -263,14 +258,17 @@ let Main = (function() {
 				ctx.drawImage(waveImages[Math.floor(t/3)%waveImages.length], -waveImages[0].width/2, -2*waveImages[0].height)
 			ctx.restore();
 			
-			ctx.globalAlpha = 1;
-			ctx.fillStyle = lineColor
-			ctx.strokeStyle = lineColor
+			ctx.fillStyle = backColor;
+			ctx.globalAlpha = 0.25;
+			ctx.fillRect(-canvas.width/2, -canvas.height/2, canvas.width, canvas.height);
+			
+			ctx.fillStyle = lineColor;
+			ctx.strokeStyle = lineColor;
+			ctx.globalAlpha = alpha;
+			ctx.fillRect(-200,200,Math.min(400,400*t/(80*8*7)),10);
 			if (t < 80*8*7) {
 				ctx.strokeRect(-200,200,400,10);
 			}
-			ctx.globalAlpha = alpha;
-			ctx.fillRect(-200,200,Math.min(400,400*t/(80*8*7)),10)
 			
 			ctx.lineWidth = 3;
 			ctx.strokeStyle = lineColor;
