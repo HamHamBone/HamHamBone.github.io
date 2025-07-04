@@ -127,6 +127,9 @@ let Main = (function() {
 		
 		let t = 0;
 		
+		ctx.fillStyle = backColor;
+		ctx.fillRect(0,0,canvas.width, canvas.height);
+		
 		ctx.save()
 			ctx.translate(canvas.width/2, canvas.height/2);
 			ctx.lineWidth = 3;
