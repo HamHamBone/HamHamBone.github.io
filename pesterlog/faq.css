@@ -60,6 +60,7 @@ img.panel {
 	font-weight:normal;
 	cursor:pointer;
 	user-select: none;
+	color: #2244AA;
 }
 .inside {
 	background-color: #EFEFEF;
