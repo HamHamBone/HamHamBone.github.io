@@ -64,7 +64,7 @@ When a Kalandi is born, their parents must make a pilgrimage to the palace and m
 
 A roving Kaland Barbarian may be on such a mad quest, or perhaps is searching for some supply their tribe desperately needs.
 
-![map](assets/class-setting-1/map.png)
+![map](assets/class-setting-1/Map.png)
 
 ### Footnotes
 
